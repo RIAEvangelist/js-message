@@ -1,5 +1,5 @@
 # js-message
-Normalized JS & JSON Message and event Protocol for node.js, react.js, websockets, rest api's, node-ipc, and any other protocol that might use a js object and or a JSON string.  
+Normalized JS & JSON Message and event Protocol for node.js, vanilla.js (plain old javascript), react.js, websockets, rest api's, node-ipc, and any other protocol that might use a js object and or a JSON string.  
 
 js-message allows for seamless conversion of JSON messages and events to JS objects for a normalized implementation on the server and in the client without needing to concern yourself with JSON intermediaries and custom parsers.  
 
@@ -29,7 +29,10 @@ GitHub info :
 
 ```javascript
 
+    //commonjs
     var Message=require('js-message');
+    //plain old javascript
+    <script src='js-message-vanilla.js' />
 
     var myMessage=new Message;
     myMessage.type='message or event type';
@@ -44,7 +47,10 @@ GitHub info :
 
 ```javascript
 
+    //commonjs
     var Message=require('js-message');
+    //plain old javascript
+    <script src='js-message-vanilla.js' />
 
     //lets say we have the above example running on
     //a websocket server sending js-messages as JSON
@@ -68,7 +74,10 @@ GitHub info :
 
 ```javascript
 
+    //commonjs
     var Message=require('js-message');
+    //plain old javascript
+    <script src='js-message-vanilla.js' />
 
     //client example, but works the same on server too!
     var ws=new WebSocket('ws://myawesomeWS:8000');
