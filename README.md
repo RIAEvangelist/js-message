@@ -5,6 +5,18 @@ js-message allows for seamless conversion of JSON messages and events to JS obje
 
 Things are just easier when you normalize them.  
 
+npm js-message info :  [See npm trends and stats for js-message](http://npm-stat.com/charts.html?package=js-message&author=&from=&to=)  
+![js-message npm version](https://img.shields.io/npm/v/js-message.svg) ![supported node version for js-message](https://img.shields.io/node/v/js-message.svg) ![total npm downloads for js-message](https://img.shields.io/npm/dt/js-message.svg) ![monthly npm downloads for js-message](https://img.shields.io/npm/dm/js-message.svg) ![npm licence for js-message](https://img.shields.io/npm/l/js-message.svg)
+
+` npm install --save js-message `  
+
+[![RIAEvangelist](https://avatars3.githubusercontent.com/u/369041?v=3&s=100)](https://github.com/RIAEvangelist)
+
+GitHub info :  
+[![js-message GitHub Release](https://img.shields.io/github/release/RIAEvangelist/js-message.svg) ![GitHub license js-message license](https://img.shields.io/github/license/RIAEvangelist/js-message.svg) ![open issues for js-message on GitHub](https://img.shields.io/github/issues/RIAEvangelist/js-message.svg)](http://riaevangelist.github.io/js-message/)
+
+[js-message site](http://riaevangelist.github.io/js-message/)
+
 
 |method or key  |type   |mutable|description|
 |---------------|-------|-------|-----------|
