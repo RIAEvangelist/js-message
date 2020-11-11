@@ -1,6 +1,6 @@
 {
   "name": "js-message",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "normalized JS Object and JSON message and event protocol for node.js, vanialla js, react.js, components, actions, stores and dispatchers",
   "main": "Message.js",
   "scripts": {
@@ -44,7 +44,7 @@
     "actions"
   ],
   "author": "Brandon Nozaki Miller",
-  "license": "DBAD",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/RIAEvangelist/js-message/issues"
   },
