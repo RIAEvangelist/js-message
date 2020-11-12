@@ -93,4 +93,4 @@ GitHub info :
 
 ---
 
-This work is licenced via the [DBAD Public Licence](http://www.dbad-license.org/).
+This work is licenced via the MIT Licence
