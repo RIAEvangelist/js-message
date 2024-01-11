@@ -2,7 +2,7 @@
   "name": "js-message",
   "version": "2.0.1",
   "description": "normalized JS Object and JSON message and event protocol for ES6+ node.js, browsers, electron, vanialla js, react.js, components, actions, stores and dispatchers",
-  "main": "index.js",
+  "main": "Message.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
