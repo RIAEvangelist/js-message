@@ -1,71 +1,35 @@
-function Message() {
-    Object.defineProperties(
-        this, {
-            data: {
-                enumerable: true,
-                get: getData,
-                set: setData
-            },
-            type: {
-                enumerable: true,
-                get: getType,
-                set: setType
-            },
-            load:{
-                enumerable:true,
-                writable:false,
-                value:parse
-            },
-            JSON: {
-                enumerable: true,
-                get: getJSON
-            }
-        }
-    );
-
-    var type = '';
-    var data = {};
-
-    function getType() {
-        return type;
+export class Message {
+    constructor() {
+    
     }
 
-    function getData() {
-        return data;
-    }
+    type=''
+    data={}
 
-    function getJSON() {
+    get JSON() {
         return JSON.stringify(
             {
-                type: type,
-                data: data
+                type: this.type,
+                data: this.data
             }
         );
     }
 
-    function setType(value) {
-        type = value;
-    }
-
-    function setData(value) {
-        data = value;
-    }
-
-    function parse(message){
-        try{
-            var message=JSON.parse(message);
-            type=message.type;
-            data=message.data;
-        }catch(err){
-            var badMessage=message;
-            type='error',
-            data={
-                message:'Invalid JSON response format',
-                err:err,
-                response:badMessage
-            }
+    load(message) {
+        try {
+            const parsedMessage = JSON.parse(message);
+            this.type = parsedMessage.type;
+            this.data = parsedMessage.data;
+        } catch (err) {
+            const badMessage = message;
+            this.type = 'error';
+            this.data = {
+                message: 'Invalid JSON response format',
+                err: err,
+                response: badMessage
+            };
         }
     }
 }
 
-module.exports=Message;
+export default Message;

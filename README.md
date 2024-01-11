@@ -27,12 +27,21 @@ GitHub info :
 
 ### Creating a Message Object
 
+For the browser you can do either an import with the path to make the first http request for your module, and have it cached for other scripts thereafter ***OR*** you can import it with the `<script>` tag upfront which automatically loads as `defer` so it doesn't interrupt the parser.
+
+
+```html
+<script type="module" src='/path/to/module/js-message-vanilla.js' />
+
+```
+Both node and the browser now support `import` statements. If you use relative pathing you can use the same exact code from node in the browser without even transpiling much the less bundling.
+
 ```javascript
 
-    //commonjs
-    var Message=require('js-message');
-    //plain old javascript
-    <script src='js-message-vanilla.js' />
+    //works for browser natively AND node natively
+    import { default as Message } from './node_modules/js-message/Message.js';
+    //works for browser transpiled AND node natively
+    import { default as Message } from 'js-message';
 
     var myMessage=new Message;
     myMessage.type='message or event type';
