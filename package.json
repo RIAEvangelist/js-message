@@ -1,6 +1,6 @@
 {
   "name": "js-message",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "normalized JS Object and JSON message and event protocol for ES6+ node.js, browsers, electron, vanialla js, react.js, components, actions, stores and dispatchers",
   "main": "Message.js",
   "type": "module",
