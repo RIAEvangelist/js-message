@@ -56,10 +56,10 @@ Both node and the browser now support `import` statements. If you use relative p
 
 ```javascript
 
-    //commonjs
-    var Message=require('js-message');
-    //plain old javascript
-    <script src='js-message-vanilla.js' />
+    //works for browser natively AND node natively
+    import { default as Message } from './node_modules/js-message/Message.js';
+    //works for browser transpiled AND node natively
+    import { default as Message } from 'js-message';
 
     //lets say we have the above example running on
     //a websocket server sending js-messages as JSON
@@ -83,10 +83,10 @@ Both node and the browser now support `import` statements. If you use relative p
 
 ```javascript
 
-    //commonjs
-    var Message=require('js-message');
-    //plain old javascript
-    <script src='js-message-vanilla.js' />
+    //works for browser natively AND node natively
+    import { default as Message } from './node_modules/js-message/Message.js';
+    //works for browser transpiled AND node natively
+    import { default as Message } from 'js-message';
 
     //client example, but works the same on server too!
     var ws=new WebSocket('ws://myawesomeWS:8000');
