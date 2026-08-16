@@ -99,6 +99,7 @@ jobs:
       - name: Run Node and Chrome native coverage
         env:
           CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+          VANILLA_TEST_CHROME_NO_SANDBOX: '1'
         run: npm run coverage -- --chrome-path "$CHROME_PATH"
 
       - name: Upload coverage reports
