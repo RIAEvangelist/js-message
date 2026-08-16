@@ -4,3 +4,6 @@ npm-debug.log
 .nyc
 .env
 .DS_Store
+coverage
+_site
+*.tgz

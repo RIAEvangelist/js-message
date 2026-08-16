@@ -1,18 +1,124 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>vanilla-test node module test report</title>
-        <script async type='module' src='./CI.js'></script>
-        <style>
-            body{
-                font-family: arial;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>vanilla-test npm module</h1>
-        <a href='./test/'>tests</a>
-        <br>
-        <a href='./example/'>examples</a>
-    </body>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="One tiny, normalized message envelope for Node.js, browsers, WebSockets, IPC, and every JavaScript boundary.">
+    <meta name="color-scheme" content="dark">
+    <meta property="og:title" content="js-message · One shape for every JavaScript boundary">
+    <meta property="og:description" content="Create, serialize, load, and recover normalized JavaScript messages without a build step or runtime dependency.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://riaevangelist.github.io/js-message/">
+    <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="js-message · One shape for every JavaScript boundary">
+    <meta name="twitter:description" content="A zero-dependency JavaScript and JSON message envelope.">
+    <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <link rel="canonical" href="https://riaevangelist.github.io/js-message/">
+    <link rel="stylesheet" href="./assets/site.css">
+    <title>js-message · One shape for every JavaScript boundary</title>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header">
+        <div class="site-shell site-header__inner">
+            <a class="brand" href="./" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a>
+            <nav class="site-nav" aria-label="Primary navigation">
+                <ul>
+                    <li><a href="./" aria-current="page">Overview</a></li>
+                    <li><a href="./guide/">Start</a></li>
+                    <li><a href="./api/">API</a></li>
+                    <li><a href="./protocol/">Protocol</a></li>
+                    <li><a href="./browser/">Browser</a></li>
+                    <li><a href="./examples/">Examples</a></li>
+                    <li><a href="./testing/">Testing</a></li>
+                    <li><a href="./migration/">Migration</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <section class="site-shell hero">
+            <div>
+                <p class="eyebrow">v3 on main · normalize once · cross every boundary</p>
+                <h1>One message shape. Everywhere.</h1>
+                <p class="lede">Create a predictable <code>{ type, data }</code> envelope, serialize it to JSON, and load it again in Node.js, browsers, WebSockets, IPC, workers, or any JavaScript host.</p>
+                <ul class="pill-row" aria-label="Package guarantees">
+                    <li class="pill">0 runtime dependencies</li>
+                    <li class="pill">v3 preview</li>
+                    <li class="pill">Native ES modules</li>
+                    <li class="pill">Browser global included</li>
+                    <li class="pill">No build step</li>
+                </ul>
+                <div class="actions">
+                    <a class="button" href="./guide/">Create your first message</a>
+                    <a class="button button--secondary" href="./protocol/">Read the wire contract</a>
+                </div>
+            </div>
+
+            <div class="code-card" aria-label="Minimal js-message example">
+                <div class="code-card__bar" aria-hidden="true"><span></span><span></span><span></span></div>
+                <pre><code><span class="code-keyword">import</span> Message <span class="code-keyword">from</span> <span class="code-string">'js-message'</span>;
+
+<span class="code-keyword">const</span> message = <span class="code-keyword">new</span> Message();
+
+message.<span class="code-property">type</span> = <span class="code-string">'user.updated'</span>;
+message.<span class="code-property">data</span> = {
+    id: 42,
+    active: <span class="code-keyword">true</span>
+};
+
+socket.send(message.JSON);</code></pre>
+            </div>
+        </section>
+
+        <figure class="site-shell hero-art">
+            <img src="./assets/js-message-header.png" width="2172" height="724" alt="A structured message crossing a glowing normalization gate between browser and server endpoints">
+        </figure>
+
+        <section class="section section--bordered">
+            <div class="site-shell">
+                <div class="section-heading">
+                    <p class="eyebrow">Choose the page you need</p>
+                    <h2>Short routes, not one endless manual.</h2>
+                    <p>Each topic has a focused page, so implementation details stay close and navigation stays fast.</p>
+                </div>
+                <div class="grid">
+                    <article class="card"><span class="card__label">Build</span><h3>Start in minutes</h3><p>Install, create, serialize, and receive a message.</p><a class="card__link" href="./guide/">Get started →</a></article>
+                    <article class="card"><span class="card__label">Integrate</span><h3>Know the API</h3><p>See every field, method, return value, and failure mode.</p><a class="card__link" href="./api/">Open the API →</a></article>
+                    <article class="card"><span class="card__label">Design</span><h3>Lock the protocol</h3><p>Understand valid envelopes, ignored extras, and error recovery.</p><a class="card__link" href="./protocol/">Read the contract →</a></article>
+                    <article class="card"><span class="card__label">Verify</span><h3>Audit the evidence</h3><p>Review vanilla-test coverage, compatibility, and package checks.</p><a class="card__link" href="./testing/">Inspect testing →</a></article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section--bordered">
+            <div class="site-shell grid grid--two">
+                <div>
+                    <p class="eyebrow">Install</p>
+                    <h2>One tiny package. Nothing at runtime.</h2>
+                    <p class="lede">The public module uses only JavaScript and native JSON behavior. Modernized v3 is on <code>main</code>; npm <code>latest</code> remains v2.1.0 until a separate release.</p>
+                </div>
+                <div>
+                    <div class="code-block"><pre><code>npm install github:RIAEvangelist/js-message#main</code></pre></div>
+                    <div class="actions">
+                        <a class="button" href="https://www.npmjs.com/package/js-message">View on npm</a>
+                        <a class="button button--secondary" href="./browser/">Use it in a browser</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-shell site-footer__inner">
+            <p>js-message · MIT licensed · <span data-current-year></span></p>
+            <nav aria-label="Project links"><a href="./migration/">Migration</a><a href="https://github.com/RIAEvangelist/js-message">GitHub</a><a href="https://www.npmjs.com/package/js-message">npm</a><a href="https://github.com/RIAEvangelist/js-message/blob/main/licence">License</a></nav>
+        </div>
+    </footer>
+    <script type="module" src="./assets/site.js"></script>
+</body>
 </html>

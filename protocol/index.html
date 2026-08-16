@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="The js-message wire contract: valid envelopes, normalization rules, error envelopes, references, and native JSON boundaries.">
+    <meta name="color-scheme" content="dark">
+    <meta property="og:title" content="Protocol contract · js-message">
+    <meta property="og:description" content="Define what crosses the boundary and how js-message handles malformed input.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://riaevangelist.github.io/js-message/protocol/">
+    <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Protocol contract · js-message">
+    <meta name="twitter:description" content="Define what crosses the boundary and how js-message handles malformed input.">
+    <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <link rel="canonical" href="https://riaevangelist.github.io/js-message/protocol/">
+    <link rel="stylesheet" href="../assets/site.css">
+    <title>Protocol contract · js-message</title>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../">Overview</a></li><li><a href="../guide/">Start</a></li><li><a href="../api/">API</a></li><li><a href="./" aria-current="page">Protocol</a></li><li><a href="../browser/">Browser</a></li><li><a href="../examples/">Examples</a></li><li><a href="../testing/">Testing</a></li><li><a href="../migration/">Migration</a></li></ul></nav></div></header>
+
+    <main id="main-content">
+        <header class="site-shell page-hero"><p class="eyebrow">Protocol contract</p><h1>Two keys define the boundary.</h1><p class="lede">A loadable message is a non-array object with its own <code>type</code> and <code>data</code> properties. Serialization always emits those two keys and no others.</p></header>
+        <div class="site-shell page-layout">
+            <article class="prose">
+                <section id="envelope">
+                    <h2>The envelope</h2>
+                    <div class="code-block"><pre><code>{
+    "type": "inventory.changed",
+    "data": {
+        "sku": "A-104",
+        "available": 8
+    }
+}</code></pre></div>
+                    <p><code>type</code> chooses the route or event. <code>data</code> carries the payload. js-message does not impose a vocabulary or schema inside either value; applications can layer validation above this transport envelope.</p>
+                </section>
+
+                <section id="validation">
+                    <h2>What <code>load()</code> validates</h2>
+                    <div class="table-wrap"><table><thead><tr><th>Input</th><th>Outcome</th></tr></thead><tbody><tr><td>JSON string for an object with own <code>type</code> and <code>data</code></td><td><span class="metric">Loaded</span></td></tr><tr><td>Buffer, boxed string, typed view, or other JSON-coercible text</td><td><span class="metric">Loaded</span> after native text coercion and parsing.</td></tr><tr><td>Existing object with own <code>type</code> and <code>data</code></td><td><span class="metric">Loaded</span></td></tr><tr><td>Malformed JSON</td><td>Error envelope with a <code>SyntaxError</code>.</td></tr><tr><td><code>null</code>, primitive, or array</td><td>Error envelope with a <code>TypeError</code>.</td></tr><tr><td>Object missing either required own key</td><td>Error envelope with a <code>TypeError</code>.</td></tr></tbody></table></div>
+                    <div class="callout callout--warning"><strong>A valid JSON value is not always a valid message.</strong><p><code>[]</code>, <code>0</code>, <code>null</code>, and <code>{}</code> parse successfully, but none satisfy the envelope contract.</p></div>
+                </section>
+
+                <section id="normalization">
+                    <h2>Normalization rules</h2>
+                    <ul>
+                        <li>Extra keys in loaded input are ignored when the message is serialized.</li>
+                        <li>Object input keeps the original <code>data</code> reference; js-message does not clone payloads.</li>
+                        <li>Direct assignment to <code>type</code> and <code>data</code> is unrestricted for compatibility.</li>
+                        <li><code>JSON</code> uses native <code>JSON.stringify</code> behavior, including omission, conversion, and errors.</li>
+                        <li>A later valid <code>load()</code> replaces an earlier error state, so one instance can recover.</li>
+                    </ul>
+                    <div class="callout"><strong>Keep payloads wire-safe.</strong><p>If a message must cross JSON, prefer strings, numbers, booleans, null, arrays, and plain objects. Cycles and <code>BigInt</code> make native serialization throw.</p></div>
+                    <div class="actions"><a class="button" href="../api/">See exact API behavior</a><a class="button button--secondary" href="../examples/">Apply the contract</a></div>
+                </section>
+            </article>
+            <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#envelope">The envelope</a></li><li><a href="#validation">Validation</a></li><li><a href="#normalization">Normalization</a></li></ul></aside>
+        </div>
+    </main>
+
+    <footer class="site-footer"><div class="site-shell site-footer__inner"><p>js-message · MIT licensed · <span data-current-year></span></p><nav aria-label="Project links"><a href="../migration/">Migration</a><a href="https://github.com/RIAEvangelist/js-message">GitHub</a><a href="https://www.npmjs.com/package/js-message">npm</a><a href="https://github.com/RIAEvangelist/js-message/blob/main/licence">License</a></nav></div></footer>
+    <script type="module" src="../assets/site.js"></script>
+</body>
+</html>

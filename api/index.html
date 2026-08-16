@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Complete js-message API reference for the Message constructor, fields, JSON getter, toJSON, load, and package exports.">
+    <meta name="color-scheme" content="dark">
+    <meta property="og:title" content="API reference · js-message">
+    <meta property="og:description" content="Every js-message export, field, method, return value, and failure mode.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://riaevangelist.github.io/js-message/api/">
+    <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="API reference · js-message">
+    <meta name="twitter:description" content="Every js-message export, field, method, return value, and failure mode.">
+    <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <link rel="canonical" href="https://riaevangelist.github.io/js-message/api/">
+    <link rel="stylesheet" href="../assets/site.css">
+    <title>API reference · js-message</title>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../">Overview</a></li><li><a href="../guide/">Start</a></li><li><a href="./" aria-current="page">API</a></li><li><a href="../protocol/">Protocol</a></li><li><a href="../browser/">Browser</a></li><li><a href="../examples/">Examples</a></li><li><a href="../testing/">Testing</a></li><li><a href="../migration/">Migration</a></li></ul></nav></div></header>
+
+    <main id="main-content">
+        <header class="site-shell page-hero"><p class="eyebrow">API reference</p><h1>A four-part surface.</h1><p class="lede"><code>Message</code> exposes two mutable fields, one JSON getter, one native serialization method, and one loader.</p></header>
+        <div class="site-shell page-layout">
+            <article class="prose">
+                <section id="exports">
+                    <h2>Package exports</h2>
+                    <div class="table-wrap"><table><thead><tr><th>Import</th><th>Purpose</th></tr></thead><tbody><tr><td><code>js-message</code></td><td>Default and named <code>Message</code> exports from the canonical module.</td></tr><tr><td><code>js-message/Message.js</code></td><td>Supported legacy ES-module path; resolves to the same class.</td></tr><tr><td><code>js-message/js-message-vanilla.js</code></td><td>Side-effect entry that assigns <code>globalThis.Message</code>.</td></tr><tr><td><code>js-message/package.json</code></td><td>Package metadata for tools that explicitly need it.</td></tr></tbody></table></div>
+                    <div class="code-block"><pre><code>import Message, { Message as NamedMessage } from 'js-message';
+
+Message === NamedMessage; // true</code></pre></div>
+                </section>
+
+                <section id="constructor">
+                    <h2>Constructor and fields</h2>
+                    <div class="method-list">
+                        <article class="method"><h3>new Message([input])</h3><p>Creates an envelope with <code>type === ''</code> and an independent <code>data === {}</code>. When supplied, <code>input</code> is passed through <code>load()</code>.</p><dl><dt>input</dt><dd>Optional JSON string or message object.</dd><dt>returns</dt><dd>A new <code>Message</code> instance.</dd></dl></article>
+                        <article class="method"><h3>message.type</h3><p>Mutable, enumerable message or event discriminator. Direct assignment is intentionally unrestricted.</p><dl><dt>default</dt><dd>Empty string.</dd><dt>wire key</dt><dd><code>type</code></dd></dl></article>
+                        <article class="method"><h3>message.data</h3><p>Mutable, enumerable payload. Direct assignment follows native JSON behavior, including errors for cycles and <code>BigInt</code>.</p><dl><dt>default</dt><dd>Fresh empty object.</dd><dt>wire key</dt><dd><code>data</code></dd></dl></article>
+                    </div>
+                </section>
+
+                <section id="methods">
+                    <h2>Serialization and loading</h2>
+                    <div class="method-list">
+                        <article class="method"><h3>message.JSON</h3><p>Returns <code>JSON.stringify({ type: message.type, data: message.data })</code>. Instance extras are excluded.</p><dl><dt>returns</dt><dd>JSON string.</dd><dt>throws</dt><dd>Native <code>TypeError</code> for unsupported values such as cycles or <code>BigInt</code>.</dd></dl></article>
+                        <article class="method"><h3>message.toJSON()</h3><p>Returns a new plain <code>{ type, data }</code> object. Native <code>JSON.stringify(message)</code> calls this method automatically.</p><dl><dt>returns</dt><dd>Plain object with exactly two keys.</dd></dl></article>
+                        <article class="method"><h3>message.load(input)</h3><p>Loads a JSON string, a JSON-coercible text value, or an object with own <code>type</code> and <code>data</code> keys. Extra input keys are ignored.</p><dl><dt>returns</dt><dd><code>undefined</code>, preserving the legacy contract.</dd><dt>failure</dt><dd>Mutates the instance into an error envelope; complete JSON serialization still requires a JSON-safe preserved response.</dd></dl></article>
+                    </div>
+                </section>
+
+                <section id="errors">
+                    <h2>Error envelope</h2>
+                    <div class="code-block"><pre><code>{
+    type: 'error',
+    data: {
+        message: 'Invalid JSON response format',
+        err: SyntaxError | TypeError,
+        response: originalInput
+    }
+}</code></pre></div>
+                    <p>The live <code>err</code> remains an <code>Error</code> instance. Its JSON form includes stable <code>name</code> and <code>message</code> fields instead of collapsing to <code>{}</code>. The original response stays by reference, so cycles or <code>BigInt</code> still make native serialization throw.</p>
+                </section>
+            </article>
+            <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#exports">Exports</a></li><li><a href="#constructor">Constructor and fields</a></li><li><a href="#methods">Methods</a></li><li><a href="#errors">Error envelope</a></li></ul></aside>
+        </div>
+    </main>
+
+    <footer class="site-footer"><div class="site-shell site-footer__inner"><p>js-message · MIT licensed · <span data-current-year></span></p><nav aria-label="Project links"><a href="../migration/">Migration</a><a href="https://github.com/RIAEvangelist/js-message">GitHub</a><a href="https://www.npmjs.com/package/js-message">npm</a><a href="https://github.com/RIAEvangelist/js-message/blob/main/licence">License</a></nav></div></footer>
+    <script type="module" src="../assets/site.js"></script>
+</body>
+</html>

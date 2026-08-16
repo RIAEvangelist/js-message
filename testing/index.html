@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="How js-message is verified with vanilla-test in Node and Chrome, compatibility smoke tests, native coverage, and packed-package checks.">
+    <meta name="color-scheme" content="dark">
+    <meta property="og:title" content="Testing strategy · js-message">
+    <meta property="og:description" content="One vanilla-test protocol suite, real runtimes, native coverage, and package-boundary checks.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://riaevangelist.github.io/js-message/testing/">
+    <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Testing strategy · js-message">
+    <meta name="twitter:description" content="One vanilla-test protocol suite, real runtimes, native coverage, and package-boundary checks.">
+    <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <link rel="canonical" href="https://riaevangelist.github.io/js-message/testing/">
+    <link rel="stylesheet" href="../assets/site.css">
+    <title>Testing strategy · js-message</title>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../">Overview</a></li><li><a href="../guide/">Start</a></li><li><a href="../api/">API</a></li><li><a href="../protocol/">Protocol</a></li><li><a href="../browser/">Browser</a></li><li><a href="../examples/">Examples</a></li><li><a href="./" aria-current="page">Testing</a></li><li><a href="../migration/">Migration</a></li></ul></nav></div></header>
+
+    <main id="main-content">
+        <header class="site-shell page-hero"><p class="eyebrow">Testing strategy</p><h1>Test the contract at every edge.</h1><p class="lede">The shared protocol suite uses vanilla-test and executes the same untransformed module in Node.js and real Chrome coverage.</p></header>
+        <div class="site-shell page-layout">
+            <article class="prose">
+                <section id="suite">
+                    <h2>Shared vanilla-test suite</h2>
+                    <div class="table-wrap"><table><thead><tr><th>Area</th><th>Evidence</th></tr></thead><tbody><tr><td>Exports</td><td>Root default, root named, and legacy <code>Message.js</code> resolve to one class.</td></tr><tr><td>State</td><td>Fresh defaults, enumerability, instance isolation, and recovery.</td></tr><tr><td>Serialization</td><td>Exact two-key JSON, <code>toJSON()</code>, extras exclusion, and native failure semantics.</td></tr><tr><td>Loading</td><td>JSON strings, object input, nested values, malformed JSON, and invalid shapes.</td></tr><tr><td>Browser global</td><td>String/object loading, errors, and JSON parity with the ES module.</td></tr></tbody></table></div>
+                    <p>The protocol module records <span class="metric">12 focused checks</span>. Separate documentation and local-server suites treat pages, metadata, local links, package exports, security boundaries, workflows, and the generated header as tested repository contracts.</p>
+                </section>
+
+                <section id="commands">
+                    <h2>Local commands</h2>
+                    <div class="code-block"><pre><code>npm ci
+npm test
+npm run coverage:node
+npm run coverage:chrome
+npm start</code></pre></div>
+                    <p>Development and coverage use Node.js 22.12 or newer because vanilla-test v2 targets current Web-standard runtimes. The shipped js-message module retains its existing Node.js 13.2 engine floor and has a dependency-free compatibility smoke.</p>
+                </section>
+
+                <section id="gates">
+                    <h2>Coverage and delivery gates</h2>
+                    <ul>
+                        <li>Node and Chrome independently require 100% statements, branches, functions, and lines across the shipped modules.</li>
+                        <li>Linux, macOS, and Windows run the package suite on current Node releases.</li>
+                        <li>Legacy-compatible Node versions execute the dependency-free package smoke.</li>
+                        <li><code>npm pack</code> is inspected and installed in a clean temporary project before delivery.</li>
+                        <li>GitHub Pages receives an explicit allowlist only after required test jobs pass.</li>
+                    </ul>
+                    <div class="callout"><strong>Published code is the test target.</strong><p>The root package import, both supported deep paths, and the browser-global file are verified directly—no generated build stands between the tests and npm files.</p></div>
+                    <div class="actions"><a class="button" href="https://github.com/RIAEvangelist/js-message/actions/workflows/ci.yml">Open CI results</a><a class="button button--secondary" href="https://github.com/RIAEvangelist/js-message/blob/main/test/CI.js">Read the shared suite</a></div>
+                </section>
+            </article>
+            <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#suite">Shared suite</a></li><li><a href="#commands">Commands</a></li><li><a href="#gates">Delivery gates</a></li></ul></aside>
+        </div>
+    </main>
+
+    <footer class="site-footer"><div class="site-shell site-footer__inner"><p>js-message · MIT licensed · <span data-current-year></span></p><nav aria-label="Project links"><a href="../migration/">Migration</a><a href="https://github.com/RIAEvangelist/js-message">GitHub</a><a href="https://www.npmjs.com/package/js-message">npm</a><a href="https://github.com/RIAEvangelist/js-message/blob/main/licence">License</a></nav></div></footer>
+    <script type="module" src="../assets/site.js"></script>
+</body>
+</html>

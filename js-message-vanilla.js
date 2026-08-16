@@ -1,75 +1,126 @@
-(
-    function(){
-        function Message() {
-            Object.defineProperties(
-                this, {
-                    data: {
-                        enumerable: true,
-                        get: getData,
-                        set: setData
-                    },
-                    type: {
-                        enumerable: true,
-                        get: getType,
-                        set: setType
-                    },
-                    load:{
-                        enumarable:true,
-                        writable:false,
-                        value:parse
-                    },
-                    JSON: {
-                        enumerable: true,
-                        get: getJSON
-                    }
+(function exposeMessage(scope) {
+    const hasOwn = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
+
+    function makeSerializable(error) {
+        let name = 'Error';
+        let message = 'Unknown error';
+
+        try {
+            message = String(error);
+        } catch {}
+
+        if (error !== null && (typeof error === 'object' || typeof error === 'function')) {
+            try {
+                name = typeof error.name === 'string' ? error.name : name;
+            } catch {}
+
+            try {
+                message = typeof error.message === 'string' ? error.message : message;
+            } catch {}
+        }
+
+        function attachSerializer(serializable) {
+            Object.defineProperty(serializable, 'toJSON', {
+                configurable: true,
+                value() {
+                    return { name, message };
                 }
-            );
+            });
 
-            var type = '';
-            var data = {};
+            return serializable;
+        }
 
-            function getType() {
-                return type;
+        try {
+            if (error instanceof Error && Object.isExtensible(error)) {
+                return attachSerializer(error);
+            }
+        } catch {}
+
+        const replacement = new Error(message);
+        replacement.name = name;
+        return attachSerializer(replacement);
+    }
+
+    function parse(message) {
+        if (
+            message !== null &&
+            typeof message === 'object'
+        ) {
+            if (
+                !Array.isArray(message) &&
+                hasOwn(message, 'type') &&
+                hasOwn(message, 'data')
+            ) {
+                return message;
             }
 
-            function getData() {
-                return data;
+            if (
+                !Array.isArray(message) &&
+                (
+                    typeof message[Symbol.toPrimitive] === 'function' ||
+                    message.toString !== Object.prototype.toString
+                )
+            ) {
+                return JSON.parse(message);
             }
 
-            function getJSON() {
-                return JSON.stringify(
-                    {
-                        type: type,
-                        data: data
-                    }
-                );
-            }
+            return message;
+        }
 
-            function setType(value) {
-                type = value;
-            }
+        return JSON.parse(message);
+    }
 
-            function setData(value) {
-                data = value;
-            }
+    function requireEnvelope(message) {
+        if (message === null || typeof message !== 'object' || Array.isArray(message)) {
+            throw new TypeError('Expected a message object.');
+        }
 
-            function parse(message){
-                try{
-                    var message=JSON.parse(message);
-                    type=message.type;
-                    data=message.data;
-                }catch(err){
-                    var badMessage=message;
-                    type='error',
-                    data={
-                        message:'Invalid JSON response format',
-                        err:err,
-                        response:badMessage
-                    }
-                }
+        if (!hasOwn(message, 'type') || !hasOwn(message, 'data')) {
+            throw new TypeError('Expected own "type" and "data" properties.');
+        }
+
+        return message;
+    }
+
+    class Message {
+        type = '';
+        data = {};
+
+        constructor(message) {
+            if (arguments.length > 0) {
+                this.load(message);
             }
         }
 
-        window.Message=Message;
+        get JSON() {
+            return JSON.stringify({
+                type: this.type,
+                data: this.data
+            });
+        }
+
+        toJSON() {
+            return {
+                type: this.type,
+                data: this.data
+            };
+        }
+
+        load(message) {
+            try {
+                const parsed = requireEnvelope(parse(message));
+                this.type = parsed.type;
+                this.data = parsed.data;
+            } catch (error) {
+                this.type = 'error';
+                this.data = {
+                    message: 'Invalid JSON response format',
+                    err: makeSerializable(error),
+                    response: message
+                };
+            }
+        }
     }
-)();
+
+    scope.Message = Message;
+}(globalThis));

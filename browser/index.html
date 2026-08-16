@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Use js-message in browsers through native ES modules, import maps, the legacy browser global, WebSockets, and workers.">
+    <meta name="color-scheme" content="dark">
+    <meta property="og:title" content="Browser use · js-message">
+    <meta property="og:description" content="Native ES modules and a tested browser-global entry, with no bundle required.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://riaevangelist.github.io/js-message/browser/">
+    <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Browser use · js-message">
+    <meta name="twitter:description" content="Native ES modules and a tested browser-global entry, with no bundle required.">
+    <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <link rel="canonical" href="https://riaevangelist.github.io/js-message/browser/">
+    <link rel="stylesheet" href="../assets/site.css">
+    <title>Browser use · js-message</title>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../">Overview</a></li><li><a href="../guide/">Start</a></li><li><a href="../api/">API</a></li><li><a href="../protocol/">Protocol</a></li><li><a href="./" aria-current="page">Browser</a></li><li><a href="../examples/">Examples</a></li><li><a href="../testing/">Testing</a></li><li><a href="../migration/">Migration</a></li></ul></nav></div></header>
+
+    <main id="main-content">
+        <header class="site-shell page-hero"><p class="eyebrow">Browser use</p><h1>Native modules or one global.</h1><p class="lede">Choose standards-first ES modules for new work, or keep an existing script-tag integration with the supported browser-global file.</p></header>
+        <div class="site-shell page-layout">
+            <article class="prose">
+                <section id="modules">
+                    <h2>Native ES modules</h2>
+                    <p>When your server exposes <code>node_modules</code> or copies package assets into a public directory, import the canonical module directly.</p>
+                    <div class="code-block"><pre><code>&lt;script type="module"&gt;
+    import Message from './node_modules/js-message/index.js';
+
+    const ready = new Message({
+        type: 'page.ready',
+        data: { path: location.pathname }
+    });
+
+    console.log(ready.JSON);
+&lt;/script&gt;</code></pre></div>
+                    <p>A bundler may still resolve <code>import Message from 'js-message'</code>, but js-message itself does not require one.</p>
+                </section>
+
+                <section id="global">
+                    <h2>Browser-global entry</h2>
+                    <div class="code-block"><pre><code>&lt;script src="./node_modules/js-message/js-message-vanilla.js"&gt;&lt;/script&gt;
+&lt;script&gt;
+    const message = new Message();
+    message.type = 'legacy.ready';
+    message.data = { ok: true };
+&lt;/script&gt;</code></pre></div>
+                    <p>The side-effect file assigns the class to <code>globalThis.Message</code>. It is behaviorally tested against the module class, including object and JSON loading, invalid shapes, and serializable errors.</p>
+                    <div class="callout callout--coral"><strong>Use a closing script tag.</strong><p>HTML script elements are not self-closing. The explicit <code>&lt;/script&gt;</code> prevents the browser from treating later markup as script content.</p></div>
+                </section>
+
+                <section id="sockets">
+                    <h2>WebSockets and workers</h2>
+                    <div class="code-block"><pre><code>const socket = new WebSocket(url);
+
+socket.addEventListener('message', (event) =&gt; {
+    const message = new Message(event.data);
+
+    if (message.type === 'error') {
+        console.error(message.data.err);
+        return;
+    }
+
+    dispatch(message.type, message.data);
+});</code></pre></div>
+                    <p>In a worker, use the ES-module entry or load the global file through your existing worker strategy. The global entry targets <code>globalThis</code>, not only <code>window</code>.</p>
+                    <div class="actions"><a class="button" href="../examples/">See full boundary recipes</a><a class="button button--secondary" href="../protocol/">Review the contract</a></div>
+                </section>
+            </article>
+            <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#modules">Native modules</a></li><li><a href="#global">Browser global</a></li><li><a href="#sockets">Sockets and workers</a></li></ul></aside>
+        </div>
+    </main>
+
+    <footer class="site-footer"><div class="site-shell site-footer__inner"><p>js-message · MIT licensed · <span data-current-year></span></p><nav aria-label="Project links"><a href="../migration/">Migration</a><a href="https://github.com/RIAEvangelist/js-message">GitHub</a><a href="https://www.npmjs.com/package/js-message">npm</a><a href="https://github.com/RIAEvangelist/js-message/blob/main/licence">License</a></nav></div></footer>
+    <script type="module" src="../assets/site.js"></script>
+</body>
+</html>

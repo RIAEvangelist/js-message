@@ -1,17 +1,44 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>vanilla-test node module test report</title>
-        <script async type='module' src='./CI.js'></script>
-        <style>
-            body{
-                font-family: arial;
-            }
-        </style>
-    </head>
-    <body>
-        <h1>vanilla-test report</h1>
-        <h3>node module browser test</h3>
-        <p>We are now running the actual node.js test files in the browser. Results logged in your console.</p>
-    </body>
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>Live browser verification · js-message</title>
+    <script type="importmap">
+    {
+        "imports": {
+            "vanilla-test": "../node_modules/vanilla-test/index.js",
+            "ansi-colors-es6": "../node_modules/ansi-colors-es6/index.js",
+            "strong-type": "../node_modules/strong-type/index.js"
+        }
+    }
+    </script>
+    <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <main id="main-content" class="site-shell live-shell">
+        <p class="eyebrow">Live runtime verification</p>
+        <h1>Testing the real browser module.</h1>
+        <p class="lede">This page runs the same untransformed vanilla-test suite used by Node and browser coverage.</p>
+        <section class="result-panel" aria-live="polite">
+            <h2 id="status">Running checks…</h2>
+            <p id="summary">The result will appear here.</p>
+        </section>
+    </main>
+    <script type="module">
+        import run from './CI.js';
+
+        try {
+            const result = await run();
+            globalThis.__JS_MESSAGE_TEST_RESULT__ = result;
+            document.querySelector('#status').textContent = result.ok ? 'All checks passed' : 'Checks failed';
+            document.querySelector('#summary').textContent = `${result.passed.length}/${result.total} checks passed.`;
+        } catch (error) {
+            document.querySelector('#status').textContent = 'Harness error';
+            document.querySelector('#summary').textContent = error instanceof Error ? error.message : String(error);
+        }
+    </script>
+</body>
 </html>

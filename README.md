@@ -1,105 +1,130 @@
+![js-message carrying a structured message through a normalization gate between browser and server runtimes](https://raw.githubusercontent.com/RIAEvangelist/js-message/main/assets/js-message-header.png)
+
 # js-message
-Normalized JS & JSON Message and event Protocol for node.js, vanilla.js (plain old javascript), react.js, websockets, rest api's, node-ipc, and any other protocol that might use a js object and or a JSON string.  
 
-js-message allows for seamless conversion of JSON messages and events to JS objects for a normalized implementation on the server and in the client without needing to concern yourself with JSON intermediaries and custom parsers.  
+A tiny, normalized JavaScript and JSON message envelope for every runtime boundary.
 
-Things are just easier when you normalize them.  
+[Documentation](https://riaevangelist.github.io/js-message/) · [Get started](https://riaevangelist.github.io/js-message/guide/) · [API](https://riaevangelist.github.io/js-message/api/) · [Protocol](https://riaevangelist.github.io/js-message/protocol/) · [Browser](https://riaevangelist.github.io/js-message/browser/) · [Examples](https://riaevangelist.github.io/js-message/examples/) · [Testing](https://riaevangelist.github.io/js-message/testing/) · [Migration](https://riaevangelist.github.io/js-message/migration/)
 
-npm js-message info :  [See npm trends and stats for js-message](http://npm-stat.com/charts.html?package=js-message&author=&from=&to=)  
-![js-message npm version](https://img.shields.io/npm/v/js-message.svg) ![supported node version for js-message](https://img.shields.io/node/v/js-message.svg) ![total npm downloads for js-message](https://img.shields.io/npm/dt/js-message.svg) ![monthly npm downloads for js-message](https://img.shields.io/npm/dm/js-message.svg) ![npm licence for js-message](https://img.shields.io/npm/l/js-message.svg)
+[![CI](https://github.com/RIAEvangelist/js-message/actions/workflows/ci.yml/badge.svg)](https://github.com/RIAEvangelist/js-message/actions/workflows/ci.yml)
+[![npm version](https://img.shields.io/npm/v/js-message.svg)](https://www.npmjs.com/package/js-message)
+[![Node support](https://img.shields.io/node/v/js-message.svg)](package.json)
+[![runtime dependencies](https://img.shields.io/badge/runtime_dependencies-0-7cf2a6)](package.json)
+[![license](https://img.shields.io/github/license/RIAEvangelist/js-message.svg)](licence)
 
-` npm install --save js-message `  
+> **v3 status:** this documentation tracks modernized `main`, prepared as version 3.0.0 and not yet published to npm. Install it now with `npm install github:RIAEvangelist/js-message#main`. The npm `latest` tag remains v2.1.0 until a separate release is authorized.
 
-[![RIAEvangelist](https://avatars3.githubusercontent.com/u/369041?v=3&s=100)](https://github.com/RIAEvangelist)
+`js-message` keeps the transport contract deliberately small:
 
-GitHub info :  
-[![js-message GitHub Release](https://img.shields.io/github/release/RIAEvangelist/js-message.svg) ![GitHub license js-message license](https://img.shields.io/github/license/RIAEvangelist/js-message.svg) ![open issues for js-message on GitHub](https://img.shields.io/github/issues/RIAEvangelist/js-message.svg)](http://riaevangelist.github.io/js-message/)
+```js
+{
+    type: 'event.or.message.name',
+    data: { any: 'JSON-safe payload' }
+}
+```
 
-[js-message site](http://riaevangelist.github.io/js-message/)
+Create the same shape in Node.js, browsers, WebSockets, workers, IPC, fetch, Electron, or any other JavaScript host. The package has no runtime dependencies, build, transpiler, or framework binding.
 
+## Install
 
-|method or key  |type   |mutable|description|
-|---------------|-------|-------|-----------|
-|type           |String |true   |the type of message|
-|data           |Object |true   |the message data or payload|
-|load           |func   |false  |load a message from JSON, this will return a message with the type of error if not valid JSON|
-|JSON           |String |not by user|JSON representation of the message|
+```sh
+npm install github:RIAEvangelist/js-message#main
+```
 
-### Creating a Message Object
+## Quick start
 
-For the browser you can do either an import with the path to make the first http request for your module, and have it cached for other scripts thereafter ***OR*** you can import it with the `<script>` tag upfront which automatically loads as `defer` so it doesn't interrupt the parser.
+```js
+import Message from 'js-message';
 
+const outgoing = new Message();
+outgoing.type = 'user.updated';
+outgoing.data = {
+    id: 42,
+    active: true
+};
+
+socket.send(outgoing.JSON);
+```
+
+Load the value at the other boundary:
+
+```js
+const incoming = new Message(receivedValue);
+
+if (incoming.type === 'error') {
+    console.error(incoming.data.err);
+} else {
+    route(incoming.type, incoming.data);
+}
+```
+
+The constructor and `load()` accept either a JSON string or an existing message object.
+
+## Contract
+
+| Surface | Behavior |
+| --- | --- |
+| `new Message([input])` | Creates fresh `type` and `data` fields; optionally loads an envelope. |
+| `message.type` | Mutable message or event discriminator. Defaults to `''`. |
+| `message.data` | Mutable payload. Defaults to a fresh `{}` per instance. |
+| `message.JSON` | JSON string containing exactly `{ type, data }`. |
+| `message.toJSON()` | Plain `{ type, data }` object for structured-clone transports and `JSON.stringify`. |
+| `message.load(input)` | Loads a valid envelope; returns `undefined` for legacy compatibility. |
+
+A loadable envelope must be a non-array object with its own `type` and `data` keys. Malformed JSON or an invalid shape produces a recoverable error message:
+
+```js
+{
+    type: 'error',
+    data: {
+        message: 'Invalid JSON response format',
+        err: new SyntaxError('…'), // shape errors use TypeError
+        response: originalInput
+    }
+}
+```
+
+The live `err` remains an `Error`. Its JSON form includes `name` and `message` instead of collapsing to `{}` when the preserved response is JSON-safe. A cyclic or `BigInt` response still follows native JSON behavior and throws.
+
+## Imports
+
+```js
+// Canonical ES module
+import Message, { Message as NamedMessage } from 'js-message';
+
+// Supported legacy ES-module path
+import LegacyMessage from 'js-message/Message.js';
+```
+
+For a classic browser script:
 
 ```html
-<script type="module" src='/path/to/module/js-message-vanilla.js' />
-
-```
-Both node and the browser now support `import` statements. If you use relative pathing you can use the same exact code from node in the browser without even transpiling much the less bundling.
-
-```javascript
-
-    //works for browser natively AND node natively
-    import { default as Message } from './node_modules/js-message/Message.js';
-    //works for browser transpiled AND node natively
-    import { default as Message } from 'js-message';
-
-    var myMessage=new Message;
-    myMessage.type='message or event type';
-    myMessage.data.something='something';
-    myMessage.data.stuff=[1,2,3,4,5]
-
-    console.log(myMessage.JSON);
-
+<script src="./node_modules/js-message/js-message-vanilla.js"></script>
+<script>
+    const message = new Message({
+        type: 'page.ready',
+        data: { ok: true }
+    });
+</script>
 ```
 
-### Creating a Message From JSON
+The global entry assigns `globalThis.Message` and is tested against the ES-module contract.
 
-```javascript
+## Verification
 
-    //works for browser natively AND node natively
-    import { default as Message } from './node_modules/js-message/Message.js';
-    //works for browser transpiled AND node natively
-    import { default as Message } from 'js-message';
+The protocol suite uses [vanilla-test](https://www.npmjs.com/package/vanilla-test) and runs as one untransformed module in Node.js and Chrome. CI also checks documentation links and metadata, the declared compatibility surface, native coverage, and the packed npm artifact.
 
-    //lets say we have the above example running on
-    //a websocket server sending js-messages as JSON
-    //
-    //and lets say this is the client in the browser
-    ws.on(
-        'message',
-        handleMessage
-    );
-
-    handleMessage(e){
-        var message=new Message;
-        message.load(e.data);
-
-        console.log(message.type, message.data);
-    }
-
+```sh
+npm ci
+npm test
+npm run coverage:node
+npm run coverage:chrome
+npm run test:package
+npm start
 ```
 
-### Sending a Message Object via WebSocket
+Development and coverage require Node.js 22.12 or newer because vanilla-test v2 targets current Web-standard runtimes. The shipped module retains its existing Node.js `>=13.2.0` engine declaration and has a dependency-free compatibility smoke.
 
-```javascript
+## License
 
-    //works for browser natively AND node natively
-    import { default as Message } from './node_modules/js-message/Message.js';
-    //works for browser transpiled AND node natively
-    import { default as Message } from 'js-message';
-
-    //client example, but works the same on server too!
-    var ws=new WebSocket('ws://myawesomeWS:8000');
-
-    var myMessage=new Message;
-    myMessage.type='setUsername';
-    myMessage.data.username='sideshow bob';
-
-    ws.send(myMessage.JSON);
-
-```
-
-
----
-
-This work is licenced via the MIT Licence
+[MIT](licence)

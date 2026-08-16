@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Migration notes for the modernized js-message package, including preserved imports, object loading, stricter envelope validation, and serializable errors.">
+    <meta name="color-scheme" content="dark">
+    <meta property="og:title" content="Migration guide · js-message">
+    <meta property="og:description" content="What stays compatible and what becomes more predictable on modernized main.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://riaevangelist.github.io/js-message/migration/">
+    <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Migration guide · js-message">
+    <meta name="twitter:description" content="What stays compatible and what becomes more predictable on modernized main.">
+    <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <link rel="canonical" href="https://riaevangelist.github.io/js-message/migration/">
+    <link rel="stylesheet" href="../assets/site.css">
+    <title>Migration guide · js-message</title>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../">Overview</a></li><li><a href="../guide/">Start</a></li><li><a href="../api/">API</a></li><li><a href="../protocol/">Protocol</a></li><li><a href="../browser/">Browser</a></li><li><a href="../examples/">Examples</a></li><li><a href="../testing/">Testing</a></li><li><a href="./" aria-current="page">Migration</a></li></ul></nav></div></header>
+
+    <main id="main-content">
+        <header class="site-shell page-hero"><p class="eyebrow">Migration to v3</p><h1>Keep the path. Gain a contract.</h1><p class="lede">Modernized main preserves the established imports and mutable message surface while making object input, invalid shapes, and error serialization explicit.</p></header>
+        <div class="site-shell page-layout">
+            <article class="prose">
+                <div class="callout"><strong>v3 is a preview on <code>main</code>.</strong><p>The source is prepared as 3.0.0 but has not been published to npm. Install the GitHub <code>main</code> branch to evaluate this contract; npm still serves 2.1.0 until a separate release is authorized.</p></div>
+                <section id="compatible">
+                    <h2>What stays compatible</h2>
+                    <ul>
+                        <li><code>import Message from 'js-message'</code> remains the canonical package import.</li>
+                        <li><code>js-message/Message.js</code> remains a supported deep ES-module path.</li>
+                        <li><code>js-message/js-message-vanilla.js</code> still creates <code>globalThis.Message</code>.</li>
+                        <li><code>type</code> and <code>data</code> remain mutable, enumerable instance fields.</li>
+                        <li><code>JSON</code> remains a getter and <code>load()</code> still returns <code>undefined</code>.</li>
+                        <li>Buffer, boxed-string, typed-view, and custom JSON-coercible text inputs remain accepted.</li>
+                        <li>The declared Node.js engine floor remains <code>&gt;=13.2.0</code>.</li>
+                    </ul>
+                </section>
+
+                <section id="changed">
+                    <h2>What becomes stricter</h2>
+                    <div class="table-wrap"><table><thead><tr><th>Earlier behavior</th><th>Modernized behavior</th></tr></thead><tbody><tr><td>Valid JSON such as <code>{}</code>, <code>[]</code>, or <code>0</code> could silently leave fields undefined.</td><td>Any value without an own <code>type</code> and <code>data</code> pair becomes an error envelope.</td></tr><tr><td>The browser global and ES-module implementations could drift.</td><td>Both surfaces share the same tested contract and recovery behavior.</td></tr><tr><td>Serialized native errors collapsed to <code>{}</code>.</td><td>Error JSON exposes stable <code>name</code> and <code>message</code> fields while the live value remains an <code>Error</code>.</td></tr><tr><td>The browser-global script installed own <code>JSON</code> and <code>load</code> properties.</td><td>They are non-enumerable prototype members, matching the ES-module class. Native <code>JSON.stringify()</code> now uses the normalized two-key envelope.</td></tr></tbody></table></div>
+                    <div class="callout callout--warning"><strong>Audit code that relied on incomplete envelopes.</strong><p>If your receiver intentionally sent objects without both keys, add the missing key or branch on <code>message.type === 'error'</code>.</p></div>
+                    <p>An invalid cyclic or <code>BigInt</code> response is retained for debugging. Native serialization can still throw while that response is present; the error object itself remains serializable.</p>
+                </section>
+
+                <section id="new">
+                    <h2>New supported conveniences</h2>
+                    <div class="code-block"><pre><code>const fromObject = new Message({
+    type: 'ready',
+    data: { ok: true }
+});
+
+const fromJSON = new Message(
+    '{"type":"ready","data":{"ok":true}}'
+);
+
+JSON.stringify(fromObject) === fromObject.JSON; // true</code></pre></div>
+                    <p>Constructor input, object loading, and <code>toJSON()</code> make js-message fit both text and structured-clone transports without replacing its original API.</p>
+                    <div class="actions"><a class="button" href="../guide/">Use the modern surface</a><a class="button button--secondary" href="https://github.com/RIAEvangelist/js-message/blob/main/MIGRATION.md">Read the repository migration notes</a></div>
+                </section>
+            </article>
+            <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#compatible">Compatible behavior</a></li><li><a href="#changed">Stricter behavior</a></li><li><a href="#new">New conveniences</a></li></ul></aside>
+        </div>
+    </main>
+
+    <footer class="site-footer"><div class="site-shell site-footer__inner"><p>js-message · MIT licensed · <span data-current-year></span></p><nav aria-label="Project links"><a href="./">Migration</a><a href="https://github.com/RIAEvangelist/js-message">GitHub</a><a href="https://www.npmjs.com/package/js-message">npm</a><a href="https://github.com/RIAEvangelist/js-message/blob/main/licence">License</a></nav></div></footer>
+    <script type="module" src="../assets/site.js"></script>
+</body>
+</html>

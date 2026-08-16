@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Copyable js-message recipes for WebSockets, fetch, workers, and Node child-process IPC.">
+    <meta name="color-scheme" content="dark">
+    <meta property="og:title" content="Boundary examples · js-message">
+    <meta property="og:description" content="WebSocket, fetch, worker, and process recipes using one normalized message shape.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://riaevangelist.github.io/js-message/examples/">
+    <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Boundary examples · js-message">
+    <meta name="twitter:description" content="WebSocket, fetch, worker, and process recipes using one normalized message shape.">
+    <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <link rel="canonical" href="https://riaevangelist.github.io/js-message/examples/">
+    <link rel="stylesheet" href="../assets/site.css">
+    <title>Boundary examples · js-message</title>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../">Overview</a></li><li><a href="../guide/">Start</a></li><li><a href="../api/">API</a></li><li><a href="../protocol/">Protocol</a></li><li><a href="../browser/">Browser</a></li><li><a href="./" aria-current="page">Examples</a></li><li><a href="../testing/">Testing</a></li><li><a href="../migration/">Migration</a></li></ul></nav></div></header>
+
+    <main id="main-content">
+        <header class="site-shell page-hero"><p class="eyebrow">Boundary examples</p><h1>Use the same envelope everywhere.</h1><p class="lede">These recipes keep transport details outside the message contract. Each receiver creates or loads a <code>Message</code>, then routes <code>type</code> and <code>data</code>.</p></header>
+        <div class="site-shell page-layout">
+            <article class="prose">
+                <section id="websocket">
+                    <h2>WebSocket client</h2>
+                    <div class="code-block"><pre><code>import Message from 'js-message';
+
+const outgoing = new Message({
+    type: 'chat.send',
+    data: { text: 'Hello' }
+});
+
+socket.send(outgoing.JSON);
+
+socket.addEventListener('message', ({ data }) =&gt; {
+    const incoming = new Message(data);
+    handle(incoming.type, incoming.data);
+});</code></pre></div>
+                </section>
+
+                <section id="fetch">
+                    <h2>Fetch request and response</h2>
+                    <div class="code-block"><pre><code>const request = new Message({
+    type: 'profile.read',
+    data: { id: 42 }
+});
+
+const response = await fetch('/messages', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: request.JSON
+});
+
+const incoming = new Message(await response.text());</code></pre></div>
+                </section>
+
+                <section id="worker">
+                    <h2>Web Worker</h2>
+                    <div class="code-block"><pre><code>// page
+worker.postMessage(new Message({
+    type: 'image.resize',
+    data: { width: 640 }
+}).toJSON());
+
+// worker
+self.addEventListener('message', ({ data }) =&gt; {
+    const message = new Message(data);
+    resize(message.data);
+});</code></pre></div>
+                    <p>Structured clone can carry the plain object from <code>toJSON()</code> without turning it into text first.</p>
+                </section>
+
+                <section id="ipc">
+                    <h2>Node child-process IPC</h2>
+                    <div class="code-block"><pre><code>// parent
+child.send(new Message({
+    type: 'job.run',
+    data: { id: 'job_8' }
+}).toJSON());
+
+// child
+process.on('message', (value) =&gt; {
+    const message = new Message(value);
+    run(message.data);
+});</code></pre></div>
+                    <div class="callout"><strong>Choose text or objects at the transport edge.</strong><p>Use <code>message.JSON</code> for text transports and <code>message.toJSON()</code> for structured-clone or object transports.</p></div>
+                </section>
+            </article>
+            <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#websocket">WebSocket</a></li><li><a href="#fetch">Fetch</a></li><li><a href="#worker">Web Worker</a></li><li><a href="#ipc">Node IPC</a></li></ul></aside>
+        </div>
+    </main>
+
+    <footer class="site-footer"><div class="site-shell site-footer__inner"><p>js-message · MIT licensed · <span data-current-year></span></p><nav aria-label="Project links"><a href="../migration/">Migration</a><a href="https://github.com/RIAEvangelist/js-message">GitHub</a><a href="https://www.npmjs.com/package/js-message">npm</a><a href="https://github.com/RIAEvangelist/js-message/blob/main/licence">License</a></nav></div></footer>
+    <script type="module" src="../assets/site.js"></script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Install js-message, create a normalized message, send its JSON, and load it at the receiving boundary.">
+    <meta name="color-scheme" content="dark">
+    <meta property="og:title" content="Get started · js-message">
+    <meta property="og:description" content="Create and round-trip your first normalized JavaScript message.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://riaevangelist.github.io/js-message/guide/">
+    <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Get started · js-message">
+    <meta name="twitter:description" content="Create and round-trip your first normalized JavaScript message.">
+    <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <link rel="canonical" href="https://riaevangelist.github.io/js-message/guide/">
+    <link rel="stylesheet" href="../assets/site.css">
+    <title>Get started · js-message</title>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../">Overview</a></li><li><a href="./" aria-current="page">Start</a></li><li><a href="../api/">API</a></li><li><a href="../protocol/">Protocol</a></li><li><a href="../browser/">Browser</a></li><li><a href="../examples/">Examples</a></li><li><a href="../testing/">Testing</a></li><li><a href="../migration/">Migration</a></li></ul></nav></div></header>
+
+    <main id="main-content">
+        <header class="site-shell page-hero"><p class="eyebrow">Get started</p><h1>Cross your first boundary.</h1><p class="lede">Install one zero-dependency module, create a <code>{ type, data }</code> envelope, and use the same shape on both sides of the wire.</p></header>
+        <div class="site-shell page-layout">
+            <article class="prose">
+                <section id="install">
+                    <h2>1. Install and import</h2>
+                    <div class="code-block"><pre><code>npm install github:RIAEvangelist/js-message#main</code></pre></div>
+                    <div class="code-block"><pre><code>import Message from 'js-message';</code></pre></div>
+                    <p>This installs the modernized v3 source from <code>main</code>. The npm <code>latest</code> tag remains v2.1.0 until a separate release. The package is a native ES module with no runtime dependency or compile step.</p>
+                </section>
+
+                <section id="create">
+                    <h2>2. Create and serialize</h2>
+                    <div class="code-block"><pre><code>const message = new Message();
+
+message.type = 'order.created';
+message.data = {
+    id: 'ord_481',
+    total: 27.50
+};
+
+transport.send(message.JSON);</code></pre></div>
+                    <p><code>message.JSON</code> is a string containing only <code>type</code> and <code>data</code>. Other properties you add to the instance stay local.</p>
+                    <div class="callout"><strong>Already have an envelope?</strong><p>Pass a JSON string or an object directly to the constructor: <code>new Message(input)</code>.</p></div>
+                </section>
+
+                <section id="receive">
+                    <h2>3. Load and branch</h2>
+                    <div class="code-block"><pre><code>const incoming = new Message();
+incoming.load(receivedValue);
+
+if (incoming.type === 'error') {
+    console.error(incoming.data.err);
+} else {
+    route(incoming.type, incoming.data);
+}</code></pre></div>
+                    <p><code>load()</code> accepts a JSON string or an existing object. A malformed string or invalid envelope becomes a recoverable <code>type: 'error'</code> message instead of escaping from <code>load()</code>.</p>
+                    <div class="actions"><a class="button" href="../protocol/">Understand valid envelopes</a><a class="button button--secondary" href="../examples/">Copy a complete example</a></div>
+                </section>
+            </article>
+            <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#install">Install and import</a></li><li><a href="#create">Create and serialize</a></li><li><a href="#receive">Load and branch</a></li></ul></aside>
+        </div>
+    </main>
+
+    <footer class="site-footer"><div class="site-shell site-footer__inner"><p>js-message · MIT licensed · <span data-current-year></span></p><nav aria-label="Project links"><a href="../migration/">Migration</a><a href="https://github.com/RIAEvangelist/js-message">GitHub</a><a href="https://www.npmjs.com/package/js-message">npm</a><a href="https://github.com/RIAEvangelist/js-message/blob/main/licence">License</a></nav></div></footer>
+    <script type="module" src="../assets/site.js"></script>
+</body>
+</html>

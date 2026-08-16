@@ -1,0 +1,32 @@
+{
+  "entry": "./test/CI.js",
+  "reportsDirectory": "./coverage",
+  "thresholds": {
+    "statements": 100,
+    "branches": 100,
+    "functions": 100,
+    "lines": 100
+  },
+  "node": {
+    "include": [
+      "index.js",
+      "Message.js",
+      "js-message-vanilla.js"
+    ]
+  },
+  "chrome": {
+    "include": [
+      "index.js",
+      "Message.js",
+      "js-message-vanilla.js"
+    ],
+    "imports": {
+      "vanilla-test": "./node_modules/vanilla-test/index.js",
+      "ansi-colors-es6": "./node_modules/ansi-colors-es6/index.js",
+      "strong-type": "./node_modules/strong-type/index.js"
+    },
+    "headless": true,
+    "executablePath": null
+  },
+  "timeoutMs": 30000
+}
