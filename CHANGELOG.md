@@ -2,7 +2,7 @@
 
 All notable changes to js-message are documented here.
 
-## 3.0.0 - Unreleased
+## 3.0.0 - 2026-08-16
 
 ### Added
 

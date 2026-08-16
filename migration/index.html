@@ -6,14 +6,14 @@
     <meta name="description" content="Migration notes for the modernized js-message package, including preserved imports, object loading, stricter envelope validation, and serializable errors.">
     <meta name="color-scheme" content="dark">
     <meta property="og:title" content="Migration guide · js-message">
-    <meta property="og:description" content="What stays compatible and what becomes more predictable on modernized main.">
+    <meta property="og:description" content="What stays compatible and what becomes more predictable in js-message 3.">
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://riaevangelist.github.io/js-message/migration/">
     <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
     <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Migration guide · js-message">
-    <meta name="twitter:description" content="What stays compatible and what becomes more predictable on modernized main.">
+    <meta name="twitter:description" content="What stays compatible and what becomes more predictable in js-message 3.">
     <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
     <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
     <link rel="canonical" href="https://riaevangelist.github.io/js-message/migration/">
@@ -25,10 +25,10 @@
     <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../">Overview</a></li><li><a href="../guide/">Start</a></li><li><a href="../api/">API</a></li><li><a href="../protocol/">Protocol</a></li><li><a href="../browser/">Browser</a></li><li><a href="../examples/">Examples</a></li><li><a href="../testing/">Testing</a></li><li><a href="./" aria-current="page">Migration</a></li></ul></nav></div></header>
 
     <main id="main-content">
-        <header class="site-shell page-hero"><p class="eyebrow">Migration to v3</p><h1>Keep the path. Gain a contract.</h1><p class="lede">Modernized main preserves the established imports and mutable message surface while making object input, invalid shapes, and error serialization explicit.</p></header>
+        <header class="site-shell page-hero"><p class="eyebrow">Migration to v3</p><h1>Keep the path. Gain a contract.</h1><p class="lede">Version 3 preserves the established imports and mutable message surface while making object input, invalid shapes, and error serialization explicit.</p></header>
         <div class="site-shell page-layout">
             <article class="prose">
-                <div class="callout"><strong>v3 is a preview on <code>main</code>.</strong><p>The source is prepared as 3.0.0 but has not been published to npm. Install the GitHub <code>main</code> branch to evaluate this contract; npm still serves 2.1.0 until a separate release is authorized.</p></div>
+                <div class="callout"><strong>Version 3.0.0 is available on npm.</strong><p>Install it with <code>npm install js-message</code>. Review the stricter envelope validation and browser-global descriptor changes below before upgrading an existing integration.</p></div>
                 <section id="compatible">
                     <h2>What stays compatible</h2>
                     <ul>

@@ -12,7 +12,7 @@ A tiny, normalized JavaScript and JSON message envelope for every runtime bounda
 [![runtime dependencies](https://img.shields.io/badge/runtime_dependencies-0-7cf2a6)](package.json)
 [![license](https://img.shields.io/github/license/RIAEvangelist/js-message.svg)](licence)
 
-> **v3 status:** this documentation tracks modernized `main`, prepared as version 3.0.0 and not yet published to npm. Install it now with `npm install github:RIAEvangelist/js-message#main`. The npm `latest` tag remains v2.1.0 until a separate release is authorized.
+> **Current release:** js-message 3.0.0 is available on npm. Existing users should review the [v3 migration guide](https://riaevangelist.github.io/js-message/migration/) before upgrading.
 
 `js-message` keeps the transport contract deliberately small:
 
@@ -28,7 +28,7 @@ Create the same shape in Node.js, browsers, WebSockets, workers, IPC, fetch, Ele
 ## Install
 
 ```sh
-npm install github:RIAEvangelist/js-message#main
+npm install js-message
 ```
 
 ## Quick start

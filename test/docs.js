@@ -135,9 +135,30 @@ async function run() {
         const readme = read('README.md');
         assert(readme.startsWith('![js-message'), 'README must start with the generated header.');
         assert(readme.includes('https://raw.githubusercontent.com/RIAEvangelist/js-message/main/assets/js-message-header.png'), 'README header path is missing.');
+        assert(readme.includes('npm install js-message'), 'README must install the published npm package.');
         for (const route of ['guide/', 'api/', 'protocol/', 'browser/', 'examples/', 'testing/', 'migration/']) {
             assert(readme.includes(`https://riaevangelist.github.io/js-message/${route}`), `README is missing ${route}.`);
         }
+    });
+
+    await check('release documentation identifies published version 3.0.0', () => {
+        const releaseDocuments = [
+            'README.md',
+            'index.html',
+            'guide/index.html',
+            'migration/index.html'
+        ];
+
+        for (const document of releaseDocuments) {
+            const content = read(document);
+            assert(content.includes('3.0.0'), `${document} does not identify version 3.0.0.`);
+            assert(!content.includes('github:RIAEvangelist/js-message#main'), `${document} still installs from GitHub main.`);
+            assert(!/not (?:yet )?published|v3 preview|until a separate release/i.test(content), `${document} still describes a preview release.`);
+        }
+
+        const changelog = read('CHANGELOG.md');
+        assert(changelog.includes('## 3.0.0 - 2026-08-16'), 'Changelog release date is missing.');
+        assert(!changelog.includes('## 3.0.0 - Unreleased'), 'Changelog still marks 3.0.0 as unreleased.');
     });
 
     await check('package metadata preserves every supported entry and has no runtime dependency', () => {
