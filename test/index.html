@@ -21,23 +21,29 @@
     <main id="main-content" class="site-shell live-shell">
         <p class="eyebrow">Live runtime verification</p>
         <h1>Testing the real browser module.</h1>
-        <p class="lede">This page runs the same untransformed vanilla-test suite used by Node and browser coverage.</p>
+        <p class="lede">This page runs eleven focused vanilla-test checks against the real iframe, module Worker, controls, output, safety limits, and recipe handoff.</p>
         <section class="result-panel" aria-live="polite">
             <h2 id="status">Running checks…</h2>
             <p id="summary">The result will appear here.</p>
+            <p id="suite-summary">Suite totals will appear here.</p>
         </section>
     </main>
     <script type="module">
-        import run from './CI.js';
+        import run from './browser-CI.js';
 
         try {
             const result = await run();
             globalThis.__JS_MESSAGE_TEST_RESULT__ = result;
             document.querySelector('#status').textContent = result.ok ? 'All checks passed' : 'Checks failed';
             document.querySelector('#summary').textContent = `${result.passed.length}/${result.total} checks passed.`;
+            document.querySelector('#suite-summary').textContent = result.suites
+                .map((suite) => `${suite.name}: ${suite.total}`)
+                .join(' · ');
         } catch (error) {
+            globalThis.__JS_MESSAGE_TEST_ERROR__ = error instanceof Error ? error.stack : String(error);
             document.querySelector('#status').textContent = 'Harness error';
             document.querySelector('#summary').textContent = error instanceof Error ? error.message : String(error);
+            document.querySelector('#suite-summary').textContent = 'Suite totals unavailable.';
         }
     </script>
 </body>

@@ -29,20 +29,12 @@ function run(command, args, cwd = process.cwd()) {
 try {
     const packed = JSON.parse(run('npm', ['pack', '--json', '--pack-destination', workspace]));
     const metadata = packed[0];
-    const paths = new Set(metadata.files.map(({ path }) => path));
     const required = ['index.js', 'Message.js', 'js-message-vanilla.js', 'package.json', 'README.md', 'licence', 'CHANGELOG.md', 'MIGRATION.md'];
-    const forbiddenPrefixes = ['.github/', 'assets/', 'test/', 'node_modules/'];
+    const actual = metadata.files.map(({ path }) => path).sort();
+    const expected = [...required].sort();
 
-    for (const path of required) {
-        if (!paths.has(path)) {
-            throw new Error(`Packed artifact is missing ${path}.`);
-        }
-    }
-
-    for (const path of paths) {
-        if (forbiddenPrefixes.some((prefix) => path.startsWith(prefix))) {
-            throw new Error(`Packed artifact unexpectedly contains ${path}.`);
-        }
+    if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+        throw new Error(`Packed artifact files differ. Expected ${expected.join(', ')}; received ${actual.join(', ')}.`);
     }
 
     const tarball = resolve(workspace, metadata.filename);

@@ -4,7 +4,7 @@
 
 A tiny, normalized JavaScript and JSON message envelope for every runtime boundary.
 
-[Documentation](https://riaevangelist.github.io/js-message/) · [Get started](https://riaevangelist.github.io/js-message/guide/) · [API](https://riaevangelist.github.io/js-message/api/) · [Protocol](https://riaevangelist.github.io/js-message/protocol/) · [Browser](https://riaevangelist.github.io/js-message/browser/) · [Examples](https://riaevangelist.github.io/js-message/examples/) · [Testing](https://riaevangelist.github.io/js-message/testing/) · [Migration](https://riaevangelist.github.io/js-message/migration/)
+[Documentation](https://riaevangelist.github.io/js-message/) · [Get started](https://riaevangelist.github.io/js-message/guide/) · [API](https://riaevangelist.github.io/js-message/api/) · [Protocol](https://riaevangelist.github.io/js-message/protocol/) · [Browser](https://riaevangelist.github.io/js-message/browser/) · [Examples](https://riaevangelist.github.io/js-message/examples/) · [Playground](https://riaevangelist.github.io/js-message/playground/) · [Testing](https://riaevangelist.github.io/js-message/testing/) · [Migration](https://riaevangelist.github.io/js-message/migration/)
 
 [![CI](https://github.com/RIAEvangelist/js-message/actions/workflows/ci.yml/badge.svg)](https://github.com/RIAEvangelist/js-message/actions/workflows/ci.yml)
 [![npm version](https://img.shields.io/npm/v/js-message.svg)](https://www.npmjs.com/package/js-message)
@@ -112,11 +112,16 @@ The global entry assigns `globalThis.Message` and is tested against the ES-modul
 
 ## Verification
 
-The protocol suite uses [vanilla-test](https://www.npmjs.com/package/vanilla-test) and runs as one untransformed module in Node.js and Chrome. CI also checks documentation links and metadata, the declared compatibility surface, native coverage, and the packed npm artifact.
+Four focused suites use [vanilla-test](https://www.npmjs.com/package/vanilla-test) to run 72 nonduplicated shared checks from the same untransformed module in Node.js and Chrome. Chrome adds eleven distinct playground integration checks without inflating that shared count. CI also checks documentation links and metadata, the declared compatibility surface, native coverage, and the packed npm artifact.
 
 ```sh
 npm ci
 npm test
+npm run test:unit
+npm run test:functional
+npm run test:integration
+npm run test:regression
+npm run test:playground
 npm run coverage:node
 npm run coverage:chrome
 npm run test:package

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="The 9 shared js-message Integration checks for package exports and browser-global parity, plus 11 distinct Chrome-only playground checks.">
+    <meta name="color-scheme" content="dark">
+    <meta property="og:title" content="Integration tests · js-message">
+    <meta property="og:description" content="Nine shared vanilla-test checks connect js-message entry points; eleven distinct Chrome-only checks exercise the playground.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://riaevangelist.github.io/js-message/testing/integration/">
+    <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Integration tests · js-message">
+    <meta name="twitter:description" content="Nine shared vanilla-test checks connect js-message entry points; eleven distinct Chrome-only checks exercise the playground.">
+    <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <link rel="canonical" href="https://riaevangelist.github.io/js-message/testing/integration/">
+    <link rel="stylesheet" href="../../assets/site.css">
+    <title>Integration tests · js-message</title>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../../">Overview</a></li><li><a href="../../guide/">Start</a></li><li><a href="../../api/">API</a></li><li><a href="../../protocol/">Protocol</a></li><li><a href="../../browser/">Browser</a></li><li><a href="../../examples/">Examples</a></li><li><a href="../../playground/">Playground</a></li><li><a href="../" aria-current="page">Testing</a></li><li><a href="../../migration/">Migration</a></li></ul></nav></div></header>
+
+    <main id="main-content">
+        <header class="site-shell page-hero"><p class="eyebrow">Integration suite · 9 shared checks</p><h1>Make every entry point agree.</h1><p class="lede">Integration checks connect package exports, the supported legacy path, and the classic browser global without restating their lower-level behavior.</p></header>
+        <div class="site-shell page-layout">
+            <article class="prose">
+                <section id="catalog">
+                    <h2>Runtime entry points</h2>
+                    <div class="table-wrap"><table><thead><tr><th>ID</th><th>Focused check</th></tr></thead><tbody>
+                        <tr><td><code>INT-01</code></td><td>Root default and named exports share one class.</td></tr>
+                        <tr><td><code>INT-02</code></td><td>The legacy module path shares the root class.</td></tr>
+                        <tr><td><code>INT-03</code></td><td>The browser-global entry exposes a constructor.</td></tr>
+                        <tr><td><code>INT-04</code></td><td>The global JSON getter stays on a non-enumerable prototype.</td></tr>
+                        <tr><td><code>INT-05</code></td><td>The global <code>load()</code> method stays on a non-enumerable prototype.</td></tr>
+                        <tr><td><code>INT-06</code></td><td>Module and global entries agree on JSON text.</td></tr>
+                        <tr><td><code>INT-07</code></td><td>Module and global entries agree on object input.</td></tr>
+                        <tr><td><code>INT-08</code></td><td>The global entry serializes malformed input errors.</td></tr>
+                        <tr><td><code>INT-09</code></td><td>The global <code>toJSON()</code> method returns the exact envelope.</td></tr>
+                    </tbody></table></div>
+                </section>
+
+                <section id="chrome">
+                    <h2>Chrome-only playground integration</h2>
+                    <p>These eleven cases exercise browser-only UI and Worker boundaries. They are distinct from—and are not added to—the 72 shared runtime checks.</p>
+                    <div class="table-wrap"><table><thead><tr><th>ID</th><th>Focused check</th></tr></thead><tbody>
+                        <tr><td><code>INT-BROWSER-01</code></td><td>The playground completes its same-origin ready and load handshake.</td></tr>
+                        <tr><td><code>INT-BROWSER-02</code></td><td>The default playground module completes with visible round-trip output.</td></tr>
+                        <tr><td><code>INT-BROWSER-03</code></td><td>A snippet cannot spoof runner messages through the Worker global channel.</td></tr>
+                        <tr><td><code>INT-BROWSER-04</code></td><td>Revoked Proxy logging is contained and later console output survives.</td></tr>
+                        <tr><td><code>INT-BROWSER-05</code></td><td>An infinite module is terminated at the playground run limit.</td></tr>
+                        <tr><td><code>INT-BROWSER-06</code></td><td>Excess console lines terminate the module at the output limit.</td></tr>
+                        <tr><td><code>INT-BROWSER-07</code></td><td>Loading source during a run restores the editor controls.</td></tr>
+                        <tr><td><code>INT-BROWSER-08</code></td><td>The editor does not cancel keyboard exit commands.</td></tr>
+                        <tr><td><code>INT-BROWSER-09</code></td><td>Large primitive console strings are bounded before rendering.</td></tr>
+                        <tr><td><code>INT-BROWSER-10</code></td><td>Undefined custom JSON output fails promptly with a readable value.</td></tr>
+                        <tr><td><code>INT-BROWSER-11</code></td><td>A focused recipe opens its exact source in the live workbench.</td></tr>
+                    </tbody></table></div>
+                </section>
+
+                <section id="boundaries">
+                    <h2>Repository boundary gates</h2>
+                    <ul>
+                        <li>Real Chrome runs the shared catalog against the same shipped source as Node.</li>
+                        <li>The live playground is exercised through its frame, editor controls, worker, and visible output.</li>
+                        <li>The local documentation server verifies routes, module headers, and security policies.</li>
+                        <li>A packed tarball is installed in a clean project and checked through every declared export.</li>
+                    </ul>
+                    <div class="callout"><strong>Two layers of integration evidence.</strong><p>The nine shared IDs remain portable between Node and Chrome. The eleven <code>INT-BROWSER</code> cases and other environment-specific gates stay separate so their setup does not masquerade as duplicate protocol coverage.</p></div>
+                    <div class="actions"><a class="button" href="../regression/">Next: Regression</a><a class="button button--secondary" href="../functional/">Previous: Functional</a></div>
+                </section>
+            </article>
+            <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#catalog">Runtime entry points</a></li><li><a href="#chrome">Chrome playground</a></li><li><a href="#boundaries">Boundary gates</a></li></ul></aside>
+        </div>
+    </main>
+
+    <footer class="site-footer"><div class="site-shell site-footer__inner"><p>js-message · MIT licensed · <span data-current-year></span></p><nav aria-label="Project links"><a href="../../migration/">Migration</a><a href="https://github.com/RIAEvangelist/js-message">GitHub</a><a href="https://www.npmjs.com/package/js-message">npm</a><a href="https://github.com/RIAEvangelist/js-message/blob/main/licence">License</a></nav></div></footer>
+    <script type="module" src="../../assets/site.js"></script>
+</body>
+</html>

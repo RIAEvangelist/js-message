@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A focused js-message recipe that creates an envelope, sends its JSON wire form, and receives it again.">
+    <meta name="color-scheme" content="dark">
+    <meta property="og:title" content="Round-trip recipe · js-message">
+    <meta property="og:description" content="Create, serialize, and receive one complete js-message envelope.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://riaevangelist.github.io/js-message/playground/recipes/round-trip/">
+    <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Round-trip recipe · js-message">
+    <meta name="twitter:description" content="Create, serialize, and receive one complete js-message envelope.">
+    <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <link rel="canonical" href="https://riaevangelist.github.io/js-message/playground/recipes/round-trip/">
+    <link rel="stylesheet" href="../../../assets/site.css">
+    <title>Round-trip recipe · js-message</title>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to recipe</a>
+    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../../../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../../../">Overview</a></li><li><a href="../../../guide/">Start</a></li><li><a href="../../../api/">API</a></li><li><a href="../../../protocol/">Protocol</a></li><li><a href="../../../browser/">Browser</a></li><li><a href="../../../examples/">Examples</a></li><li><a href="../../" aria-current="page">Playground</a></li><li><a href="../../../testing/">Testing</a></li><li><a href="../../../migration/">Migration</a></li></ul></nav></div></header>
+
+    <main id="main-content">
+        <header class="site-shell page-hero"><p class="eyebrow">Playground recipe · round trip</p><h1>Create. Serialize. Receive.</h1><p class="lede">The same two-field envelope survives object use, JSON transport, and reconstruction without a build step.</p></header>
+        <div class="site-shell page-layout">
+            <article class="prose">
+                <section id="source">
+                    <h2>Complete source</h2>
+                    <div class="code-block"><pre><code>import Message from 'js-message';
+
+const outgoing = new Message({
+    type: 'user.updated',
+    data: {
+        id: 42,
+        active: true
+    }
+});
+
+console.log('object', outgoing.toJSON());
+console.log('wire', outgoing.JSON);
+
+const incoming = new Message(outgoing.JSON);
+console.log('received', incoming.toJSON());</code></pre></div>
+                </section>
+                <section id="result">
+                    <h2>What to inspect</h2>
+                    <ul><li><code>toJSON()</code> exposes the plain transport envelope.</li><li><code>JSON</code> emits the exact wire string.</li><li>The receiving constructor restores the same <code>type</code> and <code>data</code>.</li></ul>
+                    <div class="actions"><a class="button" href="../../?recipe=round-trip#workbench">Open the live workbench</a><a class="button button--secondary" href="../recovery/">Next: recovery</a></div>
+                </section>
+            </article>
+            <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#source">Complete source</a></li><li><a href="#result">What to inspect</a></li></ul></aside>
+        </div>
+    </main>
+    <footer class="site-footer"><div class="site-shell site-footer__inner"><p>js-message · MIT licensed · <span data-current-year></span></p><nav aria-label="Project links"><a href="../../../migration/">Migration</a><a href="https://github.com/RIAEvangelist/js-message">GitHub</a><a href="https://www.npmjs.com/package/js-message">npm</a><a href="https://github.com/RIAEvangelist/js-message/blob/main/licence">License</a></nav></div></footer>
+    <script type="module" src="../../../assets/site.js"></script>
+</body>
+</html>

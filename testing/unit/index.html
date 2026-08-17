@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="The 31 js-message Unit checks for fields, serialization primitives, and bounded playground helpers, run with vanilla-test.">
+    <meta name="color-scheme" content="dark">
+    <meta property="og:title" content="Unit tests · js-message">
+    <meta property="og:description" content="Thirty-one focused vanilla-test checks for fields, serialization primitives, and playground helpers.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://riaevangelist.github.io/js-message/testing/unit/">
+    <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Unit tests · js-message">
+    <meta name="twitter:description" content="Thirty-one focused vanilla-test checks for fields, serialization primitives, and playground helpers.">
+    <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <link rel="canonical" href="https://riaevangelist.github.io/js-message/testing/unit/">
+    <link rel="stylesheet" href="../../assets/site.css">
+    <title>Unit tests · js-message</title>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../../">Overview</a></li><li><a href="../../guide/">Start</a></li><li><a href="../../api/">API</a></li><li><a href="../../protocol/">Protocol</a></li><li><a href="../../browser/">Browser</a></li><li><a href="../../examples/">Examples</a></li><li><a href="../../playground/">Playground</a></li><li><a href="../" aria-current="page">Testing</a></li><li><a href="../../migration/">Migration</a></li></ul></nav></div></header>
+
+    <main id="main-content">
+        <header class="site-shell page-hero"><p class="eyebrow">Unit suite · 31 checks</p><h1>Verify each small primitive.</h1><p class="lede">Unit checks isolate instance state, exact serialization behavior, and the pure helpers that keep playground input and output bounded.</p></header>
+        <div class="site-shell page-layout">
+            <article class="prose">
+                <section id="message">
+                    <h2>Message primitives</h2>
+                    <div class="table-wrap"><table><thead><tr><th>ID</th><th>Focused check</th></tr></thead><tbody>
+                        <tr><td><code>UNIT-01</code></td><td>A new message starts with an empty type.</td></tr>
+                        <tr><td><code>UNIT-02</code></td><td>Default data objects are independent.</td></tr>
+                        <tr><td><code>UNIT-03</code></td><td>Type and data are the enumerable instance fields.</td></tr>
+                        <tr><td><code>UNIT-04</code></td><td>The JSON getter emits the exact envelope.</td></tr>
+                        <tr><td><code>UNIT-05</code></td><td>The JSON getter excludes local properties.</td></tr>
+                        <tr><td><code>UNIT-06</code></td><td><code>toJSON()</code> returns only type and data.</td></tr>
+                        <tr><td><code>UNIT-07</code></td><td><code>JSON.stringify()</code> uses the normalized envelope.</td></tr>
+                        <tr><td><code>UNIT-08</code></td><td>Direct fields retain JSON-safe native values.</td></tr>
+                    </tbody></table></div>
+                </section>
+
+                <section id="playground">
+                    <h2>Playground source helpers</h2>
+                    <div class="table-wrap"><table><thead><tr><th>ID</th><th>Focused check</th></tr></thead><tbody>
+                        <tr><td><code>UNIT-09</code></td><td>The default playground source shows a complete round trip.</td></tr>
+                        <tr><td><code>UNIT-10</code></td><td>Playground root imports resolve to the canonical module.</td></tr>
+                        <tr><td><code>UNIT-11</code></td><td>Playground deep imports resolve to <code>Message.js</code>.</td></tr>
+                        <tr><td><code>UNIT-12</code></td><td>Playground import text outside static declarations is unchanged.</td></tr>
+                        <tr><td><code>UNIT-13</code></td><td>Playground source must be text.</td></tr>
+                        <tr><td><code>UNIT-14</code></td><td>Playground source has a fixed size limit.</td></tr>
+                        <tr><td><code>UNIT-15</code></td><td>Package imports after executable code remain unchanged.</td></tr>
+                        <tr><td><code>UNIT-16</code></td><td>Comments and blank lines may precede package imports.</td></tr>
+                        <tr><td><code>UNIT-17</code></td><td>Other absolute static imports may precede package imports.</td></tr>
+                        <tr><td><code>UNIT-18</code></td><td>Block comments may precede package imports.</td></tr>
+                        <tr><td><code>UNIT-19</code></td><td>Leading package imports may carry trailing line comments.</td></tr>
+                        <tr><td><code>UNIT-20</code></td><td>Compact leading package imports resolve without added whitespace.</td></tr>
+                        <tr><td><code>UNIT-21</code></td><td>Inline block comments may separate the import keyword.</td></tr>
+                        <tr><td><code>UNIT-22</code></td><td>Comment-heavy import preambles remain responsive.</td></tr>
+                        <tr><td><code>UNIT-23</code></td><td>Unicode import-prefix identifiers remain unchanged.</td></tr>
+                        <tr><td><code>UNIT-24</code></td><td>Escaped import-prefix identifiers remain unchanged.</td></tr>
+                    </tbody></table></div>
+                </section>
+
+                <section id="output">
+                    <h2>Playground output helpers</h2>
+                    <div class="table-wrap"><table><thead><tr><th>ID</th><th>Focused check</th></tr></thead><tbody>
+                        <tr><td><code>UNIT-25</code></td><td>Playground output serializes <code>BigInt</code>.</td></tr>
+                        <tr><td><code>UNIT-26</code></td><td>Playground output serializes <code>undefined</code>.</td></tr>
+                        <tr><td><code>UNIT-27</code></td><td>Playground output serializes errors.</td></tr>
+                        <tr><td><code>UNIT-28</code></td><td>Playground output labels maps.</td></tr>
+                        <tr><td><code>UNIT-29</code></td><td>Playground output labels sets.</td></tr>
+                        <tr><td><code>UNIT-30</code></td><td>Playground output marks circular references.</td></tr>
+                        <tr><td><code>UNIT-31</code></td><td>Playground output truncates primitive strings before transfer.</td></tr>
+                    </tbody></table></div>
+                    <div class="callout"><strong>One concern per row.</strong><p>Round-trip behavior belongs to the Functional suite; cross-entry agreement belongs to Integration. These Unit checks stay narrow.</p></div>
+                    <div class="actions"><a class="button" href="../functional/">Next: Functional</a><a class="button button--secondary" href="../">All testing</a></div>
+                </section>
+            </article>
+            <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#message">Message primitives</a></li><li><a href="#playground">Source helpers</a></li><li><a href="#output">Output helpers</a></li></ul></aside>
+        </div>
+    </main>
+
+    <footer class="site-footer"><div class="site-shell site-footer__inner"><p>js-message · MIT licensed · <span data-current-year></span></p><nav aria-label="Project links"><a href="../../migration/">Migration</a><a href="https://github.com/RIAEvangelist/js-message">GitHub</a><a href="https://www.npmjs.com/package/js-message">npm</a><a href="https://github.com/RIAEvangelist/js-message/blob/main/licence">License</a></nav></div></footer>
+    <script type="module" src="../../assets/site.js"></script>
+</body>
+</html>

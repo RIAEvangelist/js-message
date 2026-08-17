@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="The 24 js-message Regression checks preserving coercion compatibility, invalid-shape recovery, hostile-value handling, and native JSON failures.">
+    <meta name="color-scheme" content="dark">
+    <meta property="og:title" content="Regression tests · js-message">
+    <meta property="og:description" content="Twenty-four focused vanilla-test checks preserve js-message compatibility and failure semantics.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://riaevangelist.github.io/js-message/testing/regression/">
+    <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Regression tests · js-message">
+    <meta name="twitter:description" content="Twenty-four focused vanilla-test checks preserve js-message compatibility and failure semantics.">
+    <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <link rel="canonical" href="https://riaevangelist.github.io/js-message/testing/regression/">
+    <link rel="stylesheet" href="../../assets/site.css">
+    <title>Regression tests · js-message</title>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../../">Overview</a></li><li><a href="../../guide/">Start</a></li><li><a href="../../api/">API</a></li><li><a href="../../protocol/">Protocol</a></li><li><a href="../../browser/">Browser</a></li><li><a href="../../examples/">Examples</a></li><li><a href="../../playground/">Playground</a></li><li><a href="../" aria-current="page">Testing</a></li><li><a href="../../migration/">Migration</a></li></ul></nav></div></header>
+
+    <main id="main-content">
+        <header class="site-shell page-hero"><p class="eyebrow">Regression suite · 24 checks</p><h1>Keep the difficult edges stable.</h1><p class="lede">Regression checks name the coercion and failure behaviors most likely to change accidentally while keeping each historical guarantee in one place.</p></header>
+        <div class="site-shell page-layout">
+            <article class="prose">
+                <section id="coercion">
+                    <h2>Compatible coercion</h2>
+                    <div class="table-wrap"><table><thead><tr><th>ID</th><th>Focused check</th></tr></thead><tbody>
+                        <tr><td><code>REG-01</code></td><td>Boxed JSON strings remain loadable.</td></tr>
+                        <tr><td><code>REG-02</code></td><td>Typed views with JSON text coercion remain loadable.</td></tr>
+                        <tr><td><code>REG-03</code></td><td>Custom <code>toString()</code> JSON inputs remain loadable.</td></tr>
+                        <tr><td><code>REG-04</code></td><td><code>Symbol.toPrimitive</code> JSON inputs remain loadable.</td></tr>
+                        <tr><td><code>REG-05</code></td><td>Partial envelopes may still coerce to JSON text.</td></tr>
+                    </tbody></table></div>
+                </section>
+
+                <section id="shapes">
+                    <h2>Invalid shapes</h2>
+                    <div class="table-wrap"><table><thead><tr><th>ID</th><th>Focused check</th></tr></thead><tbody>
+                        <tr><td><code>REG-06</code></td><td><code>null</code> is rejected as an envelope.</td></tr>
+                        <tr><td><code>REG-07</code></td><td>Arrays are rejected as envelopes.</td></tr>
+                        <tr><td><code>REG-08</code></td><td>Numbers are rejected as envelopes.</td></tr>
+                        <tr><td><code>REG-09</code></td><td>Booleans are rejected as envelopes.</td></tr>
+                        <tr><td><code>REG-10</code></td><td>Parsed string primitives are rejected as envelopes.</td></tr>
+                        <tr><td><code>REG-11</code></td><td>Empty objects are rejected as envelopes.</td></tr>
+                        <tr><td><code>REG-12</code></td><td>Objects missing data are rejected as envelopes.</td></tr>
+                        <tr><td><code>REG-13</code></td><td>Objects missing type are rejected as envelopes.</td></tr>
+                    </tbody></table></div>
+                </section>
+
+                <section id="failures">
+                    <h2>Hostile errors and native failures</h2>
+                    <div class="table-wrap"><table><thead><tr><th>ID</th><th>Focused check</th></tr></thead><tbody>
+                        <tr><td><code>REG-14</code></td><td>Primitive thrown values become Error details.</td></tr>
+                        <tr><td><code>REG-15</code></td><td>Frozen thrown errors remain serializable.</td></tr>
+                        <tr><td><code>REG-16</code></td><td>Locked error serializers cannot escape <code>load()</code>.</td></tr>
+                        <tr><td><code>REG-17</code></td><td>Non-string error metadata falls back safely.</td></tr>
+                        <tr><td><code>REG-18</code></td><td>Revoked proxies become unknown serializable errors.</td></tr>
+                        <tr><td><code>REG-19</code></td><td><code>BigInt</code> data keeps native JSON failure semantics.</td></tr>
+                        <tr><td><code>REG-20</code></td><td>Circular data keeps native JSON failure semantics.</td></tr>
+                        <tr><td><code>REG-21</code></td><td>Hostile console values cannot escape output serialization.</td></tr>
+                        <tr><td><code>REG-22</code></td><td>Undefined custom JSON output receives a readable fallback.</td></tr>
+                        <tr><td><code>REG-23</code></td><td>String-named imports cannot masquerade as module specifiers.</td></tr>
+                        <tr><td><code>REG-24</code></td><td>Multiline import comments preserve text and preamble state.</td></tr>
+                    </tbody></table></div>
+                    <div class="callout"><strong>Compatibility is explicit.</strong><p>These cases run against both module and browser-global implementations where the historical behavior spans both entries.</p></div>
+                    <div class="actions"><a class="button" href="../">Back to testing</a><a class="button button--secondary" href="../integration/">Previous: Integration</a></div>
+                </section>
+            </article>
+            <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#coercion">Compatible coercion</a></li><li><a href="#shapes">Invalid shapes</a></li><li><a href="#failures">Errors and failures</a></li></ul></aside>
+        </div>
+    </main>
+
+    <footer class="site-footer"><div class="site-shell site-footer__inner"><p>js-message · MIT licensed · <span data-current-year></span></p><nav aria-label="Project links"><a href="../../migration/">Migration</a><a href="https://github.com/RIAEvangelist/js-message">GitHub</a><a href="https://www.npmjs.com/package/js-message">npm</a><a href="https://github.com/RIAEvangelist/js-message/blob/main/licence">License</a></nav></div></footer>
+    <script type="module" src="../../assets/site.js"></script>
+</body>
+</html>

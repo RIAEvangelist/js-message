@@ -2,6 +2,18 @@
 
 All notable changes to js-message are documented here.
 
+## Unreleased
+
+### Added
+
+- An editable, time-limited GitHub Pages playground using the canonical checked-in module, with focused recipe pages and real-Chrome integration coverage.
+- Unit, Functional, Integration, and Regression vanilla-test catalogs with unique case IDs and per-suite commands.
+
+### Changed
+
+- Shared runtime requirements are divided into 72 smaller nonduplicated checks, plus eleven distinct Chrome-only playground checks.
+- Packed-artifact verification now enforces the exact npm file set.
+
 ## 3.0.0 - 2026-08-16
 
 ### Added

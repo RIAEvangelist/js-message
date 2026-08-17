@@ -1,0 +1,260 @@
+:root {
+    color-scheme: dark;
+    --background: #050c14;
+    --panel: #0a1723;
+    --panel-deep: #030b12;
+    --line: #26445b;
+    --line-strong: #3a6886;
+    --text: #eef8ff;
+    --muted: #9eb7c9;
+    --cyan: #6de4ff;
+    --green: #7cf2a6;
+    --amber: #ffd166;
+    --coral: #ff8d74;
+    --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--background);
+    color: var(--text);
+    font-family: var(--mono);
+}
+
+button,
+textarea {
+    font: inherit;
+}
+
+:focus-visible {
+    outline: 3px solid var(--amber);
+    outline-offset: 2px;
+}
+
+.playground {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(16rem, 0.8fr);
+    min-height: 41rem;
+}
+
+.editor-panel,
+.console-panel {
+    display: grid;
+    min-width: 0;
+}
+
+.editor-panel {
+    grid-template-rows: auto 1fr auto;
+}
+
+.console-panel {
+    grid-template-rows: auto auto 1fr;
+    border-left: 1px solid var(--line);
+    background: var(--panel-deep);
+}
+
+header {
+    display: flex;
+    min-height: 3.7rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.7rem;
+    padding: 0.65rem 0.8rem;
+    border-bottom: 1px solid var(--line);
+    background: rgb(255 255 255 / 0.025);
+}
+
+header > div {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+header strong {
+    color: var(--muted);
+    font-size: 0.74rem;
+}
+
+.dot {
+    display: inline-block;
+    width: 0.56rem;
+    height: 0.56rem;
+    border-radius: 50%;
+    box-shadow: 0 0 12px currentColor;
+}
+
+.dot--cyan {
+    background: var(--cyan);
+    color: var(--cyan);
+}
+
+.dot--green {
+    background: var(--green);
+    color: var(--green);
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.4rem;
+}
+
+button {
+    min-height: 2.1rem;
+    padding: 0.3rem 0.62rem;
+    border: 1px solid var(--line);
+    border-radius: 0.4rem;
+    background: var(--panel);
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+button:hover {
+    border-color: var(--line-strong);
+    color: var(--text);
+}
+
+button.run {
+    border-color: rgb(109 228 255 / 0.55);
+    color: var(--cyan);
+}
+
+button:disabled {
+    cursor: wait;
+    opacity: 0.58;
+}
+
+kbd {
+    color: var(--muted);
+    font: inherit;
+}
+
+#source {
+    width: 100%;
+    min-height: 31rem;
+    resize: none;
+    padding: 1.2rem;
+    border: 0;
+    background: var(--panel);
+    color: var(--text);
+    font-size: 0.82rem;
+    line-height: 1.7;
+    tab-size: 4;
+}
+
+#editor-help,
+.run-status {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.64rem;
+}
+
+#editor-help {
+    padding: 0.58rem 0.8rem;
+    border-top: 1px solid var(--line);
+}
+
+.run-status {
+    padding: 0.55rem 0.8rem;
+    border-bottom: 1px solid var(--line);
+    color: var(--cyan);
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+#output {
+    overflow: auto;
+    max-height: 36rem;
+    margin: 0;
+    padding: 0.8rem;
+    list-style: none;
+}
+
+#output li {
+    margin: 0 0 0.58rem;
+    padding: 0.58rem 0.68rem;
+    overflow-wrap: anywhere;
+    border-left: 2px solid var(--line);
+    background: rgb(255 255 255 / 0.025);
+    color: #c2d4e1;
+    font-size: 0.73rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+
+#output li::before {
+    display: block;
+    margin-bottom: 0.18rem;
+    color: var(--muted);
+    content: attr(data-level);
+    font-size: 0.58rem;
+    text-transform: uppercase;
+}
+
+#output li.log {
+    border-color: var(--cyan);
+}
+
+#output li.info {
+    border-color: #c4b5fd;
+}
+
+#output li.warn {
+    border-color: var(--amber);
+    color: var(--amber);
+}
+
+#output li.error {
+    border-color: var(--coral);
+    color: #ffb5a4;
+}
+
+#output li.success {
+    border-color: var(--green);
+    color: var(--green);
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    border: 0;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+}
+
+@media (max-width: 46rem) {
+    .playground {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .console-panel {
+        border-top: 1px solid var(--line);
+        border-left: 0;
+    }
+
+    #source {
+        min-height: 22rem;
+    }
+
+    #output {
+        min-height: 13rem;
+        max-height: 20rem;
+    }
+
+    header {
+        align-items: flex-start;
+    }
+}

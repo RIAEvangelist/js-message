@@ -102,6 +102,12 @@ jobs:
           VANILLA_TEST_CHROME_NO_SANDBOX: '1'
         run: npm run coverage -- --chrome-path "$CHROME_PATH"
 
+      - name: Run the real playground in Chrome
+        env:
+          CHROME_PATH: ${{ steps.chrome.outputs.chrome-path }}
+          VANILLA_TEST_CHROME_NO_SANDBOX: '1'
+        run: npm run test:playground -- --chrome-path "$CHROME_PATH"
+
       - name: Upload coverage reports
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7

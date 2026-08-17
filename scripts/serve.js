@@ -73,13 +73,24 @@ const server = createServer((request, response) => {
         return;
     }
 
-    response.writeHead(200, {
-        'content-security-policy': "default-src 'self'; img-src 'self'; style-src 'self'; script-src 'self'; base-uri 'none'; object-src 'none'; frame-ancestors 'none'",
+    const relativeTarget = target.slice(root.length + 1).split(sep).join('/');
+    const frameTarget = relativeTarget === 'playground/frame.html';
+    const crossOriginResource = relativeTarget.startsWith('playground/') || relativeTarget === 'index.js' || relativeTarget === 'Message.js';
+    const headers = {
+        'content-security-policy': frameTarget
+            ? "default-src 'none'; style-src 'self'; script-src 'self' blob:; worker-src blob:; connect-src 'none'; img-src 'none'; font-src 'none'; base-uri 'none'; object-src 'none'; form-action 'none'; frame-ancestors 'self'"
+            : "default-src 'self'; img-src 'self'; style-src 'self'; script-src 'self'; worker-src 'none'; frame-src 'self'; connect-src 'none'; base-uri 'none'; object-src 'none'; form-action 'none'; frame-ancestors 'none'",
         'content-type': types.get(extname(target).toLowerCase()) ?? 'application/octet-stream',
-        'cross-origin-resource-policy': 'same-origin',
+        'cross-origin-resource-policy': crossOriginResource ? 'cross-origin' : 'same-origin',
         'referrer-policy': 'no-referrer',
         'x-content-type-options': 'nosniff'
-    });
+    };
+
+    if (extname(target).toLowerCase() === '.js') {
+        headers['access-control-allow-origin'] = '*';
+    }
+
+    response.writeHead(200, headers);
 
     if (request.method === 'HEAD') {
         response.end();

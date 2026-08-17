@@ -22,8 +22,13 @@
   ],
   "scripts": {
     "test": "node ./scripts/test.js",
+    "test:unit": "node ./test/run-suite.js unit",
+    "test:functional": "node ./test/run-suite.js functional",
+    "test:integration": "node ./test/run-suite.js integration",
+    "test:regression": "node ./test/run-suite.js regression",
     "test:core": "node ./test/node.js",
     "test:docs": "node ./test/docs.js",
+    "test:playground": "node ./test/browser.js",
     "test:compatibility": "node ./test/compatibility.js",
     "test:package": "node ./scripts/package-smoke.js",
     "coverage": "vanilla-test coverage",

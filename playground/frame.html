@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self' blob:; worker-src blob:; connect-src 'none'; img-src 'none'; font-src 'none'; base-uri 'none'; object-src 'none'; form-action 'none'">
+    <title>js-message playground</title>
+    <link rel="stylesheet" href="./playground.css">
+    <script type="module" src="./runner.js"></script>
+</head>
+<body>
+    <main class="playground">
+        <section class="editor-panel" aria-labelledby="editor-title">
+            <header>
+                <div><span class="dot dot--cyan" aria-hidden="true"></span><strong id="editor-title">message.js</strong></div>
+                <div class="controls">
+                    <button id="reset" type="button">Reset</button>
+                    <button id="copy" type="button">Copy</button>
+                    <button id="run" class="run" type="button">Run <kbd>Ctrl/⌘↵</kbd></button>
+                </div>
+            </header>
+            <label class="sr-only" for="source">JavaScript source</label>
+            <textarea id="source" spellcheck="false" aria-describedby="editor-help" maxlength="32768"></textarea>
+            <p id="editor-help">Package imports first · absolute-URL one-line static imports · Tab indents · Shift+Tab or Esc then Tab leaves · Ctrl/⌘ + Enter runs · 3 second limit</p>
+        </section>
+
+        <section class="console-panel" aria-labelledby="console-title">
+            <header>
+                <div><span class="dot dot--green" aria-hidden="true"></span><strong id="console-title">console</strong></div>
+                <button id="clear" type="button">Clear</button>
+            </header>
+            <p class="run-status" id="run-status" role="status" aria-live="polite" aria-atomic="true">Ready</p>
+            <ol id="output" role="log" aria-label="Console output" aria-live="polite" aria-relevant="additions text"></ol>
+        </section>
+    </main>
+</body>
+</html>

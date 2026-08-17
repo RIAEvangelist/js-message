@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A focused js-message recipe for inspecting the recoverable error envelope produced by invalid input.">
+    <meta name="color-scheme" content="dark">
+    <meta property="og:title" content="Recovery recipe · js-message">
+    <meta property="og:description" content="Inspect invalid input as a serializable js-message error envelope.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://riaevangelist.github.io/js-message/playground/recipes/recovery/">
+    <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Recovery recipe · js-message">
+    <meta name="twitter:description" content="Inspect invalid input as a serializable js-message error envelope.">
+    <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <link rel="canonical" href="https://riaevangelist.github.io/js-message/playground/recipes/recovery/">
+    <link rel="stylesheet" href="../../../assets/site.css">
+    <title>Recovery recipe · js-message</title>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to recipe</a>
+    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../../../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../../../">Overview</a></li><li><a href="../../../guide/">Start</a></li><li><a href="../../../api/">API</a></li><li><a href="../../../protocol/">Protocol</a></li><li><a href="../../../browser/">Browser</a></li><li><a href="../../../examples/">Examples</a></li><li><a href="../../" aria-current="page">Playground</a></li><li><a href="../../../testing/">Testing</a></li><li><a href="../../../migration/">Migration</a></li></ul></nav></div></header>
+
+    <main id="main-content">
+        <header class="site-shell page-hero"><p class="eyebrow">Playground recipe · recovery</p><h1>Turn invalid input into evidence.</h1><p class="lede">A malformed envelope does not leave the instance half-loaded. It becomes a normal message whose payload preserves the error and original response.</p></header>
+        <div class="site-shell page-layout">
+            <article class="prose">
+                <section id="source">
+                    <h2>Complete source</h2>
+                    <div class="code-block"><pre><code>import Message from 'js-message';
+
+const incoming = new Message('{"type":"incomplete"}');
+
+console.log('type', incoming.type);
+console.error('error', incoming.data.err);
+console.log('envelope', incoming.toJSON());</code></pre></div>
+                </section>
+                <section id="result">
+                    <h2>What to inspect</h2>
+                    <ul><li>The resulting type is <code>error</code>.</li><li><code>data.err</code> remains an <code>Error</code> in memory.</li><li>The JSON form retains its error name and message when the response is JSON-safe.</li></ul>
+                    <div class="actions"><a class="button" href="../../?recipe=recovery#workbench">Open the live workbench</a><a class="button button--secondary" href="../boundary/">Next: boundary</a></div>
+                </section>
+            </article>
+            <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#source">Complete source</a></li><li><a href="#result">What to inspect</a></li></ul></aside>
+        </div>
+    </main>
+    <footer class="site-footer"><div class="site-shell site-footer__inner"><p>js-message · MIT licensed · <span data-current-year></span></p><nav aria-label="Project links"><a href="../../../migration/">Migration</a><a href="https://github.com/RIAEvangelist/js-message">GitHub</a><a href="https://www.npmjs.com/package/js-message">npm</a><a href="https://github.com/RIAEvangelist/js-message/blob/main/licence">License</a></nav></div></footer>
+    <script type="module" src="../../../assets/site.js"></script>
+</body>
+</html>

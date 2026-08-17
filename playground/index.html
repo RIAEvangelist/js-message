@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Edit and run js-message examples in an isolated browser playground while keeping the complete source visible.">
+    <meta name="color-scheme" content="dark">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self'; style-src 'self'; script-src 'self'; frame-src 'self'; connect-src 'none'; base-uri 'none'; object-src 'none'; form-action 'none'">
+    <meta property="og:title" content="Playground · js-message">
+    <meta property="og:description" content="Edit the source, run the real js-message module, and inspect every console result.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://riaevangelist.github.io/js-message/playground/">
+    <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Playground · js-message">
+    <meta name="twitter:description" content="Edit the source, run the real js-message module, and inspect every console result.">
+    <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <link rel="canonical" href="https://riaevangelist.github.io/js-message/playground/">
+    <link rel="stylesheet" href="../assets/site.css">
+    <title>Playground · js-message</title>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to playground</a>
+    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../">Overview</a></li><li><a href="../guide/">Start</a></li><li><a href="../api/">API</a></li><li><a href="../protocol/">Protocol</a></li><li><a href="../browser/">Browser</a></li><li><a href="../examples/">Examples</a></li><li><a href="./" aria-current="page">Playground</a></li><li><a href="../testing/">Testing</a></li><li><a href="../migration/">Migration</a></li></ul></nav></div></header>
+
+    <main id="main-content">
+        <header class="site-shell page-hero"><p class="eyebrow">Native module playground</p><h1>Edit the source. Run the real module.</h1><p class="lede">Change the JavaScript, press Run, and inspect each console value. The editor executes the checked-in <code>index.js</code> module—there is no playground-only copy of js-message.</p></header>
+
+        <div class="site-shell playground-page">
+            <section id="workbench" aria-labelledby="workbench-title">
+                <div class="section-heading">
+                    <p class="eyebrow">Live workbench</p>
+                    <h2 id="workbench-title">Press Run or Ctrl/⌘ + Enter.</h2>
+                    <p>Put package imports and absolute-URL one-line static imports before executable code. The runner then uses a fresh, time-limited module worker inside a sandboxed editor; your snippet cannot reach or rewrite the documentation page.</p>
+                </div>
+                <iframe class="playground-frame" id="playground-frame" title="js-message JavaScript playground" src="./frame.html" sandbox="allow-scripts allow-same-origin" referrerpolicy="no-referrer"></iframe>
+                <div class="callout"><strong>Use it for code you control.</strong><p>The playground blocks fetch, WebSocket, and cross-origin module requests. Same-origin module imports, browser storage, and messaging APIs remain available, and the runner stops long-running snippets after three seconds. Browser code can still consume CPU or memory until that limit takes effect.</p></div>
+            </section>
+
+            <section id="recipes" class="playground-recipes" aria-labelledby="recipes-title">
+                <div class="section-heading">
+                    <p class="eyebrow">Focused recipes</p>
+                    <h2 id="recipes-title">One recipe per page.</h2>
+                    <p>Keep this workbench short, then open a focused page for the complete source and explanation.</p>
+                </div>
+                <div class="recipe-grid">
+                    <article class="card recipe-card">
+                        <span class="card__label">Round trip</span>
+                        <h3>Create, serialize, receive</h3>
+                        <p>Follow one message from object to wire JSON and back.</p>
+                        <a class="card__link" href="./recipes/round-trip/">Open round-trip recipe →</a>
+                    </article>
+
+                    <article class="card recipe-card">
+                        <span class="card__label">Recovery</span>
+                        <h3>Inspect an invalid envelope</h3>
+                        <p>See invalid input become a serializable error message.</p>
+                        <a class="card__link" href="./recipes/recovery/">Open recovery recipe →</a>
+                    </article>
+
+                    <article class="card recipe-card">
+                        <span class="card__label">Boundary</span>
+                        <h3>Keep local state off the wire</h3>
+                        <p>Prove instance-only fields never enter the transport envelope.</p>
+                        <a class="card__link" href="./recipes/boundary/">Open boundary recipe →</a>
+                    </article>
+                </div>
+            </section>
+
+            <section class="playground-next" aria-labelledby="next-title">
+                <div><p class="eyebrow">Keep building</p><h2 id="next-title">Move from experiment to transport.</h2><p>Use the protocol page to lock the envelope shape, then copy a boundary recipe for WebSockets, fetch, workers, or IPC.</p></div>
+                <div class="actions"><a class="button" href="../protocol/">Review the protocol</a><a class="button button--secondary" href="../examples/">Open boundary examples</a></div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer"><div class="site-shell site-footer__inner"><p>js-message · MIT licensed · <span data-current-year></span></p><nav aria-label="Project links"><a href="../migration/">Migration</a><a href="https://github.com/RIAEvangelist/js-message">GitHub</a><a href="https://www.npmjs.com/package/js-message">npm</a><a href="https://github.com/RIAEvangelist/js-message/blob/main/licence">License</a></nav></div></footer>
+    <script type="module" src="../assets/site.js"></script>
+</body>
+</html>

@@ -60,7 +60,8 @@ a:hover {
 
 a:focus-visible,
 button:focus-visible,
-summary:focus-visible {
+summary:focus-visible,
+textarea:focus-visible {
     outline: 3px solid var(--focus);
     outline-offset: 4px;
 }
@@ -633,6 +634,72 @@ tr:last-child td {
     padding-block: clamp(3rem, 8vw, 6rem);
 }
 
+.playground-page {
+    padding-bottom: clamp(4rem, 8vw, 7rem);
+}
+
+.playground-page section[id] {
+    scroll-margin-top: 6rem;
+}
+
+.playground-frame {
+    display: block;
+    width: 100%;
+    min-height: 42rem;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--surface-code);
+    box-shadow: var(--shadow);
+}
+
+.playground-recipes {
+    margin-top: clamp(4rem, 8vw, 7rem);
+    padding-top: clamp(3rem, 6vw, 5rem);
+    border-top: 1px solid var(--border);
+}
+
+.recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.recipe-card {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+}
+
+.recipe-card .code-block {
+    flex: 1;
+}
+
+.recipe-card .actions {
+    margin-top: auto;
+}
+
+.playground-next {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(16rem, 0.75fr);
+    gap: 2rem;
+    align-items: end;
+    margin-top: clamp(4rem, 8vw, 7rem);
+    padding: clamp(1.4rem, 4vw, 2.3rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: rgb(10 23 35 / 0.88);
+}
+
+.playground-next p:not(.eyebrow) {
+    margin-bottom: 0;
+    color: var(--muted);
+}
+
+.playground-next .actions {
+    justify-content: flex-end;
+    margin-top: 0;
+}
+
 .site-footer {
     border-top: 1px solid var(--border);
     background: rgb(3 9 15 / 0.72);
@@ -684,7 +751,8 @@ tr:last-child td {
 
     .hero,
     .page-layout,
-    .grid--two {
+    .grid--two,
+    .playground-next {
         grid-template-columns: minmax(0, 1fr);
     }
 
@@ -697,7 +765,20 @@ tr:last-child td {
         order: -1;
     }
 
-    .prose section[id] {
+    .recipe-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .playground-frame {
+        min-height: 57rem;
+    }
+
+    .playground-next .actions {
+        justify-content: flex-start;
+    }
+
+    .prose section[id],
+    .playground-page section[id] {
         scroll-margin-top: 1rem;
     }
 }

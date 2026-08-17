@@ -110,14 +110,37 @@ try {
         equal(page.status, 200);
         equal(page.headers['x-content-type-options'], 'nosniff');
         equal(page.headers['cross-origin-resource-policy'], 'same-origin');
+        equal(page.headers['content-security-policy'].includes("frame-ancestors 'none'"), true);
 
         const image = await fetchLocal(running.port, '/assets/js-message-header.png');
         equal(image.status, 200);
         equal(image.headers['content-type'], 'image/png');
     });
 
+    await check('serves the sandboxed playground frame and canonical modules', async () => {
+        const page = await fetchLocal(running.port, '/playground/');
+        equal(page.status, 200);
+        for (const path of ['/playground/recipes/round-trip/', '/playground/recipes/recovery/', '/playground/recipes/boundary/']) {
+            equal((await fetchLocal(running.port, path)).status, 200);
+        }
+
+        const frame = await fetchLocal(running.port, '/playground/frame.html');
+        equal(frame.status, 200);
+        equal(frame.headers['content-security-policy'].includes("worker-src blob:"), true);
+        equal(frame.headers['content-security-policy'].includes("frame-ancestors 'self'"), true);
+        equal(frame.headers['cross-origin-resource-policy'], 'cross-origin');
+
+        for (const path of ['/playground/runtime.js', '/playground/recipes.js', '/playground/runner.js', '/index.js', '/Message.js']) {
+            const module = await fetchLocal(running.port, path);
+            equal(module.status, 200);
+            equal(module.headers['content-type'], 'text/javascript; charset=utf-8');
+            equal(module.headers['access-control-allow-origin'], '*');
+            equal(module.headers['cross-origin-resource-policy'], 'cross-origin');
+        }
+    });
+
     await check('denies repository internals and ignored files', async () => {
-        for (const path of ['/.git/config', '/package.json', '/README.md', '/test/CI.js', '/.env']) {
+        for (const path of ['/.git/config', '/package.json', '/README.md', '/test/CI.js', '/playground/package.json', '/.env']) {
             equal((await fetchLocal(running.port, path)).status, 404);
         }
     });

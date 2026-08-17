@@ -3,17 +3,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="How js-message is verified with vanilla-test in Node and Chrome, compatibility smoke tests, native coverage, and packed-package checks.">
+    <meta name="description" content="How 72 shared js-message checks are organized into four vanilla-test suites, plus eleven distinct Chrome playground checks.">
     <meta name="color-scheme" content="dark">
     <meta property="og:title" content="Testing strategy · js-message">
-    <meta property="og:description" content="One vanilla-test protocol suite, real runtimes, native coverage, and package-boundary checks.">
+    <meta property="og:description" content="Four focused vanilla-test suites, 72 nonduplicated shared checks, real runtimes, and eleven distinct Chrome playground checks.">
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://riaevangelist.github.io/js-message/testing/">
     <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
     <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Testing strategy · js-message">
-    <meta name="twitter:description" content="One vanilla-test protocol suite, real runtimes, native coverage, and package-boundary checks.">
+    <meta name="twitter:description" content="Four focused vanilla-test suites, 72 nonduplicated shared checks, real runtimes, and eleven distinct Chrome playground checks.">
     <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
     <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
     <link rel="canonical" href="https://riaevangelist.github.io/js-message/testing/">
@@ -22,22 +22,33 @@
 </head>
 <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
-    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../">Overview</a></li><li><a href="../guide/">Start</a></li><li><a href="../api/">API</a></li><li><a href="../protocol/">Protocol</a></li><li><a href="../browser/">Browser</a></li><li><a href="../examples/">Examples</a></li><li><a href="./" aria-current="page">Testing</a></li><li><a href="../migration/">Migration</a></li></ul></nav></div></header>
+    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../">Overview</a></li><li><a href="../guide/">Start</a></li><li><a href="../api/">API</a></li><li><a href="../protocol/">Protocol</a></li><li><a href="../browser/">Browser</a></li><li><a href="../examples/">Examples</a></li><li><a href="../playground/">Playground</a></li><li><a href="./" aria-current="page">Testing</a></li><li><a href="../migration/">Migration</a></li></ul></nav></div></header>
 
     <main id="main-content">
-        <header class="site-shell page-hero"><p class="eyebrow">Testing strategy</p><h1>Test the contract at every edge.</h1><p class="lede">The shared protocol suite uses vanilla-test and executes the same untransformed module in Node.js and real Chrome coverage.</p></header>
+        <header class="site-shell page-hero"><p class="eyebrow">Testing strategy</p><h1>Small checks. Clear evidence.</h1><p class="lede">Four vanilla-test suites divide 72 nonduplicated shared checks by purpose, then run the same untransformed module in Node.js and real Chrome coverage.</p></header>
         <div class="site-shell page-layout">
             <article class="prose">
                 <section id="suite">
-                    <h2>Shared vanilla-test suite</h2>
-                    <div class="table-wrap"><table><thead><tr><th>Area</th><th>Evidence</th></tr></thead><tbody><tr><td>Exports</td><td>Root default, root named, and legacy <code>Message.js</code> resolve to one class.</td></tr><tr><td>State</td><td>Fresh defaults, enumerability, instance isolation, and recovery.</td></tr><tr><td>Serialization</td><td>Exact two-key JSON, <code>toJSON()</code>, extras exclusion, and native failure semantics.</td></tr><tr><td>Loading</td><td>JSON strings, object input, nested values, malformed JSON, and invalid shapes.</td></tr><tr><td>Browser global</td><td>String/object loading, errors, and JSON parity with the ES module.</td></tr></tbody></table></div>
-                    <p>The protocol module records <span class="metric">12 focused checks</span>. Separate documentation and local-server suites treat pages, metadata, local links, package exports, security boundaries, workflows, and the generated header as tested repository contracts.</p>
+                    <h2>Four suites, one contract</h2>
+                    <p>Each behavior belongs to exactly one suite. The split makes individual checks easier to scan without repeating the same assertion under multiple labels.</p>
+                    <div class="grid grid--two">
+                        <article class="card"><span class="card__label">31 checks</span><h3>Unit</h3><p>Fields, serialization primitives, and the bounded playground helpers.</p><a class="card__link" href="./unit/">Review Unit checks →</a></article>
+                        <article class="card"><span class="card__label">8 checks</span><h3>Functional</h3><p>Construction, loading, round trips, recoverable errors, and recovery.</p><a class="card__link" href="./functional/">Review Functional checks →</a></article>
+                        <article class="card"><span class="card__label">9 checks</span><h3>Integration</h3><p>Root, legacy, and browser-global entry points agreeing at runtime boundaries.</p><a class="card__link" href="./integration/">Review Integration checks →</a></article>
+                        <article class="card"><span class="card__label">24 checks</span><h3>Regression</h3><p>Coercion compatibility, invalid shapes, hostile errors, and native JSON failures.</p><a class="card__link" href="./regression/">Review Regression checks →</a></article>
+                    </div>
+                    <div class="callout"><strong>72 shared runtime checks.</strong><p>Node and Chrome execute the same catalog through vanilla-test. Chrome then adds eleven distinct playground integration cases, <code>INT-BROWSER-01</code> through <code>INT-BROWSER-11</code>, without inflating the shared count.</p></div>
                 </section>
 
                 <section id="commands">
                     <h2>Local commands</h2>
                     <div class="code-block"><pre><code>npm ci
 npm test
+npm run test:unit
+npm run test:functional
+npm run test:integration
+npm run test:regression
+npm run test:playground
 npm run coverage:node
 npm run coverage:chrome
 npm start</code></pre></div>
@@ -57,7 +68,7 @@ npm start</code></pre></div>
                     <div class="actions"><a class="button" href="https://github.com/RIAEvangelist/js-message/actions/workflows/ci.yml">Open CI results</a><a class="button button--secondary" href="https://github.com/RIAEvangelist/js-message/blob/main/test/CI.js">Read the shared suite</a></div>
                 </section>
             </article>
-            <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#suite">Shared suite</a></li><li><a href="#commands">Commands</a></li><li><a href="#gates">Delivery gates</a></li></ul></aside>
+            <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#suite">Suite map</a></li><li><a href="#commands">Commands</a></li><li><a href="#gates">Delivery gates</a></li></ul></aside>
         </div>
     </main>
 
