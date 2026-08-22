@@ -1,4 +1,7 @@
+import Message from './Message.js';
+
 export {
     Message as default,
-    Message
-} from './Message.js';
+    Message,
+    Message as 'module.exports'
+};

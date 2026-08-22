@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Reproducible js-message 3.1 benchmarks against 3.0 for construction, JSON loading, and direct-object loading.">
+    <meta name="color-scheme" content="dark">
+    <meta property="og:title" content="Performance · js-message">
+    <meta property="og:description" content="The recorded run reaches about 257 million object loads, 5.63 million JSON loads, and 12.9 million empty constructions per second.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://riaevangelist.github.io/js-message/performance/">
+    <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Performance · js-message">
+    <meta name="twitter:description" content="One million constructions and message loads, measured against the published 3.0 baseline.">
+    <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <link rel="canonical" href="https://riaevangelist.github.io/js-message/performance/">
+    <link rel="stylesheet" href="../assets/site.css">
+    <title>Performance · js-message</title>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../">Overview</a></li><li><a href="../guide/">Start</a></li><li><a href="../why/">Why</a></li><li><a href="../api/">API</a></li><li><a href="../protocol/">Protocol</a></li><li><a href="../browser/">Browser</a></li><li><a href="../examples/">Examples</a></li><li><a href="../playground/">Playground</a></li><li><a href="./" aria-current="page">Performance</a></li><li><a href="../testing/">Testing</a></li><li><a href="../migration/">Migration</a></li></ul></nav></div></header>
+
+    <main id="main-content">
+        <header class="site-shell page-hero"><p class="eyebrow">3.0.0 → 3.1.0</p><h1>Blazingly small work at every boundary.</h1><p class="lede">Version 3.1 removes the duplicate strict-envelope pass. Direct objects move faster, JSON parsing stays above five million messages per second, and optional fields work again.</p></header>
+
+        <section class="section section--bordered">
+            <div class="site-shell">
+                <div class="section-heading"><p class="eyebrow">Recorded results</p><h2>One million messages. Twenty-one alternating samples.</h2><p>The published 3.0.0 source and the 3.1.0 candidate run in the same process. Lower elapsed time is faster.</p></div>
+                <div class="benchmark-grid">
+                    <figure class="benchmark-figure"><div class="benchmark-scroll" tabindex="0" aria-label="Scrollable object-message benchmark chart"><img src="../assets/benchmark-object.svg" width="1200" height="400" alt="Loading one million object messages: version 3.0.0 took 13.19 milliseconds and version 3.1.0 took 3.89 milliseconds, 3.39 times faster and about 257 million messages per second."></div><figcaption>Direct object input benefits most because 3.1 copies available fields without repeating schema checks.</figcaption></figure>
+                    <figure class="benchmark-figure"><div class="benchmark-scroll" tabindex="0" aria-label="Scrollable JSON-message benchmark chart"><img src="../assets/benchmark-json.svg" width="1200" height="400" alt="Parsing and loading one million JSON messages: version 3.0.0 took 183.01 milliseconds and version 3.1.0 took 177.53 milliseconds, about 5.63 million messages per second."></div><figcaption>Native <code>JSON.parse</code> dominates this path; 3.1 keeps it lean while restoring optional fields.</figcaption></figure>
+                    <figure class="benchmark-figure"><div class="benchmark-scroll" tabindex="0" aria-label="Scrollable construction benchmark chart"><img src="../assets/benchmark-construct.svg" width="1200" height="400" alt="Constructing one million empty messages: version 3.0.0 took 70.34 milliseconds and version 3.1.0 took 77.37 milliseconds, about 12.9 million retained instances per second."></div><figcaption>Empty construction recorded about 12.9 million retained instances per second; the same run also exposes its roughly ten-percent elapsed-time cost instead of hiding it.</figcaption></figure>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section--bordered">
+            <div class="site-shell grid grid--two">
+                <div class="prose"><p class="eyebrow">Reproduce it</p><h2>One command, no benchmark dependency.</h2><div class="code-block"><pre><code>npm run benchmark</code></pre></div><p>The runner loads the exact <code>3.0.0</code> tag from Git, warms both implementations, alternates execution order, requests garbage collection between samples, validates output checksums, and reports the median.</p></div>
+                <aside class="side-index" aria-label="Benchmark evidence"><strong>Recorded environment</strong><ul><li>Node 24.18.0</li><li>Windows x64</li><li>Intel Core Ultra 9 275HX</li><li>1,000,000 operations</li><li>21 alternating samples</li></ul><strong>Inspect</strong><ul><li><a href="../benchmarks/results.json">Raw results JSON</a></li><li><a href="https://github.com/RIAEvangelist/js-message/blob/main/scripts/benchmark.js">Benchmark source</a></li></ul></aside>
+            </div>
+        </section>
+
+        <section class="section section--bordered"><div class="site-shell"><div class="callout callout--warning"><strong>A microbenchmark is evidence, not an application guarantee.</strong><p>Hardware, runtime flags, payload size, allocation patterns, and surrounding work change throughput. Run the command on the system you plan to ship.</p></div></div></section>
+    </main>
+
+    <footer class="site-footer"><div class="site-shell site-footer__inner"><p>js-message 3.1 · measured, tested, reproducible</p><nav aria-label="Project links"><a href="../why/">Why</a><a href="../testing/">Testing</a><a href="https://github.com/RIAEvangelist/js-message">GitHub</a><a href="https://www.npmjs.com/package/js-message">npm</a></nav></div></footer>
+    <script type="module" src="../assets/site.js"></script>
+</body>
+</html>

@@ -22,7 +22,7 @@
 </head>
 <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
-    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../">Overview</a></li><li><a href="./" aria-current="page">Start</a></li><li><a href="../api/">API</a></li><li><a href="../protocol/">Protocol</a></li><li><a href="../browser/">Browser</a></li><li><a href="../examples/">Examples</a></li><li><a href="../playground/">Playground</a></li><li><a href="../testing/">Testing</a></li><li><a href="../migration/">Migration</a></li></ul></nav></div></header>
+    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../">Overview</a></li><li><a href="./" aria-current="page">Start</a></li><li><a href="../why/">Why</a></li><li><a href="../api/">API</a></li><li><a href="../protocol/">Protocol</a></li><li><a href="../browser/">Browser</a></li><li><a href="../examples/">Examples</a></li><li><a href="../playground/">Playground</a></li><li><a href="../performance/">Performance</a></li><li><a href="../testing/">Testing</a></li><li><a href="../migration/">Migration</a></li></ul></nav></div></header>
 
     <main id="main-content">
         <header class="site-shell page-hero"><p class="eyebrow">Get started</p><h1>Cross your first boundary.</h1><p class="lede">Install one zero-dependency module, create a <code>{ type, data }</code> envelope, and use the same shape on both sides of the wire.</p></header>
@@ -32,7 +32,7 @@
                     <h2>1. Install and import</h2>
                     <div class="code-block"><pre><code>npm install js-message</code></pre></div>
                     <div class="code-block"><pre><code>import Message from 'js-message';</code></pre></div>
-                    <p>This installs js-message 3.0.0 from npm. The package is a native ES module with no runtime dependency or compile step.</p>
+                    <p>This installs js-message 3.1.0 from npm. Node 22.13+ can load the same native module through <code>import</code> or synchronous <code>require()</code>, with no runtime dependency or compile step.</p>
                 </section>
 
                 <section id="create">
@@ -47,7 +47,7 @@ message.data = {
 
 transport.send(message.JSON);</code></pre></div>
                     <p><code>message.JSON</code> is a string containing only <code>type</code> and <code>data</code>. Other properties you add to the instance stay local.</p>
-                    <div class="callout"><strong>Already have an envelope?</strong><p>Pass a JSON string or an object directly to the constructor: <code>new Message(input)</code>.</p></div>
+                    <div class="callout"><strong>No payload needed?</strong><p><code>new Message({ type: 'ping' })</code> is valid. <code>data</code> remains <code>undefined</code> and the wire form stays <code>{"type":"ping"}</code>.</p></div>
                 </section>
 
                 <section id="receive">
@@ -60,8 +60,8 @@ if (incoming.type === 'error') {
 } else {
     route(incoming.type, incoming.data);
 }</code></pre></div>
-                    <p><code>load()</code> accepts a JSON string or an existing object. A malformed string or invalid envelope becomes a recoverable <code>type: 'error'</code> message instead of escaping from <code>load()</code>.</p>
-                    <div class="actions"><a class="button" href="../protocol/">Understand valid envelopes</a><a class="button button--secondary" href="../examples/">Copy a complete example</a></div>
+                    <p><code>load()</code> accepts a JSON string or an existing object and copies the fields that are available. Malformed or uncoercible input becomes a recoverable <code>type: 'error'</code> message instead of escaping from <code>load()</code>.</p>
+                    <div class="actions"><a class="button" href="../protocol/">Understand the convention</a><a class="button button--secondary" href="../examples/">Copy a complete example</a></div>
                 </section>
             </article>
             <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#install">Install and import</a></li><li><a href="#create">Create and serialize</a></li><li><a href="#receive">Load and branch</a></li></ul></aside>

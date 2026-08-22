@@ -3,17 +3,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="The 24 js-message Regression checks preserving coercion compatibility, invalid-shape recovery, hostile-value handling, and native JSON failures.">
+    <meta name="description" content="The 27 js-message Regression checks preserving coercion, optional-field assignment, hostile-value handling, and native JSON failures.">
     <meta name="color-scheme" content="dark">
     <meta property="og:title" content="Regression tests · js-message">
-    <meta property="og:description" content="Twenty-four focused vanilla-test checks preserve js-message compatibility and failure semantics.">
+    <meta property="og:description" content="Twenty-six focused vanilla-test checks preserve js-message compatibility and failure semantics.">
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://riaevangelist.github.io/js-message/testing/regression/">
     <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
     <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Regression tests · js-message">
-    <meta name="twitter:description" content="Twenty-four focused vanilla-test checks preserve js-message compatibility and failure semantics.">
+    <meta name="twitter:description" content="Twenty-six focused vanilla-test checks preserve js-message compatibility and failure semantics.">
     <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
     <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
     <link rel="canonical" href="https://riaevangelist.github.io/js-message/testing/regression/">
@@ -22,10 +22,10 @@
 </head>
 <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
-    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../../">Overview</a></li><li><a href="../../guide/">Start</a></li><li><a href="../../api/">API</a></li><li><a href="../../protocol/">Protocol</a></li><li><a href="../../browser/">Browser</a></li><li><a href="../../examples/">Examples</a></li><li><a href="../../playground/">Playground</a></li><li><a href="../" aria-current="page">Testing</a></li><li><a href="../../migration/">Migration</a></li></ul></nav></div></header>
+    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../../">Overview</a></li><li><a href="../../guide/">Start</a></li><li><a href="../../why/">Why</a></li><li><a href="../../api/">API</a></li><li><a href="../../protocol/">Protocol</a></li><li><a href="../../browser/">Browser</a></li><li><a href="../../examples/">Examples</a></li><li><a href="../../playground/">Playground</a></li><li><a href="../../performance/">Performance</a></li><li><a href="../" aria-current="page">Testing</a></li><li><a href="../../migration/">Migration</a></li></ul></nav></div></header>
 
     <main id="main-content">
-        <header class="site-shell page-hero"><p class="eyebrow">Regression suite · 24 checks</p><h1>Keep the difficult edges stable.</h1><p class="lede">Regression checks name the coercion and failure behaviors most likely to change accidentally while keeping each historical guarantee in one place.</p></header>
+        <header class="site-shell page-hero"><p class="eyebrow">Regression suite · 27 checks</p><h1>Keep the difficult edges stable.</h1><p class="lede">Regression checks name optional-field assignment, coercion, and failure behaviors most likely to change accidentally while keeping each historical guarantee in one place.</p></header>
         <div class="site-shell page-layout">
             <article class="prose">
                 <section id="coercion">
@@ -40,16 +40,16 @@
                 </section>
 
                 <section id="shapes">
-                    <h2>Invalid shapes</h2>
+                    <h2>Assignment and native coercion</h2>
                     <div class="table-wrap"><table><thead><tr><th>ID</th><th>Focused check</th></tr></thead><tbody>
                         <tr><td><code>REG-06</code></td><td><code>null</code> is rejected as an envelope.</td></tr>
-                        <tr><td><code>REG-07</code></td><td>Arrays are rejected as envelopes.</td></tr>
-                        <tr><td><code>REG-08</code></td><td>Numbers are rejected as envelopes.</td></tr>
-                        <tr><td><code>REG-09</code></td><td>Booleans are rejected as envelopes.</td></tr>
-                        <tr><td><code>REG-10</code></td><td>Parsed string primitives are rejected as envelopes.</td></tr>
-                        <tr><td><code>REG-11</code></td><td>Empty objects are rejected as envelopes.</td></tr>
-                        <tr><td><code>REG-12</code></td><td>Objects missing data are rejected as envelopes.</td></tr>
-                        <tr><td><code>REG-13</code></td><td>Objects missing type are rejected as envelopes.</td></tr>
+                        <tr><td><code>REG-07</code></td><td>Array input keeps native JSON coercion failure behavior.</td></tr>
+                        <tr><td><code>REG-08</code></td><td>Parsed numbers preserve missing message fields.</td></tr>
+                        <tr><td><code>REG-09</code></td><td>Parsed booleans preserve missing message fields.</td></tr>
+                        <tr><td><code>REG-10</code></td><td>Parsed string primitives preserve missing message fields.</td></tr>
+                        <tr><td><code>REG-11</code></td><td>Empty objects preserve missing message fields.</td></tr>
+                        <tr><td><code>REG-12</code></td><td>Object messages may omit data.</td></tr>
+                        <tr><td><code>REG-13</code></td><td>JSON messages may omit data.</td></tr>
                     </tbody></table></div>
                 </section>
 
@@ -67,12 +67,15 @@
                         <tr><td><code>REG-22</code></td><td>Undefined custom JSON output receives a readable fallback.</td></tr>
                         <tr><td><code>REG-23</code></td><td>String-named imports cannot masquerade as module specifiers.</td></tr>
                         <tr><td><code>REG-24</code></td><td>Multiline import comments preserve text and preamble state.</td></tr>
+                        <tr><td><code>REG-25</code></td><td>Object messages may omit type.</td></tr>
+                        <tr><td><code>REG-26</code></td><td>JSON messages may omit type.</td></tr>
+                        <tr><td><code>REG-27</code></td><td>Hostile Error accessors stay contained during serialization.</td></tr>
                     </tbody></table></div>
                     <div class="callout"><strong>Compatibility is explicit.</strong><p>These cases run against both module and browser-global implementations where the historical behavior spans both entries.</p></div>
                     <div class="actions"><a class="button" href="../">Back to testing</a><a class="button button--secondary" href="../integration/">Previous: Integration</a></div>
                 </section>
             </article>
-            <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#coercion">Compatible coercion</a></li><li><a href="#shapes">Invalid shapes</a></li><li><a href="#failures">Errors and failures</a></li></ul></aside>
+            <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#coercion">Compatible coercion</a></li><li><a href="#shapes">Assignment semantics</a></li><li><a href="#failures">Errors and failures</a></li></ul></aside>
         </div>
     </main>
 

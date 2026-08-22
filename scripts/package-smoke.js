@@ -29,7 +29,19 @@ function run(command, args, cwd = process.cwd()) {
 try {
     const packed = JSON.parse(run('npm', ['pack', '--json', '--pack-destination', workspace]));
     const metadata = packed[0];
-    const required = ['index.js', 'Message.js', 'js-message-vanilla.js', 'package.json', 'README.md', 'licence', 'CHANGELOG.md', 'MIGRATION.md'];
+    const required = [
+        'index.js',
+        'Message.js',
+        'js-message-vanilla.js',
+        'assets/benchmark-construct.svg',
+        'assets/benchmark-json.svg',
+        'assets/benchmark-object.svg',
+        'package.json',
+        'README.md',
+        'licence',
+        'CHANGELOG.md',
+        'MIGRATION.md'
+    ];
     const actual = metadata.files.map(({ path }) => path).sort();
     const expected = [...required].sort();
 
@@ -41,13 +53,22 @@ try {
     writeFileSync(join(workspace, 'package.json'), '{"private":true,"type":"module"}\n');
     run('npm', ['install', '--no-audit', '--no-fund', tarball], workspace);
     writeFileSync(join(workspace, 'smoke.mjs'), `
+import { createRequire } from 'node:module';
 import Message, { Message as NamedMessage } from 'js-message';
+import IndexMessage from 'js-message/index.js';
 import LegacyMessage from 'js-message/Message.js';
 import 'js-message/js-message-vanilla.js';
 
-if (Message !== NamedMessage || Message !== LegacyMessage) throw new Error('Export identity failed.');
+const require = createRequire(import.meta.url);
+const CommonMessage = require('js-message');
+
+if (Message !== NamedMessage || Message !== IndexMessage || Message !== LegacyMessage) throw new Error('ESM export identity failed.');
+if (CommonMessage !== Message || CommonMessage.Message !== Message) throw new Error('CommonJS root identity failed.');
+if (require('js-message/index.js') !== Message || require('js-message/Message.js') !== Message) throw new Error('CommonJS deep identity failed.');
 const message = new Message({ type: 'packed', data: { ok: true } });
 if (message.JSON !== '{"type":"packed","data":{"ok":true}}') throw new Error('Packed module failed.');
+const optional = new CommonMessage('{"type":"optional"}');
+if (optional.data !== undefined || optional.JSON !== '{"type":"optional"}') throw new Error('Optional payload failed.');
 const globalMessage = new globalThis.Message('{"type":"global","data":true}');
 if (globalMessage.type !== 'global') throw new Error('Packed global entry failed.');
 console.log('packed js-message artifact: PASS');

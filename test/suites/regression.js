@@ -27,6 +27,15 @@ function assertInvalid(context, input) {
     }
 }
 
+function assertOptional(context, input, type, data, wire) {
+    for (const MessageType of implementations(context)) {
+        const message = new MessageType(input);
+        equal(message.type, type);
+        equal(message.data, data);
+        equal(message.JSON, wire);
+    }
+}
+
 const cases = [
     testCase('REG-01', 'boxed JSON strings remain loadable', (context) => {
         assertCoercion(context, new String(json));
@@ -61,26 +70,32 @@ const cases = [
     testCase('REG-06', 'null is rejected as an envelope', (context) => {
         assertInvalid(context, null);
     }),
-    testCase('REG-07', 'arrays are rejected as envelopes', (context) => {
-        assertInvalid(context, []);
+    testCase('REG-07', 'array input keeps native JSON coercion failure behavior', (context) => {
+        for (const MessageType of implementations(context)) {
+            const input = [];
+            const message = new MessageType(input);
+            equal(message.type, 'error');
+            assert(message.data.err instanceof SyntaxError);
+            equal(message.data.response, input);
+        }
     }),
-    testCase('REG-08', 'numbers are rejected as envelopes', (context) => {
-        assertInvalid(context, 0);
+    testCase('REG-08', 'parsed numbers preserve missing message fields', (context) => {
+        assertOptional(context, 0, undefined, undefined, '{}');
     }),
-    testCase('REG-09', 'booleans are rejected as envelopes', (context) => {
-        assertInvalid(context, true);
+    testCase('REG-09', 'parsed booleans preserve missing message fields', (context) => {
+        assertOptional(context, true, undefined, undefined, '{}');
     }),
-    testCase('REG-10', 'parsed string primitives are rejected as envelopes', (context) => {
-        assertInvalid(context, '"text"');
+    testCase('REG-10', 'parsed string primitives preserve missing message fields', (context) => {
+        assertOptional(context, '"text"', undefined, undefined, '{}');
     }),
-    testCase('REG-11', 'empty objects are rejected as envelopes', (context) => {
-        assertInvalid(context, {});
+    testCase('REG-11', 'empty objects preserve missing message fields', (context) => {
+        assertOptional(context, {}, undefined, undefined, '{}');
     }),
-    testCase('REG-12', 'objects missing data are rejected as envelopes', (context) => {
-        assertInvalid(context, { type: 'missing-data' });
+    testCase('REG-12', 'object messages may omit data', (context) => {
+        assertOptional(context, { type: 'missing-data' }, 'missing-data', undefined, '{"type":"missing-data"}');
     }),
-    testCase('REG-13', 'objects missing type are rejected as envelopes', (context) => {
-        assertInvalid(context, { data: {} });
+    testCase('REG-13', 'JSON messages may omit data', (context) => {
+        assertOptional(context, '{"type":"missing-data-json"}', 'missing-data-json', undefined, '{"type":"missing-data-json"}');
     }),
     testCase('REG-14', 'primitive thrown values become Error details', (context) => {
         for (const MessageType of implementations(context)) {
@@ -179,6 +194,42 @@ const cases = [
         const prepared = prepareSource(source, moduleURL);
         equal(prepared.split('\n')[1], commented);
         assert(prepared.endsWith(`import Message from '${moduleURL}';`), 'The import after the multiline comment was not resolved.');
+    }),
+    testCase('REG-25', 'object messages may omit type', (context) => {
+        const data = { ok: true };
+        assertOptional(context, { data }, undefined, data, '{"data":{"ok":true}}');
+    }),
+    testCase('REG-26', 'JSON messages may omit type', (context) => {
+        for (const MessageType of implementations(context)) {
+            const message = new MessageType('{"data":{"ok":true}}');
+            equal(message.type, undefined);
+            equal(message.data.ok, true);
+            equal(message.JSON, '{"data":{"ok":true}}');
+        }
+    }),
+    testCase('REG-27', 'hostile Error accessors stay contained during serialization', (context) => {
+        const hostile = new Error('hostile metadata');
+        Object.defineProperties(hostile, {
+            message: {
+                configurable: true,
+                get() {
+                    throw new Error('message getter escaped');
+                }
+            },
+            name: {
+                configurable: true,
+                get() {
+                    throw new Error('name getter escaped');
+                }
+            }
+        });
+
+        for (const MessageType of implementations(context)) {
+            const message = new MessageType(throwingInput(hostile));
+            const serialized = JSON.parse(message.JSON);
+            equal(serialized.data.err.name, 'Error');
+            equal(serialized.data.err.message, 'Unknown error');
+        }
     })
 ];
 

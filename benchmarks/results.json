@@ -1,0 +1,42 @@
+{
+  "package": "js-message",
+  "recorded": "2026-08-21",
+  "baseline": "3.0.0 strict envelope checks",
+  "candidate": "3.1.0 assignment semantics",
+  "methodology": "Median of 21 alternating samples; lower is faster.",
+  "runtime": "v24.18.0",
+  "platform": "win32 x64",
+  "processor": "Intel(R) Core(TM) Ultra 9 275HX",
+  "metrics": [
+    {
+      "label": "Construct empty messages",
+      "iterations": 1000000,
+      "unit": "milliseconds",
+      "baseline": 70.34,
+      "baselinePerSecond": 14215773,
+      "candidate": 77.37,
+      "candidatePerSecond": 12925157,
+      "speedup": 0.91
+    },
+    {
+      "label": "Load JSON messages",
+      "iterations": 1000000,
+      "unit": "milliseconds",
+      "baseline": 183.01,
+      "baselinePerSecond": 5464048,
+      "candidate": 177.53,
+      "candidatePerSecond": 5632940,
+      "speedup": 1.03
+    },
+    {
+      "label": "Load object messages",
+      "iterations": 1000000,
+      "unit": "milliseconds",
+      "baseline": 13.19,
+      "baselinePerSecond": 75823059,
+      "candidate": 3.89,
+      "candidatePerSecond": 256976923,
+      "speedup": 3.39
+    }
+  ]
+}

@@ -22,7 +22,7 @@
 </head>
 <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
-    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../">Overview</a></li><li><a href="../guide/">Start</a></li><li><a href="./" aria-current="page">API</a></li><li><a href="../protocol/">Protocol</a></li><li><a href="../browser/">Browser</a></li><li><a href="../examples/">Examples</a></li><li><a href="../playground/">Playground</a></li><li><a href="../testing/">Testing</a></li><li><a href="../migration/">Migration</a></li></ul></nav></div></header>
+    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../">Overview</a></li><li><a href="../guide/">Start</a></li><li><a href="../why/">Why</a></li><li><a href="./" aria-current="page">API</a></li><li><a href="../protocol/">Protocol</a></li><li><a href="../browser/">Browser</a></li><li><a href="../examples/">Examples</a></li><li><a href="../playground/">Playground</a></li><li><a href="../performance/">Performance</a></li><li><a href="../testing/">Testing</a></li><li><a href="../migration/">Migration</a></li></ul></nav></div></header>
 
     <main id="main-content">
         <header class="site-shell page-hero"><p class="eyebrow">API reference</p><h1>A four-part surface.</h1><p class="lede"><code>Message</code> exposes two mutable fields, one JSON getter, one native serialization method, and one loader.</p></header>
@@ -30,10 +30,13 @@
             <article class="prose">
                 <section id="exports">
                     <h2>Package exports</h2>
-                    <div class="table-wrap"><table><thead><tr><th>Import</th><th>Purpose</th></tr></thead><tbody><tr><td><code>js-message</code></td><td>Default and named <code>Message</code> exports from the canonical module.</td></tr><tr><td><code>js-message/Message.js</code></td><td>Supported legacy ES-module path; resolves to the same class.</td></tr><tr><td><code>js-message/js-message-vanilla.js</code></td><td>Side-effect entry that assigns <code>globalThis.Message</code>.</td></tr><tr><td><code>js-message/package.json</code></td><td>Package metadata for tools that explicitly need it.</td></tr></tbody></table></div>
+                    <div class="table-wrap"><table><thead><tr><th>Entry</th><th>Purpose</th></tr></thead><tbody><tr><td><code>import Message from 'js-message'</code></td><td>Default and named exports from the canonical native module.</td></tr><tr><td><code>require('js-message')</code></td><td>The same synchronous <code>Message.js</code> constructor on Node 22.13+.</td></tr><tr><td><code>js-message/index.js</code></td><td>Compatibility module that re-exports the canonical constructor.</td></tr><tr><td><code>js-message/Message.js</code></td><td>Supported direct module path; resolves to the same class.</td></tr><tr><td><code>js-message/js-message-vanilla.js</code></td><td>Side-effect entry that assigns <code>globalThis.Message</code>.</td></tr><tr><td><code>js-message/package.json</code></td><td>Package metadata for tools that explicitly need it.</td></tr></tbody></table></div>
                     <div class="code-block"><pre><code>import Message, { Message as NamedMessage } from 'js-message';
 
 Message === NamedMessage; // true</code></pre></div>
+                    <div class="code-block"><pre><code>const CommonMessage = require('js-message');
+
+CommonMessage === CommonMessage.Message; // true</code></pre></div>
                 </section>
 
                 <section id="constructor">
@@ -50,7 +53,7 @@ Message === NamedMessage; // true</code></pre></div>
                     <div class="method-list">
                         <article class="method"><h3>message.JSON</h3><p>Returns <code>JSON.stringify({ type: message.type, data: message.data })</code>. Instance extras are excluded.</p><dl><dt>returns</dt><dd>JSON string.</dd><dt>throws</dt><dd>Native <code>TypeError</code> for unsupported values such as cycles or <code>BigInt</code>.</dd></dl></article>
                         <article class="method"><h3>message.toJSON()</h3><p>Returns a new plain <code>{ type, data }</code> object. Native <code>JSON.stringify(message)</code> calls this method automatically.</p><dl><dt>returns</dt><dd>Plain object with exactly two keys.</dd></dl></article>
-                        <article class="method"><h3>message.load(input)</h3><p>Loads a JSON string, a JSON-coercible text value, or an object with own <code>type</code> and <code>data</code> keys. Extra input keys are ignored.</p><dl><dt>returns</dt><dd><code>undefined</code>, preserving the legacy contract.</dd><dt>failure</dt><dd>Mutates the instance into an error envelope; complete JSON serialization still requires a JSON-safe preserved response.</dd></dl></article>
+                        <article class="method"><h3>message.load(input)</h3><p>Parses JSON or JSON-coercible text, or accepts an existing object, then assigns its available <code>type</code> and <code>data</code> fields. Either field may be absent; extra input keys are ignored by serialization.</p><dl><dt>returns</dt><dd><code>undefined</code>, preserving the legacy contract.</dd><dt>failure</dt><dd>Malformed or uncoercible input mutates the instance into an error envelope; complete JSON serialization still requires a JSON-safe preserved response.</dd></dl></article>
                     </div>
                 </section>
 

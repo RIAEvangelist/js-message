@@ -45,6 +45,9 @@ const cases = [
         equal(Object.keys(envelope).join(','), 'type,data');
         equal(envelope.type, message.type);
         equal(envelope.data, message.data);
+    }),
+    testCase('INT-10', 'the module constructor exposes its named CommonJS identity', ({ Message }) => {
+        equal(Message.Message, Message);
     })
 ];
 

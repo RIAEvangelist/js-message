@@ -1,17 +1,32 @@
-# Migrating to js-message 3
+# Migrating to js-message 3.1
 
-js-message 3 preserves the established mutable `Message` surface and both legacy entry paths. It makes the accepted envelope shape explicit and adds object-friendly construction without adding a runtime dependency.
+js-message 3.1 keeps the mutable `Message` surface, restores optional message fields, and lets ESM and CommonJS load one synchronous source file. It has no runtime dependency or build step.
+
+## Move Node.js to 22.13 or newer
+
+Version 3.1 raises the declared runtime floor:
+
+```json
+{
+    "engines": {
+        "node": ">=22.13.0"
+    }
+}
+```
+
+Node 22.13 is the first 22.x release where synchronous `require(ESM)` no longer emits an experimental warning by default.
 
 ## Preserved behavior
 
 - `import Message from 'js-message'`
+- `const Message = require('js-message')`
 - `import Message from 'js-message/Message.js'`
 - `js-message/js-message-vanilla.js` assigning `globalThis.Message`
 - Mutable, enumerable `type` and `data` fields
 - The `JSON` getter
 - `load()` returning `undefined`
 - JSON-coercible Buffer, boxed-string, typed-view, and custom text inputs
-- The declared Node.js `>=13.2.0` engine floor
+- JSON values with missing `type` or `data` fields assigning `undefined`
 
 ## New conveniences
 
@@ -38,19 +53,35 @@ Native stringification now uses the same exact envelope:
 JSON.stringify(fromObject) === fromObject.JSON; // true
 ```
 
-## Stricter invalid-input handling
+## Optional fields are restored
 
-Earlier releases could silently accept valid JSON values that were not messages:
+Version 3.0 treated missing keys as a schema failure. Version 3.1 returns to the original assignment contract:
 
 ```js
-const message = new Message();
-message.load('{}');
+const ping = new Message('{"type":"ping"}');
 
-// Earlier: type and data became undefined.
-// Modernized: type is 'error' and data.err is a TypeError.
+ping.type === 'ping';
+ping.data === undefined;
+ping.JSON === '{"type":"ping"}';
 ```
 
-A loadable value must now be a non-array object with its own `type` and `data` keys. Audit any sender that intentionally omitted either key.
+The same rule applies to direct object input. `type` and `data` are conventions, not a schema imposed by this package. Malformed JSON still becomes a recoverable `type: 'error'` message.
+
+## ESM and CommonJS share one constructor
+
+New ESM code remains unchanged:
+
+```js
+import Message from 'js-message';
+```
+
+CommonJS is synchronous on Node 22.13 and newer:
+
+```js
+const Message = require('js-message');
+```
+
+Both forms resolve to `Message.js`. No parallel `.cjs` implementation is shipped.
 
 ## Serializable errors
 
@@ -72,6 +103,6 @@ The v3 browser-global class now matches the ES-module class: `JSON` and `load` a
 
 ## Development requirements
 
-The shipped module retains its legacy Node.js engine declaration. Repository tests and native coverage require Node.js 22.12 or newer because they use vanilla-test v2.
+The package, repository tests, benchmark, and native coverage require Node.js 22.13 or newer.
 
-See the focused [migration page](https://riaevangelist.github.io/js-message/migration/) and [protocol contract](https://riaevangelist.github.io/js-message/protocol/) for the complete behavior.
+See the focused [migration page](https://riaevangelist.github.io/js-message/migration/), [decision guide](https://riaevangelist.github.io/js-message/why/), and [performance evidence](https://riaevangelist.github.io/js-message/performance/) for the complete 3.1 story.

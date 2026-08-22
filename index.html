@@ -3,10 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="One tiny, normalized message envelope for Node.js, browsers, WebSockets, IPC, and every JavaScript boundary.">
+    <meta name="description" content="One tiny, optional-field message envelope for ESM, CommonJS, browsers, WebSockets, IPC, and every JavaScript boundary.">
     <meta name="color-scheme" content="dark">
     <meta property="og:title" content="js-message · One shape for every JavaScript boundary">
-    <meta property="og:description" content="Create, serialize, load, and recover normalized JavaScript messages without a build step or runtime dependency.">
+    <meta property="og:description" content="Normalize once and move messages anywhere through ESM, CommonJS, or browsers with no runtime dependency.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://riaevangelist.github.io/js-message/">
     <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
@@ -29,12 +29,12 @@
                 <ul>
                     <li><a href="./" aria-current="page">Overview</a></li>
                     <li><a href="./guide/">Start</a></li>
-                    <li><a href="./api/">API</a></li>
+                    <li><a href="./why/">Why</a></li><li><a href="./api/">API</a></li>
                     <li><a href="./protocol/">Protocol</a></li>
                     <li><a href="./browser/">Browser</a></li>
                     <li><a href="./examples/">Examples</a></li>
                     <li><a href="./playground/">Playground</a></li>
-                    <li><a href="./testing/">Testing</a></li>
+                    <li><a href="./performance/">Performance</a></li><li><a href="./testing/">Testing</a></li>
                     <li><a href="./migration/">Migration</a></li>
                 </ul>
             </nav>
@@ -44,13 +44,13 @@
     <main id="main-content">
         <section class="site-shell hero">
             <div>
-                <p class="eyebrow">3.0.0 · normalize once · cross every boundary</p>
+                <p class="eyebrow">3.1.0 · normalize once · cross every boundary</p>
                 <h1>One message shape. Everywhere.</h1>
-                <p class="lede">Create a predictable <code>{ type, data }</code> envelope, serialize it to JSON, and load it again in Node.js, browsers, WebSockets, IPC, workers, or any JavaScript host.</p>
+                <p class="lede">Create a predictable <code>{ type, data }</code> convention, omit fields a signal does not need, and load it through ESM, CommonJS, browsers, WebSockets, IPC, workers, or any JavaScript host.</p>
                 <ul class="pill-row" aria-label="Package guarantees">
                     <li class="pill">0 runtime dependencies</li>
-                    <li class="pill">Version 3.0.0</li>
-                    <li class="pill">Native ES modules</li>
+                    <li class="pill">Version 3.1.0</li>
+                    <li class="pill">ESM + CommonJS</li>
                     <li class="pill">Browser global included</li>
                     <li class="pill">No build step</li>
                 </ul>
@@ -90,8 +90,10 @@ socket.send(message.JSON);</code></pre>
                 <div class="grid">
                     <article class="card"><span class="card__label">Build</span><h3>Start in minutes</h3><p>Install, create, serialize, and receive a message.</p><a class="card__link" href="./guide/">Get started →</a></article>
                     <article class="card"><span class="card__label">Integrate</span><h3>Know the API</h3><p>See every field, method, return value, and failure mode.</p><a class="card__link" href="./api/">Open the API →</a></article>
-                    <article class="card"><span class="card__label">Design</span><h3>Lock the protocol</h3><p>Understand valid envelopes, ignored extras, and error recovery.</p><a class="card__link" href="./protocol/">Read the contract →</a></article>
+                    <article class="card"><span class="card__label">Choose</span><h3>Know why it fits</h3><p>Compare the tiny convention with schema validators and transport clients.</p><a class="card__link" href="./why/">Why js-message →</a></article>
+                    <article class="card"><span class="card__label">Design</span><h3>Know the protocol</h3><p>Understand optional fields, ignored extras, and error recovery.</p><a class="card__link" href="./protocol/">Read the contract →</a></article>
                     <article class="card"><span class="card__label">Experiment</span><h3>Run the real module</h3><p>Edit visible JavaScript and inspect each message at the boundary.</p><a class="card__link" href="./playground/">Open the playground →</a></article>
+                    <article class="card"><span class="card__label">Measure</span><h3>See one million messages move</h3><p>Inspect reproducible 3.0-to-3.1 benchmarks, charts, and raw results.</p><a class="card__link" href="./performance/">See performance →</a></article>
                     <article class="card"><span class="card__label">Verify</span><h3>Audit the evidence</h3><p>Review vanilla-test coverage, compatibility, and package checks.</p><a class="card__link" href="./testing/">Inspect testing →</a></article>
                 </div>
             </div>
@@ -102,7 +104,7 @@ socket.send(message.JSON);</code></pre>
                 <div>
                     <p class="eyebrow">Install</p>
                     <h2>One tiny package. Nothing at runtime.</h2>
-                    <p class="lede">The public module uses only JavaScript and native JSON behavior. Version 3.0.0 is published on npm with zero runtime dependencies.</p>
+                    <p class="lede">The public module uses only JavaScript and native JSON behavior. Version 3.1.0 supports ESM and CommonJS on Node 22.13+ with zero runtime dependencies.</p>
                 </div>
                 <div>
                     <div class="code-block"><pre><code>npm install js-message</code></pre></div>

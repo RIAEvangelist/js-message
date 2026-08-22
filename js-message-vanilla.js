@@ -1,5 +1,9 @@
 (function exposeMessage(scope) {
-    const hasOwn = (value, key) => Object.prototype.hasOwnProperty.call(value, key);
+    const errorDetails = new WeakMap();
+
+    function errorToJSON() {
+        return errorDetails.get(this);
+    }
 
     function makeSerializable(error) {
         let name = 'Error';
@@ -19,67 +23,48 @@
             } catch {}
         }
 
-        function attachSerializer(serializable) {
-            Object.defineProperty(serializable, 'toJSON', {
-                configurable: true,
-                value() {
-                    return { name, message };
-                }
-            });
-
-            return serializable;
-        }
-
         try {
             if (error instanceof Error && Object.isExtensible(error)) {
-                return attachSerializer(error);
+                Object.defineProperty(error, 'toJSON', {
+                    configurable: true,
+                    value: errorToJSON
+                });
+                errorDetails.set(error, { name, message });
+                return error;
             }
         } catch {}
 
         const replacement = new Error(message);
         replacement.name = name;
-        return attachSerializer(replacement);
+        Object.defineProperty(replacement, 'toJSON', {
+            value: errorToJSON
+        });
+        errorDetails.set(replacement, { name, message });
+        return replacement;
     }
 
     function parse(message) {
+        if (typeof message === 'string') {
+            return JSON.parse(message);
+        }
+
         if (
             message !== null &&
-            typeof message === 'object'
+            typeof message === 'object' &&
+            !Array.isArray(message)
         ) {
             if (
-                !Array.isArray(message) &&
-                hasOwn(message, 'type') &&
-                hasOwn(message, 'data')
+                typeof message[Symbol.toPrimitive] !== 'function' &&
+                (
+                    message.toString === undefined ||
+                    message.toString === Object.prototype.toString
+                )
             ) {
                 return message;
             }
-
-            if (
-                !Array.isArray(message) &&
-                (
-                    typeof message[Symbol.toPrimitive] === 'function' ||
-                    message.toString !== Object.prototype.toString
-                )
-            ) {
-                return JSON.parse(message);
-            }
-
-            return message;
         }
 
         return JSON.parse(message);
-    }
-
-    function requireEnvelope(message) {
-        if (message === null || typeof message !== 'object' || Array.isArray(message)) {
-            throw new TypeError('Expected a message object.');
-        }
-
-        if (!hasOwn(message, 'type') || !hasOwn(message, 'data')) {
-            throw new TypeError('Expected own "type" and "data" properties.');
-        }
-
-        return message;
     }
 
     class Message {
@@ -108,7 +93,7 @@
 
         load(message) {
             try {
-                const parsed = requireEnvelope(parse(message));
+                const parsed = parse(message);
                 this.type = parsed.type;
                 this.data = parsed.data;
             } catch (error) {

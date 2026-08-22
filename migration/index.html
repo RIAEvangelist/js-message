@@ -3,17 +3,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="Migration notes for the modernized js-message package, including preserved imports, object loading, stricter envelope validation, and serializable errors.">
+    <meta name="description" content="Migrate to js-message 3.1: Node 22.13, one shared ESM and CommonJS source, restored optional fields, benchmarks, and preserved recovery behavior.">
     <meta name="color-scheme" content="dark">
     <meta property="og:title" content="Migration guide · js-message">
-    <meta property="og:description" content="What stays compatible and what becomes more predictable in js-message 3.">
+    <meta property="og:description" content="Move to Node 22.13, share one constructor across ESM and CommonJS, and keep optional messages small.">
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://riaevangelist.github.io/js-message/migration/">
     <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
     <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Migration guide · js-message">
-    <meta name="twitter:description" content="What stays compatible and what becomes more predictable in js-message 3.">
+    <meta name="twitter:description" content="The runtime, module, and optional-field changes in js-message 3.1.">
     <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
     <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
     <link rel="canonical" href="https://riaevangelist.github.io/js-message/migration/">
@@ -22,50 +22,45 @@
 </head>
 <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
-    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../">Overview</a></li><li><a href="../guide/">Start</a></li><li><a href="../api/">API</a></li><li><a href="../protocol/">Protocol</a></li><li><a href="../browser/">Browser</a></li><li><a href="../examples/">Examples</a></li><li><a href="../playground/">Playground</a></li><li><a href="../testing/">Testing</a></li><li><a href="./" aria-current="page">Migration</a></li></ul></nav></div></header>
+    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../">Overview</a></li><li><a href="../guide/">Start</a></li><li><a href="../why/">Why</a></li><li><a href="../api/">API</a></li><li><a href="../protocol/">Protocol</a></li><li><a href="../browser/">Browser</a></li><li><a href="../examples/">Examples</a></li><li><a href="../playground/">Playground</a></li><li><a href="../performance/">Performance</a></li><li><a href="../testing/">Testing</a></li><li><a href="./" aria-current="page">Migration</a></li></ul></nav></div></header>
 
     <main id="main-content">
-        <header class="site-shell page-hero"><p class="eyebrow">Migration to v3</p><h1>Keep the path. Gain a contract.</h1><p class="lede">Version 3 preserves the established imports and mutable message surface while making object input, invalid shapes, and error serialization explicit.</p></header>
+        <header class="site-shell page-hero"><p class="eyebrow">Migration to 3.1</p><h1>One module. Both Node syntaxes.</h1><p class="lede">Version 3.1 raises the runtime floor to Node 22.13, lets <code>import</code> and <code>require()</code> share one constructor, and restores optional message fields.</p></header>
         <div class="site-shell page-layout">
             <article class="prose">
-                <div class="callout"><strong>Version 3.0.0 is available on npm.</strong><p>Install it with <code>npm install js-message</code>. Review the stricter envelope validation and browser-global descriptor changes below before upgrading an existing integration.</p></div>
-                <section id="compatible">
+                <div class="callout"><strong>Version 3.1.0 requires Node.js 22.13 or newer.</strong><p>Install it with <code>npm install js-message</code>. Browser module and classic-script use remain available.</p></div>
+                <section id="runtime">
+                    <h2>Raise the Node.js floor</h2>
+                    <p>Update production, CI, containers, and local development to Node 22.13 or newer before installing 3.1.</p>
+                    <div class="code-block"><pre><code>node --version
+# v22.13.0 or newer</code></pre></div>
+                    <p>Node 22.13 is the first 22.x release where synchronous <code>require(ESM)</code> no longer emits an experimental warning by default.</p>
+                </section>
+
+                <section id="modules">
+                    <h2>Choose syntax, not a separate build</h2>
+                    <div class="grid grid--two"><div class="code-block"><pre><code>import Message from 'js-message';</code></pre></div><div class="code-block"><pre><code>const Message = require('js-message');</code></pre></div></div>
+                    <p>Both entries resolve to the synchronous <code>Message.js</code> source and return the same constructor identity. <code>js-message/index.js</code> and <code>js-message/Message.js</code> remain supported direct paths.</p>
+                </section>
+
+                <section id="optional">
+                    <h2>Keep incomplete messages incomplete</h2>
+                    <p>Version 3.0 accidentally required both message keys. Version 3.1 restores the original assignment behavior:</p>
+                    <div class="code-block"><pre><code>const ping = new Message('{"type":"ping"}');
+
+ping.type === 'ping';
+ping.data === undefined;
+ping.JSON === '{"type":"ping"}';</code></pre></div>
+                    <p><code>type</code>, <code>data</code>, or both may be absent. Add application-level validation only where your own protocol requires it.</p>
+                </section>
+
+                <section id="preserved">
                     <h2>What stays compatible</h2>
-                    <ul>
-                        <li><code>import Message from 'js-message'</code> remains the canonical package import.</li>
-                        <li><code>js-message/Message.js</code> remains a supported deep ES-module path.</li>
-                        <li><code>js-message/js-message-vanilla.js</code> still creates <code>globalThis.Message</code>.</li>
-                        <li><code>type</code> and <code>data</code> remain mutable, enumerable instance fields.</li>
-                        <li><code>JSON</code> remains a getter and <code>load()</code> still returns <code>undefined</code>.</li>
-                        <li>Buffer, boxed-string, typed-view, and custom JSON-coercible text inputs remain accepted.</li>
-                        <li>The declared Node.js engine floor remains <code>&gt;=13.2.0</code>.</li>
-                    </ul>
-                </section>
-
-                <section id="changed">
-                    <h2>What becomes stricter</h2>
-                    <div class="table-wrap"><table><thead><tr><th>Earlier behavior</th><th>Modernized behavior</th></tr></thead><tbody><tr><td>Valid JSON such as <code>{}</code>, <code>[]</code>, or <code>0</code> could silently leave fields undefined.</td><td>Any value without an own <code>type</code> and <code>data</code> pair becomes an error envelope.</td></tr><tr><td>The browser global and ES-module implementations could drift.</td><td>Both surfaces share the same tested contract and recovery behavior.</td></tr><tr><td>Serialized native errors collapsed to <code>{}</code>.</td><td>Error JSON exposes stable <code>name</code> and <code>message</code> fields while the live value remains an <code>Error</code>.</td></tr><tr><td>The browser-global script installed own <code>JSON</code> and <code>load</code> properties.</td><td>They are non-enumerable prototype members, matching the ES-module class. Native <code>JSON.stringify()</code> now uses the normalized two-key envelope.</td></tr></tbody></table></div>
-                    <div class="callout callout--warning"><strong>Audit code that relied on incomplete envelopes.</strong><p>If your receiver intentionally sent objects without both keys, add the missing key or branch on <code>message.type === 'error'</code>.</p></div>
-                    <p>An invalid cyclic or <code>BigInt</code> response is retained for debugging. Native serialization can still throw while that response is present; the error object itself remains serializable.</p>
-                </section>
-
-                <section id="new">
-                    <h2>New supported conveniences</h2>
-                    <div class="code-block"><pre><code>const fromObject = new Message({
-    type: 'ready',
-    data: { ok: true }
-});
-
-const fromJSON = new Message(
-    '{"type":"ready","data":{"ok":true}}'
-);
-
-JSON.stringify(fromObject) === fromObject.JSON; // true</code></pre></div>
-                    <p>Constructor input, object loading, and <code>toJSON()</code> make js-message fit both text and structured-clone transports without replacing its original API.</p>
-                    <div class="actions"><a class="button" href="../guide/">Use the modern surface</a><a class="button button--secondary" href="https://github.com/RIAEvangelist/js-message/blob/main/MIGRATION.md">Read the repository migration notes</a></div>
+                    <ul><li>Mutable, enumerable <code>type</code> and <code>data</code> fields.</li><li>The <code>JSON</code> getter, <code>toJSON()</code>, and <code>load()</code> returning <code>undefined</code>.</li><li>Buffer, boxed-string, typed-view, and custom JSON-coercible text input.</li><li>Recoverable malformed-input messages with serializable error details.</li><li>The explicit <code>js-message/js-message-vanilla.js</code> browser global.</li></ul>
+                    <div class="actions"><a class="button" href="../guide/">Start with 3.1</a><a class="button button--secondary" href="../performance/">See the benchmark</a></div>
                 </section>
             </article>
-            <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#compatible">Compatible behavior</a></li><li><a href="#changed">Stricter behavior</a></li><li><a href="#new">New conveniences</a></li></ul></aside>
+            <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#runtime">Node 22.13</a></li><li><a href="#modules">ESM and CommonJS</a></li><li><a href="#optional">Optional fields</a></li><li><a href="#preserved">Preserved behavior</a></li></ul></aside>
         </div>
     </main>
 

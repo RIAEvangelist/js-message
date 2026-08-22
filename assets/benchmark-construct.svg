@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="400" viewBox="0 0 1200 400" role="img" aria-labelledby="title description">
+  <title id="title">Time to construct one million empty messages</title>
+  <desc id="description">js-message 3.0.0 took 70.34 milliseconds. Version 3.1.0 took 77.37 milliseconds, approximately 12.9 million retained message instances per second. Lower is faster.</desc>
+  <rect width="1200" height="400" rx="24" fill="#07111c"/>
+  <rect x="1" y="1" width="1198" height="398" rx="23" fill="none" stroke="#3a6886" stroke-width="2"/>
+  <g font-family="Inter,Segoe UI,Arial,sans-serif">
+    <text x="40" y="52" fill="#eef8ff" font-size="30" font-weight="700">Construct 1,000,000 empty messages</text>
+    <text x="1160" y="52" fill="#7cf2a6" font-size="30" font-weight="700" text-anchor="end">≈12.9M/sec</text>
+    <text x="40" y="82" fill="#a9bfd0" font-size="16">Node 24.18 · median of 21 alternating samples · lower is faster</text>
+    <text x="1160" y="82" fill="#6de4ff" font-size="16" font-weight="700" text-anchor="end">retained instances + field check</text>
+
+    <text x="40" y="158" fill="#ffd166" font-size="18" font-weight="700">3.0.0 · strict checks</text>
+    <rect x="275" y="125" width="659.4" height="48" rx="7" fill="#ff8d74"/>
+    <text x="949.4" y="157" fill="#eef8ff" font-size="18" font-weight="700">70.34 ms</text>
+
+    <text x="40" y="248" fill="#c0f6ff" font-size="18" font-weight="700">3.1.0 · assignment</text>
+    <rect x="275" y="215" width="725.3" height="48" rx="7" fill="#6de4ff"/>
+    <text x="1015.3" y="247" fill="#eef8ff" font-size="18" font-weight="700">77.37 ms</text>
+
+    <line x1="275" y1="315" x2="1025" y2="315" stroke="#3a6886" stroke-width="2"/>
+    <g fill="#a9bfd0" font-size="14" text-anchor="middle">
+      <line x1="275" y1="315" x2="275" y2="323" stroke="#3a6886"/><text x="275" y="345">0</text>
+      <line x1="462.5" y1="315" x2="462.5" y2="323" stroke="#3a6886"/><text x="462.5" y="345">20</text>
+      <line x1="650" y1="315" x2="650" y2="323" stroke="#3a6886"/><text x="650" y="345">40</text>
+      <line x1="837.5" y1="315" x2="837.5" y2="323" stroke="#3a6886"/><text x="837.5" y="345">60</text>
+      <line x1="1025" y1="315" x2="1025" y2="323" stroke="#3a6886"/><text x="1025" y="345">80</text>
+      <text x="650" y="377" fill="#c0d3e2">milliseconds</text>
+    </g>
+  </g>
+</svg>

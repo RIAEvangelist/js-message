@@ -115,6 +115,18 @@ try {
         const image = await fetchLocal(running.port, '/assets/js-message-header.png');
         equal(image.status, 200);
         equal(image.headers['content-type'], 'image/png');
+
+        for (const path of ['/why/', '/performance/']) {
+            equal((await fetchLocal(running.port, path)).status, 200);
+        }
+
+        const chart = await fetchLocal(running.port, '/assets/benchmark-object.svg');
+        equal(chart.status, 200);
+        equal(chart.headers['content-type'], 'image/svg+xml');
+
+        const results = await fetchLocal(running.port, '/benchmarks/results.json');
+        equal(results.status, 200);
+        equal(results.headers['content-type'], 'application/json; charset=utf-8');
     });
 
     await check('serves the sandboxed playground frame and canonical modules', async () => {

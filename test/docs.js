@@ -11,6 +11,7 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const publicPages = [
     'index.html',
     'guide/index.html',
+    'why/index.html',
     'api/index.html',
     'protocol/index.html',
     'browser/index.html',
@@ -19,6 +20,7 @@ const publicPages = [
     'playground/recipes/round-trip/index.html',
     'playground/recipes/recovery/index.html',
     'playground/recipes/boundary/index.html',
+    'performance/index.html',
     'testing/index.html',
     'testing/unit/index.html',
     'testing/functional/index.html',
@@ -110,6 +112,8 @@ async function run() {
             assert(html.includes('aria-label="Primary navigation"'), `${page} is missing labeled navigation.`);
             assert((html.match(/aria-current="page"/g) ?? []).length === 1, `${page} needs one current nav item.`);
             assert(html.includes('>Playground</a>'), `${page} is missing Playground from primary navigation.`);
+            assert(html.includes('>Why</a>'), `${page} is missing Why from primary navigation.`);
+            assert(html.includes('>Performance</a>'), `${page} is missing Performance from primary navigation.`);
             assert(html.includes('>Migration</a>'), `${page} is missing Migration from primary navigation.`);
             assert(html.includes('assets/site.css'), `${page} is missing shared CSS.`);
             assert(html.includes('assets/site.js'), `${page} is missing shared JavaScript.`);
@@ -136,8 +140,8 @@ async function run() {
         const overview = read('testing/index.html');
         const expectedTotals = {
             functional: 8,
-            integration: 9,
-            regression: 24,
+            integration: 10,
+            regression: 27,
             unit: 31
         };
         const allIds = catalog.flatMap((suite) => suite.cases.map((testCase) => testCase.id));
@@ -145,8 +149,8 @@ async function run() {
 
         assert(catalog.length === 4, 'Testing documentation requires four focused suites.');
         assert(new Set(allIds).size === allIds.length, 'A test ID appears in more than one suite.');
-        assert(allIds.length === 72, `Expected 72 shared checks, found ${allIds.length}.`);
-        assert(overview.includes('72 nonduplicated shared checks'), 'Testing overview is missing the shared check total.');
+        assert(allIds.length === 76, `Expected 76 shared checks, found ${allIds.length}.`);
+        assert(overview.includes('76 nonduplicated shared checks'), 'Testing overview is missing the shared check total.');
 
         for (const suite of catalog) {
             const expected = expectedTotals[suite.id];
@@ -228,12 +232,15 @@ async function run() {
         assert(readme.startsWith('![js-message'), 'README must start with the generated header.');
         assert(readme.includes('https://raw.githubusercontent.com/RIAEvangelist/js-message/main/assets/js-message-header.png'), 'README header path is missing.');
         assert(readme.includes('npm install js-message'), 'README must install the published npm package.');
-        for (const route of ['guide/', 'api/', 'protocol/', 'browser/', 'examples/', 'playground/', 'testing/', 'migration/']) {
+        for (const route of ['guide/', 'why/', 'api/', 'protocol/', 'browser/', 'examples/', 'playground/', 'performance/', 'testing/', 'migration/']) {
             assert(readme.includes(`https://riaevangelist.github.io/js-message/${route}`), `README is missing ${route}.`);
         }
+        assert(readme.includes('./assets/benchmark-object.svg'), 'README is missing the object benchmark chart.');
+        assert(readme.includes('./assets/benchmark-json.svg'), 'README is missing the JSON benchmark chart.');
+        assert(readme.includes('./assets/benchmark-construct.svg'), 'README is missing the construction benchmark chart.');
     });
 
-    await check('release documentation identifies published version 3.0.0', () => {
+    await check('release documentation identifies published version 3.1.0', () => {
         const releaseDocuments = [
             'README.md',
             'index.html',
@@ -243,22 +250,25 @@ async function run() {
 
         for (const document of releaseDocuments) {
             const content = read(document);
-            assert(content.includes('3.0.0'), `${document} does not identify version 3.0.0.`);
+            assert(content.includes('3.1.0'), `${document} does not identify version 3.1.0.`);
             assert(!content.includes('github:RIAEvangelist/js-message#main'), `${document} still installs from GitHub main.`);
             assert(!/not (?:yet )?published|v3 preview|until a separate release/i.test(content), `${document} still describes a preview release.`);
         }
 
         const changelog = read('CHANGELOG.md');
-        assert(changelog.includes('## 3.0.0 - 2026-08-16'), 'Changelog release date is missing.');
-        assert(!changelog.includes('## 3.0.0 - Unreleased'), 'Changelog still marks 3.0.0 as unreleased.');
+        assert(changelog.includes('## 3.1.0 - 2026-08-21'), 'Changelog release date is missing.');
+        assert(!changelog.includes('## 3.1.0 - Unreleased'), 'Changelog still marks 3.1.0 as unreleased.');
     });
 
     await check('package metadata preserves every supported entry and has no runtime dependency', () => {
         const manifest = JSON.parse(read('package.json'));
-        assert(manifest.version === '3.0.0', 'Modernized source version must be 3.0.0.');
+        assert(manifest.version === '3.1.0', 'Modernized source version must be 3.1.0.');
         assert(manifest.type === 'module', 'Package must remain native ESM.');
-        assert(manifest.exports['.'] === './index.js', 'Root export is incorrect.');
-        assert(manifest.exports['./Message.js'] === './Message.js', 'Legacy module export is missing.');
+        assert(manifest.main === './Message.js' && manifest.module === './Message.js' && manifest.browser === './Message.js', 'Primary module metadata must share Message.js.');
+        assert(manifest.engines.node === '>=22.13.0', 'Node runtime floor is incorrect.');
+        assert(manifest.exports['.'].import === './Message.js' && manifest.exports['.'].require === './Message.js', 'Root ESM/CommonJS export is incorrect.');
+        assert(manifest.exports['./index.js'].import === './index.js' && manifest.exports['./index.js'].require === './index.js', 'Index compatibility export is missing.');
+        assert(manifest.exports['./Message.js'].import === './Message.js' && manifest.exports['./Message.js'].require === './Message.js', 'Direct module export is missing.');
         assert(manifest.exports['./js-message-vanilla.js'] === './js-message-vanilla.js', 'Global export is missing.');
         assert(!manifest.dependencies || Object.keys(manifest.dependencies).length === 0, 'Runtime dependencies must stay empty.');
         assert(manifest.devDependencies['vanilla-test'] === '2.1.1', 'vanilla-test must stay exactly pinned.');
@@ -266,6 +276,26 @@ async function run() {
             assert(manifest.scripts[`test:${suite}`] === `node ./test/run-suite.js ${suite}`, `Missing focused ${suite} test command.`);
         }
         assert(manifest.scripts['test:playground'] === 'node ./test/browser.js', 'Real-Chrome playground command is missing.');
+        assert(manifest.scripts.benchmark === 'node --expose-gc ./scripts/benchmark.js', 'Benchmark command is missing.');
+    });
+
+    await check('benchmarks publish reproducible results and accessible charts', () => {
+        const results = JSON.parse(read('benchmarks/results.json'));
+        const benchmark = read('scripts/benchmark.js');
+        const performance = read('performance/index.html');
+        assert(results.baseline === '3.0.0 strict envelope checks', 'Benchmark baseline is not the published 3.0.0 runtime.');
+        assert(results.candidate === '3.1.0 assignment semantics', 'Benchmark candidate is not 3.1.0.');
+        assert(results.metrics.length === 3, 'Benchmark must publish three focused metrics.');
+        assert(results.metrics.every((metric) => metric.iterations === 1000000 && metric.baseline > 0 && metric.candidate > 0), 'Benchmark results are incomplete.');
+        assert(benchmark.includes("const baselineVersion = '3.0.0'"), 'Benchmark source does not load the release baseline.');
+        assert(benchmark.includes('Median of ${samples} alternating samples'), 'Benchmark source is missing alternating median methodology.');
+        for (const chart of ['assets/benchmark-object.svg', 'assets/benchmark-json.svg', 'assets/benchmark-construct.svg']) {
+            const svg = read(chart);
+            assert(svg.includes('<title id="title">') && svg.includes('<desc id="description">'), `${chart} is missing accessible text.`);
+            assert(performance.includes(`../${chart}`), `Performance page is missing ${chart}.`);
+        }
+        assert((performance.match(/class="benchmark-scroll" tabindex="0"/g) || []).length === 3, 'Performance charts are not keyboard-scrollable on small screens.');
+        assert(performance.includes('../benchmarks/results.json'), 'Performance page is missing raw results.');
     });
 
     await check('the generated repository header is a bounded three-to-one PNG', () => {
@@ -279,7 +309,7 @@ async function run() {
 
     await check('CI verifies the package before deploying an allowlisted Pages artifact', () => {
         const workflow = read('.github/workflows/ci.yml');
-        for (const required of ['npm test', 'coverage', 'test:playground', 'package-smoke', 'upload-pages-artifact', 'deploy-pages', '_site']) {
+        for (const required of ['npm test', '22.13.0', 'runtime-floor', 'coverage', 'test:playground', 'package-smoke', 'upload-pages-artifact', 'deploy-pages', '_site']) {
             assert(workflow.includes(required), `CI workflow is missing ${required}.`);
         }
     });
@@ -289,8 +319,12 @@ async function run() {
             '.nojekyll',
             'index.html',
             'assets/js-message-header.png',
+            'assets/benchmark-construct.svg',
+            'assets/benchmark-json.svg',
+            'assets/benchmark-object.svg',
             'assets/site.css',
             'assets/site.js',
+            'benchmarks/results.json',
             'index.js',
             'Message.js',
             'playground/frame.html',

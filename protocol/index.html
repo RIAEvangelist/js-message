@@ -22,10 +22,10 @@
 </head>
 <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
-    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../">Overview</a></li><li><a href="../guide/">Start</a></li><li><a href="../api/">API</a></li><li><a href="./" aria-current="page">Protocol</a></li><li><a href="../browser/">Browser</a></li><li><a href="../examples/">Examples</a></li><li><a href="../playground/">Playground</a></li><li><a href="../testing/">Testing</a></li><li><a href="../migration/">Migration</a></li></ul></nav></div></header>
+    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../">Overview</a></li><li><a href="../guide/">Start</a></li><li><a href="../why/">Why</a></li><li><a href="../api/">API</a></li><li><a href="./" aria-current="page">Protocol</a></li><li><a href="../browser/">Browser</a></li><li><a href="../examples/">Examples</a></li><li><a href="../playground/">Playground</a></li><li><a href="../performance/">Performance</a></li><li><a href="../testing/">Testing</a></li><li><a href="../migration/">Migration</a></li></ul></nav></div></header>
 
     <main id="main-content">
-        <header class="site-shell page-hero"><p class="eyebrow">Protocol contract</p><h1>Two keys define the boundary.</h1><p class="lede">A loadable message is a non-array object with its own <code>type</code> and <code>data</code> properties. Serialization always emits those two keys and no others.</p></header>
+        <header class="site-shell page-hero"><p class="eyebrow">Protocol convention</p><h1>Two familiar keys. Neither forced.</h1><p class="lede"><code>type</code> names a signal and <code>data</code> carries its payload, but js-message copies what exists instead of imposing a schema. Native JSON serialization omits missing values.</p></header>
         <div class="site-shell page-layout">
             <article class="prose">
                 <section id="envelope">
@@ -37,13 +37,15 @@
         "available": 8
     }
 }</code></pre></div>
-                    <p><code>type</code> chooses the route or event. <code>data</code> carries the payload. js-message does not impose a vocabulary or schema inside either value; applications can layer validation above this transport envelope.</p>
+                    <p><code>type</code> usually chooses the route or event. <code>data</code> usually carries the payload. Either may be absent, and js-message does not impose a vocabulary or schema inside either value. Applications can layer validation above this transport convention.</p>
+                    <div class="code-block"><pre><code>{ "type": "ping" }</code></pre></div>
+                    <p>A payload-free signal loads with <code>data === undefined</code> and serializes without a dummy <code>data</code> key.</p>
                 </section>
 
                 <section id="validation">
-                    <h2>What <code>load()</code> validates</h2>
-                    <div class="table-wrap"><table><thead><tr><th>Input</th><th>Outcome</th></tr></thead><tbody><tr><td>JSON string for an object with own <code>type</code> and <code>data</code></td><td><span class="metric">Loaded</span></td></tr><tr><td>Buffer, boxed string, typed view, or other JSON-coercible text</td><td><span class="metric">Loaded</span> after native text coercion and parsing.</td></tr><tr><td>Existing object with own <code>type</code> and <code>data</code></td><td><span class="metric">Loaded</span></td></tr><tr><td>Malformed JSON</td><td>Error envelope with a <code>SyntaxError</code>.</td></tr><tr><td><code>null</code>, primitive, or array</td><td>Error envelope with a <code>TypeError</code>.</td></tr><tr><td>Object missing either required own key</td><td>Error envelope with a <code>TypeError</code>.</td></tr></tbody></table></div>
-                    <div class="callout callout--warning"><strong>A valid JSON value is not always a valid message.</strong><p><code>[]</code>, <code>0</code>, <code>null</code>, and <code>{}</code> parse successfully, but none satisfy the envelope contract.</p></div>
+                    <h2>What <code>load()</code> does</h2>
+                    <div class="table-wrap"><table><thead><tr><th>Input</th><th>Outcome</th></tr></thead><tbody><tr><td>JSON string with any available message fields</td><td><span class="metric">Parsed and assigned</span></td></tr><tr><td>Buffer, boxed string, typed view, or other JSON-coercible text</td><td><span class="metric">Native text coercion, then parsing</span></td></tr><tr><td>Existing plain object</td><td><span class="metric">Available fields assigned by reference</span></td></tr><tr><td>Field omitted</td><td>The corresponding instance field becomes <code>undefined</code>.</td></tr><tr><td>Extra object key</td><td>Accessible on the input but excluded from normalized serialization.</td></tr><tr><td>Malformed JSON text</td><td>Recoverable error message whose live <code>err</code> is a <code>SyntaxError</code>.</td></tr><tr><td>Null or uncoercible input</td><td>Recoverable error message whose live <code>err</code> is a <code>TypeError</code>.</td></tr></tbody></table></div>
+                    <div class="callout"><strong>Normalization is not validation.</strong><p>If an application requires <code>type</code>, <code>data</code>, or a payload schema, validate that policy above js-message.</p></div>
                 </section>
 
                 <section id="normalization">
@@ -51,7 +53,8 @@
                     <ul>
                         <li>Extra keys in loaded input are ignored when the message is serialized.</li>
                         <li>Object input keeps the original <code>data</code> reference; js-message does not clone payloads.</li>
-                        <li>Direct assignment to <code>type</code> and <code>data</code> is unrestricted for compatibility.</li>
+                        <li>Missing <code>type</code> or <code>data</code> fields assign <code>undefined</code> for compatibility.</li>
+                        <li>Direct assignment to either field is unrestricted.</li>
                         <li><code>JSON</code> uses native <code>JSON.stringify</code> behavior, including omission, conversion, and errors.</li>
                         <li>A later valid <code>load()</code> replaces an earlier error state, so one instance can recover.</li>
                     </ul>

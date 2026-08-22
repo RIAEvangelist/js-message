@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Why teams choose js-message: optional fields, one ESM and CommonJS constructor, recoverable parsing, zero runtime dependencies, and measurable speed.">
+    <meta name="color-scheme" content="dark">
+    <meta property="og:title" content="Why js-message · One boundary primitive">
+    <meta property="og:description" content="Normalize once, move messages anywhere, and keep transport code tiny.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://riaevangelist.github.io/js-message/why/">
+    <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Why js-message · One boundary primitive">
+    <meta name="twitter:description" content="A tiny message boundary for ESM, CommonJS, browsers, and every JavaScript transport.">
+    <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <link rel="canonical" href="https://riaevangelist.github.io/js-message/why/">
+    <link rel="stylesheet" href="../assets/site.css">
+    <title>Why js-message · One boundary primitive</title>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../">Overview</a></li><li><a href="../guide/">Start</a></li><li><a href="./" aria-current="page">Why</a></li><li><a href="../api/">API</a></li><li><a href="../protocol/">Protocol</a></li><li><a href="../browser/">Browser</a></li><li><a href="../examples/">Examples</a></li><li><a href="../playground/">Playground</a></li><li><a href="../performance/">Performance</a></li><li><a href="../testing/">Testing</a></li><li><a href="../migration/">Migration</a></li></ul></nav></div></header>
+
+    <main id="main-content">
+        <header class="site-shell page-hero"><p class="eyebrow">Why js-message</p><h1>Normalize once. Move messages anywhere.</h1><p class="lede">Use one small boundary primitive when your application needs a predictable convention—not another transport framework, schema engine, or dependency tree.</p></header>
+
+        <section class="section section--bordered">
+            <div class="site-shell">
+                <div class="section-heading"><p class="eyebrow">The practical case</p><h2>Less boundary code to own.</h2><p>A message can be complete, partial, incoming as JSON, or already an object. js-message copies the fields that exist and stays out of the payload.</p></div>
+                <div class="grid grid--two">
+                    <article class="card"><span class="card__label">Optional by design</span><h3>No dummy payloads</h3><p><code>{ type: 'ping' }</code> is a valid signal. Missing fields remain <code>undefined</code>; applications choose whether they are required.</p></article>
+                    <article class="card"><span class="card__label">One Node source</span><h3>Import or require</h3><p>Node 22.13+ loads the same synchronous <code>Message.js</code> constructor through ESM and CommonJS. There is no duplicate build to drift.</p></article>
+                    <article class="card"><span class="card__label">Recovery as data</span><h3>Inspect malformed input</h3><p>A failed parse becomes a normal <code>type: 'error'</code> message with the original response and useful error details.</p></article>
+                    <article class="card"><span class="card__label">Small on purpose</span><h3>Zero runtime dependencies</h3><p>No transpiler, generated runtime, framework binding, install hook, timer, listener, or hidden network request.</p></article>
+                </div>
+            </div>
+        </section>
+
+        <section class="section section--bordered">
+            <div class="site-shell grid grid--two">
+                <div class="prose"><p class="eyebrow">Use it when</p><h2>Your transports need one convention.</h2><ul><li>WebSockets, workers, IPC, fetch, or storage exchange JavaScript messages.</li><li>Node services mix ESM and CommonJS during a migration.</li><li>Some signals carry payloads and others do not.</li><li>You want parse failures preserved without repeating recovery code.</li></ul></div>
+                <div class="prose"><p class="eyebrow">Choose something else when</p><h2>You need enforcement or transport.</h2><ul><li>Use a schema validator when fields and payload types must be rejected.</li><li>Use a protocol client when you need delivery, retries, authentication, or persistence.</li><li>Use native objects directly when one boundary never needs normalization or JSON recovery.</li></ul></div>
+            </div>
+        </section>
+
+        <section class="section section--bordered"><div class="site-shell"><div class="callout"><strong>Small enough to understand. Fast enough to disappear.</strong><p>Review the measured path, then run the real module before choosing it.</p><div class="actions"><a class="button" href="../performance/">See the benchmarks</a><a class="button button--secondary" href="../playground/">Open the playground</a></div></div></div></section>
+    </main>
+
+    <footer class="site-footer"><div class="site-shell site-footer__inner"><p>js-message 3.1 · one boundary primitive · <span data-current-year></span></p><nav aria-label="Project links"><a href="../performance/">Performance</a><a href="../testing/">Testing</a><a href="https://github.com/RIAEvangelist/js-message">GitHub</a><a href="https://www.npmjs.com/package/js-message">npm</a></nav></div></footer>
+    <script type="module" src="../assets/site.js"></script>
+</body>
+</html>

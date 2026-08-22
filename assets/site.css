@@ -625,6 +625,41 @@ tr:last-child td {
     font-weight: 900;
 }
 
+.benchmark-grid {
+    display: grid;
+    gap: 1.25rem;
+}
+
+.benchmark-figure {
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+}
+
+.benchmark-figure img {
+    width: 100%;
+    height: auto;
+}
+
+.benchmark-scroll {
+    overflow-x: auto;
+    scrollbar-color: var(--border-strong) var(--surface);
+}
+
+.benchmark-scroll:focus-visible {
+    outline: 3px solid var(--focus);
+    outline-offset: -3px;
+}
+
+.benchmark-figure figcaption {
+    padding: 1rem 1.2rem 1.15rem;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+}
+
 .result-panel {
     padding: 1.35rem;
     box-shadow: none;
@@ -781,6 +816,11 @@ tr:last-child td {
     .playground-page section[id] {
         scroll-margin-top: 1rem;
     }
+
+    .benchmark-scroll img {
+        width: 50rem;
+        max-width: none;
+    }
 }
 
 @media (max-width: 34rem) {
@@ -800,6 +840,7 @@ tr:last-child td {
     .method dl {
         grid-template-columns: 1fr;
     }
+
 }
 
 @media (prefers-reduced-motion: reduce) {

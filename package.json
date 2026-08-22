@@ -1,12 +1,27 @@
 {
   "name": "js-message",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "A tiny, normalized JavaScript and JSON message envelope for every runtime boundary",
   "type": "module",
-  "main": "./index.js",
+  "main": "./Message.js",
+  "module": "./Message.js",
+  "browser": "./Message.js",
   "exports": {
-    ".": "./index.js",
-    "./Message.js": "./Message.js",
+    ".": {
+      "import": "./Message.js",
+      "require": "./Message.js",
+      "default": "./Message.js"
+    },
+    "./index.js": {
+      "import": "./index.js",
+      "require": "./index.js",
+      "default": "./index.js"
+    },
+    "./Message.js": {
+      "import": "./Message.js",
+      "require": "./Message.js",
+      "default": "./Message.js"
+    },
     "./js-message-vanilla.js": "./js-message-vanilla.js",
     "./package.json": "./package.json"
   },
@@ -14,6 +29,9 @@
     "index.js",
     "Message.js",
     "js-message-vanilla.js",
+    "assets/benchmark-construct.svg",
+    "assets/benchmark-json.svg",
+    "assets/benchmark-object.svg",
     "CHANGELOG.md",
     "MIGRATION.md"
   ],
@@ -34,6 +52,7 @@
     "coverage": "vanilla-test coverage",
     "coverage:node": "vanilla-test coverage node",
     "coverage:chrome": "vanilla-test coverage chrome",
+    "benchmark": "node --expose-gc ./scripts/benchmark.js",
     "start": "node ./scripts/serve.js"
   },
   "repository": {
@@ -45,7 +64,7 @@
   },
   "homepage": "https://riaevangelist.github.io/js-message/",
   "engines": {
-    "node": ">=13.2.0"
+    "node": ">=22.13.0"
   },
   "keywords": [
     "message",
@@ -56,7 +75,8 @@
     "websocket",
     "browser",
     "node",
-    "esm"
+    "esm",
+    "commonjs"
   ],
   "author": "Brandon Nozaki Miller",
   "license": "MIT",
