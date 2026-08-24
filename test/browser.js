@@ -107,7 +107,7 @@ function startServer() {
         };
 
         if (isFrame) {
-            headers['content-security-policy'] = "default-src 'none'; style-src 'self'; script-src 'self' blob:; worker-src blob:; connect-src 'none'; img-src 'none'; font-src 'none'; base-uri 'none'; object-src 'none'; form-action 'none'; frame-ancestors 'self'";
+            headers['content-security-policy'] = "default-src 'none'; style-src 'self'; script-src 'self' blob: 'sha256-KyKQfSJWw1MSnyijZQuh+80N+YgtXT3Or+jkudG/JOQ='; worker-src blob:; connect-src 'none'; img-src 'none'; font-src 'none'; base-uri 'none'; object-src 'none'; form-action 'none'; frame-ancestors 'self'";
         } else if (isTestPage) {
             headers['content-security-policy'] = "default-src 'self'; img-src 'none'; style-src 'self'; script-src 'self' 'unsafe-inline'; worker-src 'none'; frame-src 'self'; connect-src 'none'; base-uri 'none'; object-src 'none'; form-action 'none'; frame-ancestors 'none'";
         }

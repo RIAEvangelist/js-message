@@ -80,7 +80,7 @@ const server = createServer((request, response) => {
     const crossOriginResource = relativeTarget.startsWith('playground/') || relativeTarget === 'index.js' || relativeTarget === 'Message.js';
     const headers = {
         'content-security-policy': frameTarget
-            ? "default-src 'none'; style-src 'self'; script-src 'self' blob:; worker-src blob:; connect-src 'none'; img-src 'none'; font-src 'none'; base-uri 'none'; object-src 'none'; form-action 'none'; frame-ancestors 'self'"
+            ? "default-src 'none'; style-src 'self'; script-src 'self' blob: 'sha256-KyKQfSJWw1MSnyijZQuh+80N+YgtXT3Or+jkudG/JOQ='; worker-src blob:; connect-src 'none'; img-src 'none'; font-src 'none'; base-uri 'none'; object-src 'none'; form-action 'none'; frame-ancestors 'self'"
             : "default-src 'self'; img-src 'self'; style-src 'self'; script-src 'self'; worker-src 'none'; frame-src 'self'; connect-src 'none'; base-uri 'none'; object-src 'none'; form-action 'none'; frame-ancestors 'none'",
         'content-type': types.get(extname(target).toLowerCase()) ?? 'application/octet-stream',
         'cross-origin-resource-policy': crossOriginResource ? 'cross-origin' : 'same-origin',

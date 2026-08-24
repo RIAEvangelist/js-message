@@ -1,16 +1,19 @@
 import VanillaTest from 'vanilla-test';
-import Message, { Message as NamedMessage } from '../index.js';
-import LegacyPathMessage from '../Message.js';
-import '../js-message-vanilla.js';
+import BarePackageMessage, { Message as NamedMessage } from 'js-message';
+import IndexMessage from 'js-message/index.js';
+import LegacyPathMessage from 'js-message/Message.js';
+import 'js-message/js-message-vanilla.js';
 import {
     catalog,
     suites
 } from './suites/index.js';
 
 const context = Object.freeze({
+    BarePackageMessage,
     GlobalMessage: globalThis.Message,
+    IndexMessage,
     LegacyPathMessage,
-    Message,
+    Message: BarePackageMessage,
     NamedMessage
 });
 

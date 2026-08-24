@@ -28,6 +28,25 @@
         <header class="site-shell page-hero"><p class="eyebrow">Boundary examples</p><h1>Use the same envelope everywhere.</h1><p class="lede">These recipes keep transport details outside the message contract. Each receiver creates or loads a <code>Message</code>, then routes <code>type</code> and <code>data</code>.</p></header>
         <div class="site-shell page-layout">
             <article class="prose">
+                <section id="browser-setup">
+                    <h2>Native browser setup</h2>
+                    <div class="callout"><strong>js-message works with bundlers and without a bundler.</strong><p>Bundlers resolve the bare <code>js-message</code> import normally. Native browser ESM resolves it through a standard import map, with no build or transpilation step.</p></div>
+                    <div class="code-block"><pre><code>&lt;script type="importmap"&gt;
+{
+  "imports": {
+    "js-message": "./node_modules/js-message/index.js",
+    "js-message/": "./node_modules/js-message/"
+  }
+}
+&lt;/script&gt;
+&lt;script type="module"&gt;
+  import Message from 'js-message';
+
+  console.log(new Message({ type: 'page.ready' }).JSON);
+&lt;/script&gt;</code></pre></div>
+                    <p>This map is complete because js-message has zero runtime dependencies, so it needs no dependency or scope entries. Its paths are relative to the HTML document. Serve the app over HTTP(S), and configure the server to expose these <code>node_modules</code> files; <code>file://</code> is not supported.</p>
+                </section>
+
                 <section id="websocket">
                     <h2>WebSocket client</h2>
                     <div class="code-block"><pre><code>import Message from 'js-message';
@@ -93,7 +112,7 @@ process.on('message', (value) =&gt; {
                     <div class="callout"><strong>Choose text or objects at the transport edge.</strong><p>Use <code>message.JSON</code> for text transports and <code>message.toJSON()</code> for structured-clone or object transports.</p></div>
                 </section>
             </article>
-            <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#websocket">WebSocket</a></li><li><a href="#fetch">Fetch</a></li><li><a href="#worker">Web Worker</a></li><li><a href="#ipc">Node IPC</a></li></ul></aside>
+            <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#browser-setup">Browser setup</a></li><li><a href="#websocket">WebSocket</a></li><li><a href="#fetch">Fetch</a></li><li><a href="#worker">Web Worker</a></li><li><a href="#ipc">Node IPC</a></li></ul></aside>
         </div>
     </main>
 

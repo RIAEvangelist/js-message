@@ -1,8 +1,8 @@
 import { createRequire } from 'node:module';
 import Message, { Message as NamedMessage } from 'js-message';
-import IndexMessage from '../index.js';
-import LegacyPathMessage from '../Message.js';
-import '../js-message-vanilla.js';
+import IndexMessage from 'js-message/index.js';
+import LegacyPathMessage from 'js-message/Message.js';
+import 'js-message/js-message-vanilla.js';
 
 const require = createRequire(import.meta.url);
 

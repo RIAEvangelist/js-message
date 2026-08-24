@@ -12,7 +12,7 @@ A tiny, normalized JavaScript and JSON message envelope for every runtime bounda
 [![runtime dependencies](https://img.shields.io/badge/runtime_dependencies-0-7cf2a6)](package.json)
 [![license](https://img.shields.io/github/license/RIAEvangelist/js-message.svg)](licence)
 
-> **Current release:** js-message 3.1.0 is available on npm. It requires Node.js 22.13 or newer and gives ESM and CommonJS the same synchronous constructor.
+> **Version:** js-message 3.1.1 requires Node.js 22.13 or newer and gives ESM and CommonJS the same synchronous constructor.
 
 `js-message` keeps the transport contract deliberately small:
 
@@ -102,6 +102,30 @@ import Message, { Message as NamedMessage } from 'js-message';
 import LegacyMessage from 'js-message/Message.js';
 ```
 
+### Native browser ESM
+
+js-message works with bundlers and without a bundler. Bundlers resolve the bare package import normally. Native browser ESM resolves the same import through a standard import map, with no build or transpilation step:
+
+```html
+<script type="importmap">
+{
+    "imports": {
+        "js-message": "./node_modules/js-message/index.js"
+    }
+}
+</script>
+<script type="module">
+    import Message from 'js-message';
+
+    const message = new Message({
+        type: 'page.ready',
+        data: { ok: true }
+    });
+</script>
+```
+
+Import-map URLs are relative to the HTML document. Serve the page over HTTP(S), and configure the server to expose the mapped `node_modules` files. Loading the page from `file://` is not supported. js-message has zero runtime dependencies, so this complete map needs no dependency entries or scoped override; if that changes, the map must include every bare runtime dependency and preserve any nested dependency boundary with a scope.
+
 ```js
 // CommonJS — the same Message.js constructor, not a duplicate build
 const Message = require('js-message');
@@ -149,7 +173,7 @@ The benchmark uses Node 24.18, one million operations, and the median of 21 alte
 
 ## Verification
 
-Five focused suites use [vanilla-test](https://www.npmjs.com/package/vanilla-test) to run 82 nonduplicated shared checks from the same untransformed module in Node.js and Chrome. Chrome adds eleven distinct playground integration checks without inflating that shared count. CI also executes real ESM and CommonJS imports from the packed npm artifact, checks documentation and the declared runtime floor, and enforces native coverage.
+Five focused suites use [vanilla-test](https://www.npmjs.com/package/vanilla-test) to run 83 nonduplicated shared checks from the same untransformed module in Node.js and Chrome. Chrome adds twelve distinct playground integration checks without inflating that shared count. The shared inventory imports js-message by its bare package name: Node resolves package self-references, while real Chrome resolves that same name through the checked-in native import map. CI also executes real ESM and CommonJS imports from the packed npm artifact, verifies the dependency tree and both production and full npm audits, checks documentation and the declared runtime floor, and enforces native coverage.
 
 ```sh
 npm ci

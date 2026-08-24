@@ -130,6 +130,12 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
+      - name: Verify dependency tree and npm audits
+        run: |
+          npm ls --all
+          npm audit --omit=dev
+          npm audit
+
       - name: Pack, inspect, install, and import the artifact
         run: npm run test:package
 

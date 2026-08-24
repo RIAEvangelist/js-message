@@ -1,4 +1,5 @@
 import VanillaTest from 'vanilla-test';
+import BrowserTestMessage from 'js-message';
 import browserIntegration from './suites/integration-browser.js';
 
 export default async function run() {
@@ -15,7 +16,7 @@ export default async function run() {
         test.expects(description);
 
         try {
-            await current.run(Object.freeze({}));
+            await current.run(Object.freeze({ BrowserTestMessage }));
             test.pass();
         } catch (error) {
             console.error(`${description}:`, error);

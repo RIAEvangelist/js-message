@@ -9,7 +9,8 @@ const cases = [
     testCase('INT-01', 'root default and named exports share one class', ({ Message, NamedMessage }) => {
         equal(Message, NamedMessage);
     }),
-    testCase('INT-02', 'the legacy module path shares the root class', ({ LegacyPathMessage, Message }) => {
+    testCase('INT-02', 'the supported module paths share the root class', ({ IndexMessage, LegacyPathMessage, Message }) => {
+        equal(Message, IndexMessage);
         equal(Message, LegacyPathMessage);
     }),
     testCase('INT-03', 'the browser-global entry exposes a constructor', ({ GlobalMessage }) => {

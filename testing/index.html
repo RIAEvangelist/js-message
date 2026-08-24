@@ -3,17 +3,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="How 82 shared js-message checks are organized into five vanilla-test suites, plus eleven distinct Chrome playground checks.">
+    <meta name="description" content="How 83 shared js-message checks are organized into five vanilla-test suites, plus twelve distinct Chrome playground checks.">
     <meta name="color-scheme" content="dark">
     <meta property="og:title" content="Testing strategy · js-message">
-    <meta property="og:description" content="Five focused vanilla-test suites, 82 nonduplicated shared checks, real runtimes, and eleven distinct Chrome playground checks.">
+    <meta property="og:description" content="Five focused vanilla-test suites, 83 nonduplicated shared checks, real runtimes, and twelve distinct Chrome playground checks.">
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://riaevangelist.github.io/js-message/testing/">
     <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
     <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Testing strategy · js-message">
-    <meta name="twitter:description" content="Five focused vanilla-test suites, 82 nonduplicated shared checks, real runtimes, and eleven distinct Chrome playground checks.">
+    <meta name="twitter:description" content="Five focused vanilla-test suites, 83 nonduplicated shared checks, real runtimes, and twelve distinct Chrome playground checks.">
     <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
     <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
     <link rel="canonical" href="https://riaevangelist.github.io/js-message/testing/">
@@ -25,20 +25,21 @@
     <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../">Overview</a></li><li><a href="../guide/">Start</a></li><li><a href="../why/">Why</a></li><li><a href="../api/">API</a></li><li><a href="../protocol/">Protocol</a></li><li><a href="../browser/">Browser</a></li><li><a href="../examples/">Examples</a></li><li><a href="../playground/">Playground</a></li><li><a href="../performance/">Performance</a></li><li><a href="./" aria-current="page">Testing</a></li><li><a href="../migration/">Migration</a></li></ul></nav></div></header>
 
     <main id="main-content">
-        <header class="site-shell page-hero"><p class="eyebrow">Testing strategy</p><h1>Small checks. Clear evidence.</h1><p class="lede">Five vanilla-test suites divide 82 nonduplicated shared checks by purpose, then run the same untransformed module in Node.js and real Chrome coverage.</p></header>
+        <header class="site-shell page-hero"><p class="eyebrow">Testing strategy</p><h1>Small checks. Clear evidence.</h1><p class="lede">Five vanilla-test suites divide 83 nonduplicated shared checks by purpose, then run the same untransformed module in Node.js and real Chrome coverage.</p></header>
         <div class="site-shell page-layout">
             <article class="prose">
+                <div class="callout"><strong>js-message works with bundlers and without a bundler.</strong><p>Bundlers resolve the bare <code>js-message</code> import normally. Native browser ESM resolves it through a standard import map, with no build or transpilation step; the shared catalog proves that browser path in real Chrome.</p></div>
                 <section id="suite">
                     <h2>Five suites, one contract</h2>
                     <p>Each behavior belongs to exactly one suite. The split makes individual checks easier to scan without repeating the same assertion under multiple labels.</p>
                     <div class="grid grid--two">
                         <article class="card"><span class="card__label">31 checks</span><h3>Unit</h3><p>Fields, serialization primitives, and the bounded playground helpers.</p><a class="card__link" href="./unit/">Review Unit checks →</a></article>
                         <article class="card"><span class="card__label">8 checks</span><h3>Functional</h3><p>Construction, loading, round trips, recoverable errors, and recovery.</p><a class="card__link" href="./functional/">Review Functional checks →</a></article>
-                        <article class="card"><span class="card__label">6 checks</span><h3>Behavioral</h3><p>Consumer journeys across request/reply, object, signal, diagnostic, stream, and cross-entry boundaries.</p><a class="card__link" href="./behavioral/">Review Behavioral checks →</a></article>
+                        <article class="card"><span class="card__label">7 checks</span><h3>Behavioral</h3><p>Consumer journeys across request/reply, object, signal, diagnostic, stream, cross-entry, and native-browser boundaries.</p><a class="card__link" href="./behavioral/">Review Behavioral checks →</a></article>
                         <article class="card"><span class="card__label">10 checks</span><h3>Integration</h3><p>Root, direct, CommonJS marker, and browser-global entry points agreeing at runtime boundaries.</p><a class="card__link" href="./integration/">Review Integration checks →</a></article>
                         <article class="card"><span class="card__label">27 checks</span><h3>Regression</h3><p>Coercion compatibility, optional fields, hostile errors, and native JSON failures.</p><a class="card__link" href="./regression/">Review Regression checks →</a></article>
                     </div>
-                    <div class="callout"><strong>82 shared runtime checks.</strong><p>Node and Chrome execute the same catalog through vanilla-test. Chrome then adds eleven distinct playground integration cases, <code>INT-BROWSER-01</code> through <code>INT-BROWSER-11</code>, without inflating the shared count.</p></div>
+                    <div class="callout"><strong>83 shared runtime checks.</strong><p>Node and Chrome execute the same catalog through vanilla-test. Chrome then adds twelve distinct playground integration cases, <code>INT-BROWSER-01</code> through <code>INT-BROWSER-12</code>, without inflating the shared count.</p></div>
                 </section>
 
                 <section id="commands">

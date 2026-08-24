@@ -29,6 +29,15 @@ const publicPages = [
     'testing/regression/index.html',
     'migration/index.html'
 ];
+const browserContractDocuments = [
+    'README.md',
+    'CHANGELOG.md',
+    'MIGRATION.md',
+    ...publicPages
+];
+const browserContractStatement = 'js-message works with bundlers and without a bundler.';
+const playgroundImportMap = '<script type="importmap">{"imports":{"js-message":"../index.js","js-message/":"../"}}</script>';
+const playgroundImportMapHash = 'sha256-KyKQfSJWw1MSnyijZQuh+80N+YgtXT3Or+jkudG/JOQ=';
 
 function assert(condition, message) {
     if (!condition) {
@@ -140,7 +149,7 @@ async function run() {
     await check('testing pages publish the complete nonduplicated suite catalog', () => {
         const overview = read('testing/index.html');
         const expectedTotals = {
-            behavioral: 6,
+            behavioral: 7,
             functional: 8,
             integration: 10,
             regression: 27,
@@ -151,8 +160,8 @@ async function run() {
 
         assert(catalog.length === 5, 'Testing documentation requires five focused suites.');
         assert(new Set(allIds).size === allIds.length, 'A test ID appears in more than one suite.');
-        assert(allIds.length === 82, `Expected 82 shared checks, found ${allIds.length}.`);
-        assert(overview.includes('82 nonduplicated shared checks'), 'Testing overview is missing the shared check total.');
+        assert(allIds.length === 83, `Expected 83 shared checks, found ${allIds.length}.`);
+        assert(overview.includes('83 nonduplicated shared checks'), 'Testing overview is missing the shared check total.');
 
         for (const suite of catalog) {
             const expected = expectedTotals[suite.id];
@@ -169,7 +178,7 @@ async function run() {
 
         const integrationPage = read('testing/integration/index.html');
         const documentedBrowserIds = integrationPage.match(/\bINT-BROWSER-\d{2}\b/g) ?? [];
-        assert(browserIds.length === 11, `Expected 11 Chrome-only checks, found ${browserIds.length}.`);
+        assert(browserIds.length === 12, `Expected 12 Chrome-only checks, found ${browserIds.length}.`);
         assert(new Set([...allIds, ...browserIds]).size === allIds.length + browserIds.length, 'A Chrome-only ID duplicates a shared suite ID.');
         assert(JSON.stringify(documentedBrowserIds) === JSON.stringify(browserIds), 'Integration documentation does not publish its exact ordered Chrome-only catalog.');
         assert(overview.includes('without inflating the shared count'), 'Testing overview does not distinguish Chrome-only checks from the shared total.');
@@ -210,6 +219,11 @@ async function run() {
         for (const policy of ["worker-src blob:", "connect-src 'none'", "object-src 'none'"]) {
             assert(frame.includes(policy), `Playground frame CSP is missing ${policy}.`);
         }
+        assert(frame.includes(playgroundImportMap), 'Playground frame is missing its explicit package import map.');
+        assert(frame.indexOf(playgroundImportMap) < frame.indexOf('<script type="module" src="./runner.js"></script>'), 'Playground import map must precede its module script.');
+        assert(frame.includes(playgroundImportMapHash), 'Playground frame CSP does not authorize its exact import map.');
+        assert(runner.startsWith("import Message from 'js-message';"), 'Playground runner does not resolve the package through its import map.');
+        assert(runner.includes('nativeImportProbe'), 'Playground does not expose observable native import-map evidence.');
         assert(runner.includes('new Worker('), 'Playground does not isolate runs in a worker.');
         assert(runner.includes('new MessageChannel('), 'Playground output does not use a private worker channel.');
         assert(runner.includes('limits.runMilliseconds'), 'Playground does not enforce its run timeout.');
@@ -242,7 +256,61 @@ async function run() {
         assert(readme.includes('./assets/benchmark-construct.svg'), 'README is missing the construction benchmark chart.');
     });
 
-    await check('release documentation identifies published version 3.1.0', () => {
+    await check('browser-facing documentation publishes the native no-bundler contract', () => {
+        for (const document of browserContractDocuments) {
+            const content = read(document);
+            assert(content.includes(browserContractStatement), `${document} is missing the bundler and no-bundler contract.`);
+            assert(content.includes('Bundlers resolve'), `${document} does not explain bundler bare-import resolution.`);
+            assert(/native browser ESM/i.test(content), `${document} does not explain native browser ESM resolution.`);
+            assert(content.includes('import map'), `${document} does not explain the native import map.`);
+            assert(content.includes('no build or transpilation step'), `${document} does not explain the no-build path.`);
+        }
+
+        for (const [document, importMapToken, moduleScriptToken] of [
+            ['README.md', '<script type="importmap">', '<script type="module">'],
+            ['browser/index.html', '&lt;script type="importmap"&gt;', '&lt;script type="module"&gt;']
+        ]) {
+            const content = read(document);
+            const importMap = content.indexOf(importMapToken);
+            const packageMapping = content.indexOf('"js-message": "./node_modules/js-message/index.js"', importMap);
+            const moduleScript = content.indexOf(moduleScriptToken, importMap);
+            const bareImport = content.indexOf("import Message from 'js-message';", moduleScript);
+
+            assert(importMap !== -1 && packageMapping > importMap, `${document} is missing the complete normal-layout package map.`);
+            assert(moduleScript > packageMapping && bareImport > moduleScript, `${document} must place the import map before the bare-import module script.`);
+            for (const guidance of ['relative to the HTML document', 'HTTP(S)', 'server', 'file://', 'zero runtime dependencies']) {
+                assert(content.includes(guidance), `${document} is missing native browser guidance: ${guidance}.`);
+            }
+        }
+    });
+
+    await check('native import maps stay explicit and executable in shared Chrome coverage', () => {
+        const sharedNodeEntry = read('test/CI.js');
+        const focusedNodeEntry = read('test/run-suite.js');
+        const browserTestEntry = read('test/browser-CI.js');
+        const manualBrowserPage = read('test/index.html');
+        const config = JSON.parse(read('vanilla-test.config.json'));
+        const frame = read('playground/frame.html');
+        const runner = read('playground/runner.js');
+        const server = read('scripts/serve.js');
+        const browserRunner = read('test/browser.js');
+
+        assert(sharedNodeEntry.includes("from 'js-message';"), 'Shared suite does not import the bare package name.');
+        assert(sharedNodeEntry.includes("from 'js-message/index.js';"), 'Shared suite does not exercise the bare package compatibility path.');
+        assert(focusedNodeEntry.includes("from 'js-message';"), 'Focused suite runner does not import the bare package name.');
+        assert(browserTestEntry.includes("from 'js-message';"), 'Actual browser test page does not exercise its package import map.');
+        assert(config.chrome.imports['js-message'] === './index.js', 'Generated Chrome map is missing the package root.');
+        assert(config.chrome.imports['js-message/'] === './', 'Generated Chrome map is missing supported package subpaths.');
+        assert(manualBrowserPage.includes('"js-message": "../index.js"'), 'Manual browser map is missing the package root.');
+        assert(manualBrowserPage.includes('"js-message/": "../"'), 'Manual browser map is missing supported package subpaths.');
+        assert(manualBrowserPage.indexOf('<script type="importmap">') < manualBrowserPage.indexOf('<script type="module">'), 'Manual browser import map must precede the module script.');
+        assert(frame.includes(playgroundImportMap) && runner.startsWith("import Message from 'js-message';"), 'Playground import map is not exercised by a bare import.');
+        for (const source of [frame, server, browserRunner]) {
+            assert(source.includes(playgroundImportMapHash), 'A playground CSP definition is missing the exact import-map hash.');
+        }
+    });
+
+    await check('release documentation identifies version 3.1.1', () => {
         const releaseDocuments = [
             'README.md',
             'index.html',
@@ -252,19 +320,19 @@ async function run() {
 
         for (const document of releaseDocuments) {
             const content = read(document);
-            assert(content.includes('3.1.0'), `${document} does not identify version 3.1.0.`);
+            assert(content.includes('3.1.1'), `${document} does not identify version 3.1.1.`);
             assert(!content.includes('github:RIAEvangelist/js-message#main'), `${document} still installs from GitHub main.`);
             assert(!/not (?:yet )?published|v3 preview|until a separate release/i.test(content), `${document} still describes a preview release.`);
         }
 
         const changelog = read('CHANGELOG.md');
-        assert(changelog.includes('## 3.1.0 - 2026-08-21'), 'Changelog release date is missing.');
-        assert(!changelog.includes('## 3.1.0 - Unreleased'), 'Changelog still marks 3.1.0 as unreleased.');
+        assert(changelog.includes('## 3.1.1 - 2026-08-23'), 'Changelog patch date is missing.');
+        assert(!changelog.includes('## 3.1.1 - Unreleased'), 'Changelog still marks 3.1.1 as unreleased.');
     });
 
     await check('package metadata preserves every supported entry and has no runtime dependency', () => {
         const manifest = JSON.parse(read('package.json'));
-        assert(manifest.version === '3.1.0', 'Modernized source version must be 3.1.0.');
+        assert(manifest.version === '3.1.1', 'Modernized source version must be 3.1.1.');
         assert(manifest.type === 'module', 'Package must remain native ESM.');
         assert(manifest.main === './Message.js' && manifest.module === './Message.js' && manifest.browser === './Message.js', 'Primary module metadata must share Message.js.');
         assert(manifest.engines.node === '>=22.13.0', 'Node runtime floor is incorrect.');
@@ -279,6 +347,11 @@ async function run() {
         }
         assert(manifest.scripts['test:playground'] === 'node ./test/browser.js', 'Real-Chrome playground command is missing.');
         assert(manifest.scripts.benchmark === 'node --expose-gc ./scripts/benchmark.js', 'Benchmark command is missing.');
+
+        for (const runtimeSource of ['index.js', 'Message.js', 'js-message-vanilla.js']) {
+            const source = read(runtimeSource);
+            assert(!source.includes('../'), `${runtimeSource} contains a consumer-layout import assumption.`);
+        }
     });
 
     await check('benchmarks publish reproducible results and accessible charts', () => {
@@ -311,7 +384,7 @@ async function run() {
 
     await check('CI verifies the package before deploying an allowlisted Pages artifact', () => {
         const workflow = read('.github/workflows/ci.yml');
-        for (const required of ['npm test', '22.13.0', 'runtime-floor', 'coverage', 'test:playground', 'package-smoke', 'upload-pages-artifact', 'deploy-pages', '_site']) {
+        for (const required of ['npm test', '22.13.0', 'runtime-floor', 'coverage', 'test:playground', 'package-smoke', 'npm ls --all', 'npm audit --omit=dev', 'npm audit', 'upload-pages-artifact', 'deploy-pages', '_site']) {
             assert(workflow.includes(required), `CI workflow is missing ${required}.`);
         }
     });

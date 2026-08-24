@@ -1,3 +1,4 @@
+import Message from 'js-message';
 import {
     defaultSource,
     limits,
@@ -11,6 +12,10 @@ const runButton = document.querySelector('#run');
 const runStatus = document.querySelector('#run-status');
 const allowedLevels = new Set(['error', 'info', 'log', 'success', 'warn']);
 const parentOrigin = new URL(import.meta.url).origin;
+const nativeImportProbe = new Message({
+    type: 'playground.native-import',
+    data: { ok: true }
+}).JSON;
 let activeRun = null;
 let outputBytes = 0;
 
@@ -297,4 +302,7 @@ globalThis.addEventListener('message', (event) => {
     }
 });
 
-parent.postMessage({ type: 'js-message:ready' }, parentOrigin);
+parent.postMessage({
+    nativeImportProbe,
+    type: 'js-message:ready'
+}, parentOrigin);

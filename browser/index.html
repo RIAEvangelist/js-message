@@ -30,9 +30,17 @@
             <article class="prose">
                 <section id="modules">
                     <h2>Native ES modules</h2>
-                    <p>When your server exposes <code>node_modules</code> or copies package assets into a public directory, import the canonical module directly.</p>
-                    <div class="code-block"><pre><code>&lt;script type="module"&gt;
-    import Message from './node_modules/js-message/index.js';
+                    <div class="callout"><strong>js-message works with bundlers and without a bundler.</strong><p>Bundlers resolve the bare <code>js-message</code> import normally. Native browser ESM resolves it through a standard import map, with no build or transpilation step.</p></div>
+                    <div class="code-block"><pre><code>&lt;script type="importmap"&gt;
+{
+  "imports": {
+    "js-message": "./node_modules/js-message/index.js",
+    "js-message/": "./node_modules/js-message/"
+  }
+}
+&lt;/script&gt;
+&lt;script type="module"&gt;
+    import Message from 'js-message';
 
     const ready = new Message({
         type: 'page.ready',
@@ -41,7 +49,7 @@
 
     console.log(ready.JSON);
 &lt;/script&gt;</code></pre></div>
-                    <p>A bundler may still resolve <code>import Message from 'js-message'</code>, but js-message itself does not require one.</p>
+                    <p>This map is complete because js-message has zero runtime dependencies, so it needs no dependency or scope entries. The paths are relative to the HTML document. Serve the app over HTTP(S), and configure the server to expose these <code>node_modules</code> files; <code>file://</code> is not supported.</p>
                 </section>
 
                 <section id="global">

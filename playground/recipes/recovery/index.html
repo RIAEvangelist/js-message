@@ -28,11 +28,12 @@
         <header class="site-shell page-hero"><p class="eyebrow">Playground recipe · recovery</p><h1>Turn invalid input into evidence.</h1><p class="lede">A malformed envelope does not leave the instance half-loaded. It becomes a normal message whose payload preserves the error and original response.</p></header>
         <div class="site-shell page-layout">
             <article class="prose">
+                <div class="callout"><strong>js-message works with bundlers and without a bundler.</strong><p>Bundlers resolve the bare <code>js-message</code> import normally. Native browser ESM resolves it through a standard import map, with no build or transpilation step.</p></div>
                 <section id="source">
                     <h2>Complete source</h2>
                     <div class="code-block"><pre><code>import Message from 'js-message';
 
-const incoming = new Message('{"type":"incomplete"}');
+const incoming = new Message('{not valid json');
 
 console.log('type', incoming.type);
 console.error('error', incoming.data.err);

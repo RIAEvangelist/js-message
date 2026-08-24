@@ -28,7 +28,8 @@
         <header class="site-shell page-hero"><p class="eyebrow">Migration to 3.1</p><h1>One module. Both Node syntaxes.</h1><p class="lede">Version 3.1 raises the runtime floor to Node 22.13, lets <code>import</code> and <code>require()</code> share one constructor, and restores optional message fields.</p></header>
         <div class="site-shell page-layout">
             <article class="prose">
-                <div class="callout"><strong>Version 3.1.0 requires Node.js 22.13 or newer.</strong><p>Install it with <code>npm install js-message</code>. Browser module and classic-script use remain available.</p></div>
+                <div class="callout"><strong>Version 3.1.1 requires Node.js 22.13 or newer.</strong><p>Install it with <code>npm install js-message</code>. Browser module and classic-script use remain available.</p></div>
+                <div class="callout"><strong>js-message works with bundlers and without a bundler.</strong><p>Bundlers resolve the bare <code>js-message</code> import normally. Native browser ESM resolves it through a standard import map, with no build or transpilation step.</p></div>
                 <section id="runtime">
                     <h2>Raise the Node.js floor</h2>
                     <p>Update production, CI, containers, and local development to Node 22.13 or newer before installing 3.1.</p>

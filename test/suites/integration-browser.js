@@ -46,6 +46,7 @@ async function createFixture() {
     iframe.style.cssText = 'position:fixed;left:-10000px;top:0;width:1200px;height:800px;border:0;';
     document.body.append(iframe);
 
+    let nativeImportProbe;
     let readyOrigin;
     const ready = new Promise((resolve) => {
         function onMessage(event) {
@@ -55,6 +56,7 @@ async function createFixture() {
             }
 
             globalThis.removeEventListener('message', onMessage);
+            nativeImportProbe = event.data.nativeImportProbe;
             readyOrigin = event.origin;
             resolve();
         }
@@ -78,6 +80,7 @@ async function createFixture() {
             iframe.remove();
         },
         iframe,
+        nativeImportProbe,
         output: frameDocument.querySelector('#output'),
         readyOrigin,
         reset: frameDocument.querySelector('#reset'),
@@ -87,7 +90,7 @@ async function createFixture() {
     };
 
     for (const [name, element] of Object.entries(fixture)) {
-        if (name !== 'dispose' && name !== 'iframe' && name !== 'readyOrigin') {
+        if (name !== 'dispose' && name !== 'iframe' && name !== 'nativeImportProbe' && name !== 'readyOrigin') {
             assert(element, `Expected the playground ${name} control.`);
         }
     }
@@ -143,11 +146,17 @@ function disposeFixture() {
 }
 
 const cases = [
-    testCase('INT-BROWSER-01', 'the playground completes its same-origin ready and load handshake', async () => {
+    testCase('INT-BROWSER-01', 'the playground completes its same-origin ready and load handshake', async ({ BrowserTestMessage }) => {
         const fixture = await getFixture();
         const loadedSource = "console.log('origin handshake');";
+        const testPageProbe = new BrowserTestMessage({
+            type: 'test-page.native-import',
+            data: { ok: true }
+        });
 
+        equal(testPageProbe.JSON, '{"type":"test-page.native-import","data":{"ok":true}}');
         equal(fixture.readyOrigin, location.origin);
+        equal(fixture.nativeImportProbe, '{"type":"playground.native-import","data":{"ok":true}}');
         await loadSource(fixture, loadedSource);
         equal(fixture.source.value, loadedSource);
     }),
@@ -277,6 +286,42 @@ console.log('after large output');`, 'Completed');
 
             equal(frameDocument.querySelector('#source').value, recipeSources.recovery);
             equal(frameDocument.querySelector('#run-status').textContent, 'Example loaded');
+        } finally {
+            page.remove();
+        }
+    }),
+    testCase('INT-BROWSER-12', 'the recovery recipe executes malformed JSON as a successful error envelope', async () => {
+        const page = document.createElement('iframe');
+        page.title = 'js-message recovery recipe execution fixture';
+        page.style.cssText = 'position:fixed;left:-10000px;top:0;width:1200px;height:800px;border:0;';
+        document.body.append(page);
+
+        try {
+            page.src = '/playground/?recipe=recovery#workbench';
+            const frame = await waitFor(
+                () => page.contentDocument?.querySelector('#playground-frame'),
+                'the recovery recipe playground frame'
+            );
+            const frameDocument = await waitFor(
+                () => frame.contentDocument?.querySelector('#source')?.value === recipeSources.recovery && frame.contentDocument,
+                'the recovery recipe source handoff',
+                READY_TIMEOUT * 2
+            );
+            const lines = await runSource({
+                output: frameDocument.querySelector('#output'),
+                run: frameDocument.querySelector('#run'),
+                source: frameDocument.querySelector('#source'),
+                status: frameDocument.querySelector('#run-status')
+            }, recipeSources.recovery, 'Completed', RUN_TIMEOUT * 2);
+            const envelope = lines.find((line) => line.startsWith('envelope '));
+
+            assert(lines.includes('type error'), 'Expected the malformed input to become an error message.');
+            assert(lines.some((line) => line.startsWith('error SyntaxError:')), 'Expected the recovery payload to expose its SyntaxError.');
+            assert(envelope, 'Expected the recovery recipe to print its serialized error envelope.');
+            assert(envelope.includes('"type": "error"'), 'Expected the serialized envelope to preserve the error type.');
+            assert(envelope.includes('"name": "SyntaxError"'), 'Expected the serialized envelope to preserve the error name.');
+            assert(envelope.includes('"response": "{not valid json"'), 'Expected the serialized envelope to preserve the malformed response.');
+            equal(lines.at(-1), 'Module completed');
         } finally {
             page.remove();
         }

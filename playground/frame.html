@@ -4,9 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="dark">
-    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self' blob:; worker-src blob:; connect-src 'none'; img-src 'none'; font-src 'none'; base-uri 'none'; object-src 'none'; form-action 'none'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; script-src 'self' blob: 'sha256-KyKQfSJWw1MSnyijZQuh+80N+YgtXT3Or+jkudG/JOQ='; worker-src blob:; connect-src 'none'; img-src 'none'; font-src 'none'; base-uri 'none'; object-src 'none'; form-action 'none'">
     <title>js-message playground</title>
     <link rel="stylesheet" href="./playground.css">
+    <script type="importmap">{"imports":{"js-message":"../index.js","js-message/":"../"}}</script>
     <script type="module" src="./runner.js"></script>
 </head>
 <body>

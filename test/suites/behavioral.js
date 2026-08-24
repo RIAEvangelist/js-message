@@ -116,6 +116,17 @@ const cases = [
         equal(moduleReply.type, 'session.ready');
         equal(moduleReply.data.clientId, 'client-4');
         equal(moduleReply.data.sessionId, 'session-12');
+    }),
+    testCase('BEHAV-07', 'given the bare package entry, when Node or a native browser import map loads it, then a no-build round trip succeeds', ({ BarePackageMessage }) => {
+        const outgoing = new BarePackageMessage({
+            type: 'native-browser.request',
+            data: { requestId: 'native-5' }
+        });
+        const incoming = new BarePackageMessage(outgoing.JSON);
+
+        equal(incoming.type, 'native-browser.request');
+        equal(incoming.data.requestId, 'native-5');
+        equal(incoming.JSON, outgoing.JSON);
     })
 ];
 

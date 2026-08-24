@@ -8,6 +8,8 @@
     <script type="importmap">
     {
         "imports": {
+            "js-message": "../index.js",
+            "js-message/": "../",
             "vanilla-test": "../node_modules/vanilla-test/index.js",
             "ansi-colors-es6": "../node_modules/ansi-colors-es6/index.js",
             "strong-type": "../node_modules/strong-type/index.js"
@@ -21,7 +23,7 @@
     <main id="main-content" class="site-shell live-shell">
         <p class="eyebrow">Live runtime verification</p>
         <h1>Testing the real browser module.</h1>
-        <p class="lede">This page runs eleven focused vanilla-test checks against the real iframe, module Worker, controls, output, safety limits, and recipe handoff.</p>
+        <p class="lede">This page runs twelve focused vanilla-test checks against the real iframe, module Worker, controls, output, safety limits, recipe handoff, and observable recovery behavior.</p>
         <section class="result-panel" aria-live="polite">
             <h2 id="status">Running checks…</h2>
             <p id="summary">The result will appear here.</p>

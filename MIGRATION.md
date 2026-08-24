@@ -2,6 +2,8 @@
 
 js-message 3.1 keeps the mutable `Message` surface, restores optional message fields, and lets ESM and CommonJS load one synchronous source file. It has no runtime dependency or build step.
 
+js-message works with bundlers and without a bundler. Bundlers resolve the bare package import normally. Native browser ESM uses a standard import map with no build or transpilation step.
+
 ## Move Node.js to 22.13 or newer
 
 Version 3.1 raises the declared runtime floor:
@@ -82,6 +84,25 @@ const Message = require('js-message');
 ```
 
 Both forms resolve to `Message.js`. No parallel `.cjs` implementation is shipped.
+
+## Native browser ESM without a bundler
+
+Put a complete import map before the module script:
+
+```html
+<script type="importmap">
+{
+    "imports": {
+        "js-message": "./node_modules/js-message/index.js"
+    }
+}
+</script>
+<script type="module">
+    import Message from 'js-message';
+</script>
+```
+
+The mapped path is relative to the HTML document. Serve the application over HTTP(S), and configure the server to expose the referenced `node_modules` file; `file://` is not supported. Version 3.1.1 has zero runtime dependencies, so there are no dependency or scoped-map entries to add. A future runtime dependency would need its own bare-name mapping and, when npm nests a conflicting version, a scope under `./node_modules/js-message/` that preserves the same package boundary used by Node and bundlers.
 
 ## Serializable errors
 

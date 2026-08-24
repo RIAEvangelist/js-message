@@ -21,6 +21,8 @@
       "js-message-vanilla.js"
     ],
     "imports": {
+      "js-message": "./index.js",
+      "js-message/": "./",
       "vanilla-test": "./node_modules/vanilla-test/index.js",
       "ansi-colors-es6": "./node_modules/ansi-colors-es6/index.js",
       "strong-type": "./node_modules/strong-type/index.js"

@@ -142,6 +142,12 @@ try {
         equal(frame.headers['content-security-policy'].includes("frame-ancestors 'self'"), true);
         equal(frame.headers['cross-origin-resource-policy'], 'cross-origin');
 
+        const frameHTML = frame.body.toString('utf8');
+        const importMap = '<script type="importmap">{"imports":{"js-message":"../index.js","js-message/":"../"}}</script>';
+        const moduleScript = '<script type="module" src="./runner.js"></script>';
+        equal(frameHTML.includes(importMap), true);
+        equal(frameHTML.indexOf(importMap) < frameHTML.indexOf(moduleScript), true);
+
         for (const path of ['/playground/runtime.js', '/playground/recipes.js', '/playground/runner.js', '/index.js', '/Message.js']) {
             const module = await fetchLocal(running.port, path);
             equal(module.status, 200);
@@ -149,6 +155,15 @@ try {
             equal(module.headers['access-control-allow-origin'], '*');
             equal(module.headers['cross-origin-resource-policy'], 'cross-origin');
         }
+
+        const runner = await fetchLocal(running.port, '/playground/runner.js');
+        equal(runner.body.toString('utf8').includes("import Message from 'js-message';"), true);
+
+        const indexModule = await fetchLocal(running.port, '/index.js');
+        equal(indexModule.body.toString('utf8').includes("import Message from './Message.js';"), true);
+
+        const messageModule = await fetchLocal(running.port, '/Message.js');
+        equal(messageModule.body.toString('utf8').includes('class Message'), true);
     });
 
     await check('denies repository internals and ignored files', async () => {

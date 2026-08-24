@@ -4,9 +4,22 @@ All notable changes to js-message are documented here.
 
 ## Unreleased
 
+## 3.1.1 - 2026-08-23
+
 ### Added
 
-- A six-scenario Behavioral suite for request/reply, object-transport, payload-free signal, diagnostic, long-lived receiver, and cross-entry consumer journeys.
+- A seven-scenario Behavioral suite for request/reply, object-transport, payload-free signal, diagnostic, long-lived receiver, cross-entry consumer, and native no-bundler journeys.
+- Native Chrome evidence that the shared suite and playground resolve the bare `js-message` package import through explicit checked-in import maps.
+- Packed-consumer metadata and dependency-tree assertions plus production and full npm audits in CI.
+
+### Changed
+
+- js-message works with bundlers and without a bundler. Bundlers resolve the bare package import normally; native browser ESM uses a standard import map with no build or transpilation step. Browser-facing documentation now provides the complete map, HTTP(S) serving requirements, and the unsupported `file://` boundary.
+- Static documentation and deployment checks now protect import-map ordering, package mappings, CSP authorization, and the package's zero-runtime-dependency contract.
+
+### Fixed
+
+- The recovery playground recipe now sends genuinely malformed JSON and is executed in real Chrome to prove the observable error envelope and subsequent recovery.
 
 ## 3.1.0 - 2026-08-21
 

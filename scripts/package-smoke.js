@@ -1,4 +1,4 @@
-import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
@@ -52,6 +52,47 @@ try {
     const tarball = resolve(workspace, metadata.filename);
     writeFileSync(join(workspace, 'package.json'), '{"private":true,"type":"module"}\n');
     run('npm', ['install', '--no-audit', '--no-fund', tarball], workspace);
+
+    const installedRoot = join(workspace, 'node_modules', 'js-message');
+    const installedManifest = JSON.parse(readFileSync(join(installedRoot, 'package.json'), 'utf8'));
+
+    for (const field of ['main', 'module', 'browser']) {
+        if (installedManifest[field] !== './Message.js') {
+            throw new Error(`Packed ${field} entry must resolve to the native ./Message.js implementation.`);
+        }
+    }
+
+    for (const condition of ['import', 'require', 'default']) {
+        if (installedManifest.exports?.['.']?.[condition] !== './Message.js') {
+            throw new Error(`Packed root ${condition} export must resolve to the native ./Message.js implementation.`);
+        }
+    }
+
+    for (const field of ['dependencies', 'optionalDependencies', 'peerDependencies']) {
+        if (Object.keys(installedManifest[field] ?? {}).length !== 0) {
+            throw new Error(`Packed js-message unexpectedly declares ${field}.`);
+        }
+    }
+
+    for (const field of ['bundledDependencies', 'bundleDependencies']) {
+        if ((installedManifest[field] ?? []).length !== 0) {
+            throw new Error(`Packed js-message unexpectedly declares ${field}.`);
+        }
+    }
+
+    const dependencyTree = JSON.parse(run('npm', ['ls', '--omit=dev', '--all', '--json'], workspace));
+    const consumerDependencies = Object.keys(dependencyTree.dependencies ?? {});
+
+    if (consumerDependencies.length !== 1 || consumerDependencies[0] !== 'js-message') {
+        throw new Error(`Packed consumer runtime tree must contain only js-message; received ${consumerDependencies.join(', ') || 'none'}.`);
+    }
+
+    const packageDependencies = Object.keys(dependencyTree.dependencies['js-message'].dependencies ?? {});
+
+    if (packageDependencies.length !== 0) {
+        throw new Error(`Packed js-message runtime tree unexpectedly contains ${packageDependencies.join(', ')}.`);
+    }
+
     writeFileSync(join(workspace, 'smoke.mjs'), `
 import { createRequire } from 'node:module';
 import Message, { Message as NamedMessage } from 'js-message';

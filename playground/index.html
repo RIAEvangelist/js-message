@@ -29,6 +29,7 @@
         <header class="site-shell page-hero"><p class="eyebrow">Native module playground</p><h1>Edit the source. Run the real module.</h1><p class="lede">Change the JavaScript, press Run, and inspect each console value. The editor executes the checked-in <code>index.js</code> module—there is no playground-only copy of js-message.</p></header>
 
         <div class="site-shell playground-page">
+            <div class="callout"><strong>js-message works with bundlers and without a bundler.</strong><p>Bundlers resolve the bare <code>js-message</code> import normally. Native browser ESM, including this playground, resolves it through a standard import map, with no build or transpilation step.</p></div>
             <section id="workbench" aria-labelledby="workbench-title">
                 <div class="section-heading">
                     <p class="eyebrow">Live workbench</p>
