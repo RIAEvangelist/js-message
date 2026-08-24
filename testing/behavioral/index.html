@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="The 6 js-message Behavioral checks for complete consumer journeys across JSON, object, signal, diagnostic, stream, and cross-entry boundaries.">
+    <meta name="color-scheme" content="dark">
+    <meta property="og:title" content="Behavioral tests · js-message">
+    <meta property="og:description" content="Six Given/When/Then-style vanilla-test scenarios verify observable js-message outcomes at consumer boundaries.">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://riaevangelist.github.io/js-message/testing/behavioral/">
+    <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Behavioral tests · js-message">
+    <meta name="twitter:description" content="Six Given/When/Then-style vanilla-test scenarios verify observable js-message outcomes at consumer boundaries.">
+    <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
+    <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
+    <link rel="canonical" href="https://riaevangelist.github.io/js-message/testing/behavioral/">
+    <link rel="stylesheet" href="../../assets/site.css">
+    <title>Behavioral tests · js-message</title>
+</head>
+<body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../../">Overview</a></li><li><a href="../../guide/">Start</a></li><li><a href="../../why/">Why</a></li><li><a href="../../api/">API</a></li><li><a href="../../protocol/">Protocol</a></li><li><a href="../../browser/">Browser</a></li><li><a href="../../examples/">Examples</a></li><li><a href="../../playground/">Playground</a></li><li><a href="../../performance/">Performance</a></li><li><a href="../" aria-current="page">Testing</a></li><li><a href="../../migration/">Migration</a></li></ul></nav></div></header>
+
+    <main id="main-content">
+        <header class="site-shell page-hero"><p class="eyebrow">Behavioral suite · 6 checks</p><h1>Prove the consumer outcome.</h1><p class="lede">Behavioral checks follow complete Given/When/Then-style journeys through transport, routing, recovery, and peer exchange using only the public message contract.</p></header>
+        <div class="site-shell page-layout">
+            <article class="prose">
+                <section id="boundaries">
+                    <h2>Boundary journeys</h2>
+                    <div class="table-wrap"><table><thead><tr><th>ID</th><th>Observable scenario</th></tr></thead><tbody>
+                        <tr><td><code>BEHAV-01</code></td><td>Given a request crosses two JSON boundaries, its reply keeps the correlation ID.</td></tr>
+                        <tr><td><code>BEHAV-02</code></td><td>Given an object-transport snapshot, later sender mutations do not alter the receiver.</td></tr>
+                        <tr><td><code>BEHAV-03</code></td><td>Given a payload-free signal, the consumer routes and acknowledges it without fabricated data.</td></tr>
+                    </tbody></table></div>
+                </section>
+
+                <section id="resilience">
+                    <h2>Resilience and peer exchange</h2>
+                    <div class="table-wrap"><table><thead><tr><th>ID</th><th>Observable scenario</th></tr></thead><tbody>
+                        <tr><td><code>BEHAV-04</code></td><td>Given malformed inbound text, its diagnostic stays readable across a second boundary.</td></tr>
+                        <tr><td><code>BEHAV-05</code></td><td>Given a long-lived receiver, stale payloads and errors do not block later messages.</td></tr>
+                        <tr><td><code>BEHAV-06</code></td><td>Given module and browser-global peers, they exchange a request and reply bidirectionally.</td></tr>
+                    </tbody></table></div>
+                    <div class="callout"><strong>Outcomes, not API mechanics.</strong><p>Functional checks isolate individual construction, loading, and recovery lifecycles. Behavioral scenarios compose those operations into consumer-visible workflows without introducing a second test framework.</p></div>
+                    <div class="actions"><a class="button" href="../integration/">Next: Integration</a><a class="button button--secondary" href="../functional/">Previous: Functional</a></div>
+                </section>
+            </article>
+            <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#boundaries">Boundary journeys</a></li><li><a href="#resilience">Resilience and peers</a></li></ul></aside>
+        </div>
+    </main>
+
+    <footer class="site-footer"><div class="site-shell site-footer__inner"><p>js-message · MIT licensed · <span data-current-year></span></p><nav aria-label="Project links"><a href="../../migration/">Migration</a><a href="https://github.com/RIAEvangelist/js-message">GitHub</a><a href="https://www.npmjs.com/package/js-message">npm</a><a href="https://github.com/RIAEvangelist/js-message/blob/main/licence">License</a></nav></div></footer>
+    <script type="module" src="../../assets/site.js"></script>
+</body>
+</html>

@@ -3,17 +3,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="The 8 js-message Functional checks for construction, loading, round trips, recoverable errors, and recovery, run with vanilla-test.">
+    <meta name="description" content="The 8 js-message Functional checks for individual construction, loading, round-trip, error, and recovery lifecycles, run with vanilla-test.">
     <meta name="color-scheme" content="dark">
     <meta property="og:title" content="Functional tests · js-message">
-    <meta property="og:description" content="Eight focused vanilla-test checks for complete js-message behaviors from input through recovery.">
+    <meta property="og:description" content="Eight focused vanilla-test checks isolate js-message public API lifecycles from input through recovery.">
     <meta property="og:type" content="article">
     <meta property="og:url" content="https://riaevangelist.github.io/js-message/testing/functional/">
     <meta property="og:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
     <meta property="og:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Functional tests · js-message">
-    <meta name="twitter:description" content="Eight focused vanilla-test checks for complete js-message behaviors from input through recovery.">
+    <meta name="twitter:description" content="Eight focused vanilla-test checks isolate js-message public API lifecycles from input through recovery.">
     <meta name="twitter:image" content="https://riaevangelist.github.io/js-message/assets/js-message-header.png">
     <meta name="twitter:image:alt" content="js-message carrying a structured message through a normalization gate between browser and server runtimes">
     <link rel="canonical" href="https://riaevangelist.github.io/js-message/testing/functional/">
@@ -25,7 +25,7 @@
     <header class="site-header"><div class="site-shell site-header__inner"><a class="brand" href="../../" aria-label="js-message documentation home"><span class="brand__mark" aria-hidden="true">{ }</span><span>js-message</span></a><nav class="site-nav" aria-label="Primary navigation"><ul><li><a href="../../">Overview</a></li><li><a href="../../guide/">Start</a></li><li><a href="../../why/">Why</a></li><li><a href="../../api/">API</a></li><li><a href="../../protocol/">Protocol</a></li><li><a href="../../browser/">Browser</a></li><li><a href="../../examples/">Examples</a></li><li><a href="../../playground/">Playground</a></li><li><a href="../../performance/">Performance</a></li><li><a href="../" aria-current="page">Testing</a></li><li><a href="../../migration/">Migration</a></li></ul></nav></div></header>
 
     <main id="main-content">
-        <header class="site-shell page-hero"><p class="eyebrow">Functional suite · 8 checks</p><h1>Follow the message lifecycle.</h1><p class="lede">Functional checks exercise complete user-visible behaviors: create, load, serialize, recover from invalid input, and continue.</p></header>
+        <header class="site-shell page-hero"><p class="eyebrow">Functional suite · 8 checks</p><h1>Follow the message lifecycle.</h1><p class="lede">Functional checks isolate each public API lifecycle: create, load, serialize, recover from invalid input, and continue.</p></header>
         <div class="site-shell page-layout">
             <article class="prose">
                 <section id="loading">
@@ -46,8 +46,8 @@
                         <tr><td><code>FUNC-07</code></td><td>Malformed errors remain informative after serialization.</td></tr>
                         <tr><td><code>FUNC-08</code></td><td>A message recovers after a failed load.</td></tr>
                     </tbody></table></div>
-                    <div class="callout"><strong>Behavior, not implementation detail.</strong><p>These checks cross public methods only. Edge cases kept for historical compatibility live on the Regression page.</p></div>
-                    <div class="actions"><a class="button" href="../integration/">Next: Integration</a><a class="button button--secondary" href="../unit/">Previous: Unit</a></div>
+                    <div class="callout"><strong>One public lifecycle at a time.</strong><p>Complete consumer journeys live in the Behavioral suite. Edge cases kept for historical compatibility live on the Regression page.</p></div>
+                    <div class="actions"><a class="button" href="../behavioral/">Next: Behavioral</a><a class="button button--secondary" href="../unit/">Previous: Unit</a></div>
                 </section>
             </article>
             <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#loading">Construction and loading</a></li><li><a href="#recovery">Error recovery</a></li></ul></aside>

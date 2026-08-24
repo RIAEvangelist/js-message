@@ -149,13 +149,14 @@ The benchmark uses Node 24.18, one million operations, and the median of 21 alte
 
 ## Verification
 
-Four focused suites use [vanilla-test](https://www.npmjs.com/package/vanilla-test) to run 76 nonduplicated shared checks from the same untransformed module in Node.js and Chrome. Chrome adds eleven distinct playground integration checks without inflating that shared count. CI also executes real ESM and CommonJS imports from the packed npm artifact, checks documentation and the declared runtime floor, and enforces native coverage.
+Five focused suites use [vanilla-test](https://www.npmjs.com/package/vanilla-test) to run 82 nonduplicated shared checks from the same untransformed module in Node.js and Chrome. Chrome adds eleven distinct playground integration checks without inflating that shared count. CI also executes real ESM and CommonJS imports from the packed npm artifact, checks documentation and the declared runtime floor, and enforces native coverage.
 
 ```sh
 npm ci
 npm test
 npm run test:unit
 npm run test:functional
+npm run test:behavioral
 npm run test:integration
 npm run test:regression
 npm run test:playground

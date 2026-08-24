@@ -4,6 +4,10 @@ All notable changes to js-message are documented here.
 
 ## Unreleased
 
+### Added
+
+- A six-scenario Behavioral suite for request/reply, object-transport, payload-free signal, diagnostic, long-lived receiver, and cross-entry consumer journeys.
+
 ## 3.1.0 - 2026-08-21
 
 ### Added

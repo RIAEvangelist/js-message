@@ -24,6 +24,7 @@ const publicPages = [
     'testing/index.html',
     'testing/unit/index.html',
     'testing/functional/index.html',
+    'testing/behavioral/index.html',
     'testing/integration/index.html',
     'testing/regression/index.html',
     'migration/index.html'
@@ -139,6 +140,7 @@ async function run() {
     await check('testing pages publish the complete nonduplicated suite catalog', () => {
         const overview = read('testing/index.html');
         const expectedTotals = {
+            behavioral: 6,
             functional: 8,
             integration: 10,
             regression: 27,
@@ -147,16 +149,16 @@ async function run() {
         const allIds = catalog.flatMap((suite) => suite.cases.map((testCase) => testCase.id));
         const browserIds = integrationBrowser.cases.map((testCase) => testCase.id);
 
-        assert(catalog.length === 4, 'Testing documentation requires four focused suites.');
+        assert(catalog.length === 5, 'Testing documentation requires five focused suites.');
         assert(new Set(allIds).size === allIds.length, 'A test ID appears in more than one suite.');
-        assert(allIds.length === 76, `Expected 76 shared checks, found ${allIds.length}.`);
-        assert(overview.includes('76 nonduplicated shared checks'), 'Testing overview is missing the shared check total.');
+        assert(allIds.length === 82, `Expected 82 shared checks, found ${allIds.length}.`);
+        assert(overview.includes('82 nonduplicated shared checks'), 'Testing overview is missing the shared check total.');
 
         for (const suite of catalog) {
             const expected = expectedTotals[suite.id];
             const pagePath = `testing/${suite.id}/index.html`;
             const page = read(pagePath);
-            const documentedIds = page.match(/\b(?:UNIT|FUNC|INT|REG)-\d{2}\b/g) ?? [];
+            const documentedIds = page.match(/\b(?:UNIT|FUNC|BEHAV|INT|REG)-\d{2}\b/g) ?? [];
             const expectedIds = suite.cases.map((testCase) => testCase.id);
 
             assert(suite.total === expected, `${suite.name} catalog count changed from ${expected}.`);
@@ -272,7 +274,7 @@ async function run() {
         assert(manifest.exports['./js-message-vanilla.js'] === './js-message-vanilla.js', 'Global export is missing.');
         assert(!manifest.dependencies || Object.keys(manifest.dependencies).length === 0, 'Runtime dependencies must stay empty.');
         assert(manifest.devDependencies['vanilla-test'] === '2.1.1', 'vanilla-test must stay exactly pinned.');
-        for (const suite of ['unit', 'functional', 'integration', 'regression']) {
+        for (const suite of ['unit', 'functional', 'behavioral', 'integration', 'regression']) {
             assert(manifest.scripts[`test:${suite}`] === `node ./test/run-suite.js ${suite}`, `Missing focused ${suite} test command.`);
         }
         assert(manifest.scripts['test:playground'] === 'node ./test/browser.js', 'Real-Chrome playground command is missing.');

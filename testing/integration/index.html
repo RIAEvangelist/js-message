@@ -46,7 +46,7 @@
 
                 <section id="chrome">
                     <h2>Chrome-only playground integration</h2>
-                    <p>These eleven cases exercise browser-only UI and Worker boundaries. They are distinct from—and are not added to—the 76 shared runtime checks.</p>
+                    <p>These eleven cases exercise browser-only UI and Worker boundaries. They are distinct from—and are not added to—the 82 shared runtime checks.</p>
                     <div class="table-wrap"><table><thead><tr><th>ID</th><th>Focused check</th></tr></thead><tbody>
                         <tr><td><code>INT-BROWSER-01</code></td><td>The playground completes its same-origin ready and load handshake.</td></tr>
                         <tr><td><code>INT-BROWSER-02</code></td><td>The default playground module completes with visible round-trip output.</td></tr>
@@ -71,7 +71,7 @@
                         <li>A packed tarball is installed in a clean project and checked through every declared export.</li>
                     </ul>
                     <div class="callout"><strong>Two layers of integration evidence.</strong><p>The ten shared IDs remain portable between Node and Chrome. The eleven <code>INT-BROWSER</code> cases and other environment-specific gates stay separate so their setup does not masquerade as duplicate protocol coverage.</p></div>
-                    <div class="actions"><a class="button" href="../regression/">Next: Regression</a><a class="button button--secondary" href="../functional/">Previous: Functional</a></div>
+                    <div class="actions"><a class="button" href="../regression/">Next: Regression</a><a class="button button--secondary" href="../behavioral/">Previous: Behavioral</a></div>
                 </section>
             </article>
             <aside class="side-index" aria-label="On this page"><strong>On this page</strong><ul><li><a href="#catalog">Runtime entry points</a></li><li><a href="#chrome">Chrome playground</a></li><li><a href="#boundaries">Boundary gates</a></li></ul></aside>

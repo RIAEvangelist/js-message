@@ -42,6 +42,7 @@
     "test": "node ./scripts/test.js",
     "test:unit": "node ./test/run-suite.js unit",
     "test:functional": "node ./test/run-suite.js functional",
+    "test:behavioral": "node ./test/run-suite.js behavioral",
     "test:integration": "node ./test/run-suite.js integration",
     "test:regression": "node ./test/run-suite.js regression",
     "test:core": "node ./test/node.js",

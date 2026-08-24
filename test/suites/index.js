@@ -1,3 +1,4 @@
+import behavioral from './behavioral.js';
 import functional from './functional.js';
 import integration from './integration.js';
 import regression from './regression.js';
@@ -6,6 +7,7 @@ import unit from './unit.js';
 const suites = Object.freeze([
     unit,
     functional,
+    behavioral,
     integration,
     regression
 ]);

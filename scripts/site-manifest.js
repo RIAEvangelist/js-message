@@ -29,6 +29,7 @@ const siteFiles = Object.freeze([
     'testing/index.html',
     'testing/unit/index.html',
     'testing/functional/index.html',
+    'testing/behavioral/index.html',
     'testing/integration/index.html',
     'testing/regression/index.html',
     'migration/index.html'
